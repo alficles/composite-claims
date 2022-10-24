@@ -47,10 +47,10 @@ claim sets affects the acceptability of the composition claim.</t>
 acceptability of the claim set decides the acceptability of the CWT. However,
 this document defines multiple sets of claims, so it instead refers to
 accepting or rejecting claim sets. If the primary claim set is unacceptable,
-the CWT is unacceptable and MUST be rejected.</t>
+the CWT is unacceptable and <bcp14>MUST</bcp14> be rejected.</t>
 <t>Composition claims can be nested to an arbitrary level of depth.
-Implementations MAY limit the depth of composition nesting by rejecting CWTs
-with too many levels but MUST support at least four levels of nesting.</t>
+Implementations <bcp14>MAY</bcp14> limit the depth of composition nesting by rejecting
+CWTs with too many levels but <bcp14>MUST</bcp14> support at least four levels of nesting.</t>
 
 <section anchor="logical-claims"><name>Logical Claims</name>
 <t>These claims allow multiple claim sets to be evaluated. This claim identifies
@@ -62,8 +62,8 @@ claims.</t>
 <t>The &quot;or&quot; (Or) claim identifies one or more sets of claims of which at least one
 is valid. If every set of claims in an &quot;or&quot; claim would, when considered with
 all the other relevant claims, result in the claim set being rejected, the
-claim set containing the &quot;or&quot; claim MUST be rejected.</t>
-<t>Use of this claim is OPTIONAL. The Claim Key [add key number] is used to
+claim set containing the &quot;or&quot; claim <bcp14>MUST</bcp14> be rejected.</t>
+<t>Use of this claim is <bcp14>OPTIONAL</bcp14>. The Claim Key [add key number] is used to
 identify this claim.</t>
 </section>
 
@@ -71,9 +71,9 @@ identify this claim.</t>
 <t>The &quot;nor&quot; (Nor) claim identifies one or more sets of claims of which none are
 valid. If any set of claims in a &quot;nor&quot; claim would, when considered with all
 other relevant claims, result in the claim set being accepted, the claim set
-containing the &quot;nor&quot; MUST be rejected.</t>
+containing the &quot;nor&quot; <bcp14>MUST</bcp14> be rejected.</t>
 <t>This is the logical negation of the &quot;or&quot; claim.</t>
-<t>Use of this claim is OPTIONAL. The Claim Key [add key number] is used to
+<t>Use of this claim is <bcp14>OPTIONAL</bcp14>. The Claim Key [add key number] is used to
 identify this claim.</t>
 </section>
 
@@ -81,13 +81,13 @@ identify this claim.</t>
 <t>The &quot;and&quot; (And) claim idenfies one or more sets of claims of which all are
 valid. If any claim in an &quot;and&quot; claim would, when considered with all other
 relevant claims, result in the claim set being rejected, the claim set
-containing the &quot;and&quot; claim MUST be rejected.</t>
+containing the &quot;and&quot; claim <bcp14>MUST</bcp14> be rejected.</t>
 <t>The &quot;and&quot; claim is often unnecessary because a given claim set is only accepted
 when all its claims are acceptable. However, CBOR maps cannot have duplicate
 keys, so claims cannot be repeated more than once. The &quot;and&quot; claim is useful
 for claims that may be claimed multiple times, including the &quot;or&quot; and &quot;nor&quot;
 claims.</t>
-<t>Use of this claim is OPTIONAL. The Claim Key [add key number] is used to
+<t>Use of this claim is <bcp14>OPTIONAL</bcp14>. The Claim Key [add key number] is used to
 identify this claim.</t>
 </section>
 </section>
@@ -119,14 +119,14 @@ array in the plaintext are CBOR data items that are appropriate as values
 for the corresponding claim.</li>
 </ul>
 <t>For each claim described in the &quot;env&quot; claim that the processor can decrypt,
-the claim MAY be processed exactly as though it were a sibling claim to the
+the claim <bcp14>MAY</bcp14> be processed exactly as though it were a sibling claim to the
 &quot;env&quot; claim, including the limitation that a map of claims is invalid if it
-contains a claim more than once. An invalid claim set MUST be rejected. A claim
-set that contains duplicate claims MUST be rejected, even if the duplicates are
-not decrypted.</t>
+contains a claim more than once. An invalid claim set <bcp14>MUST</bcp14> be rejected. A
+claim set that contains duplicate claims <bcp14>MUST</bcp14> be rejected, even if the
+duplicates are not decrypted.</t>
 <t>Since claims are optionally decrypted and added as sibling claims, issuers can
 ensure that this occurs by adding them to the &quot;crit&quot; claim.</t>
-<t>Use of this claim is OPTIONAL. The Claim Key [add key number] is used to
+<t>Use of this claim is <bcp14>OPTIONAL</bcp14>. The Claim Key [add key number] is used to
 identify this claim.</t>
 </section>
 
@@ -136,23 +136,23 @@ identify this claim.</t>
 negative integers, or unsigned integers. The elements of the array correspond
 to claims that may be present in the token.</t>
 <t>If a claim listed in the &quot;crit&quot; claim is present in a claim set and the
-processor cannot understand or process the claim, the claim set MUST be
+processor cannot understand or process the claim, the claim set <bcp14>MUST</bcp14> be
 rejected.</t>
 <t>If a claim listed in the &quot;crit&quot; claim is not present in a claim set, the claim
-set MUST be rejected.</t>
+set <bcp14>MUST</bcp14> be rejected.</t>
 <t>If a claim listed in the &quot;crit&quot; claim is present in a claim set as part of a
 &quot;env&quot; claim (and, should it be decrypted, be processed as a sibling of that
 &quot;env&quot; claim), if the value of the claim is not decrypted (for any reason) and
 processed and any possible value of the claim would result in the request being
-rejected, the claim set MUST be rejected. Since any processor MAY decrypt or
-not decrypt claim values in a &quot;env&quot; claim, this means a processor MAY reject
-any claim set that contains a claim that could have a value that would require
-rejection.</t>
-<t>If a &quot;crit&quot; claim is present in a claim set, a processor SHOULD consider claims
-it does not understand to be acceptable if they are not present in the &quot;crit&quot;
-claim. That is, when a &quot;crit&quot; claim is present, any claims not listed may be
-assumed to be non-critical.</t>
-<t>Use of this claim is OPTIONAL. The Claim Key [add key number] is used to
+rejected, the claim set <bcp14>MUST</bcp14> be rejected. Since any processor <bcp14>MAY</bcp14>
+decrypt or not decrypt claim values in a &quot;env&quot; claim, this means a processor
+<bcp14>MAY</bcp14> reject any claim set that contains a claim that could have a value that
+would require rejection.</t>
+<t>If a &quot;crit&quot; claim is present in a claim set, a processor <bcp14>SHOULD</bcp14> consider
+claims it does not understand to be acceptable if they are not present in the
+&quot;crit&quot; claim. That is, when a &quot;crit&quot; claim is present, any claims not listed
+may be assumed to be non-critical.</t>
+<t>Use of this claim is <bcp14>OPTIONAL</bcp14>. The Claim Key [add key number] is used to
 identify this claim.</t>
 </section>
 </section>
