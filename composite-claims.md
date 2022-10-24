@@ -13,7 +13,7 @@ updates = [ ]
 name = "Internet-Draft"
 value = "draft-lemmons-composite-claims-00"
 stream = "IETF"
-status = "informational"
+status = "standard"
 
 [[author]]
 initials = "C."

@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- name="GENERATOR" content="github.com/mmarkdown/mmark Mmark Markdown Processor - mmark.miek.nl" -->
-<rfc version="3" ipr="trust200902" docName="draft-lemmons-composite-claims-00" submissionType="IETF" category="info" xml:lang="en" xmlns:xi="http://www.w3.org/2001/XInclude" indexInclude="true" consensus="true">
+<rfc version="3" ipr="trust200902" docName="draft-lemmons-composite-claims-00" submissionType="IETF" category="std" xml:lang="en" xmlns:xi="http://www.w3.org/2001/XInclude" indexInclude="true" consensus="true">
 
 <front>
-<title abbrev="Composite Token Claims">Composite Token Claims</title><seriesInfo value="draft-lemmons-composite-claims-00" stream="IETF" status="informational" name="Internet-Draft"></seriesInfo>
+<title abbrev="Composite Token Claims">Composite Token Claims</title><seriesInfo value="draft-lemmons-composite-claims-00" stream="IETF" status="standard" name="Internet-Draft"></seriesInfo>
 <author initials="C." surname="Lemmons" fullname="Chris Lemmons"><organization>Comcast</organization><address><postal><street></street>
 </postal><email>chris_lemmons@comcast.com</email>
 </address></author><date/>

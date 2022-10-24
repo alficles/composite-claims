@@ -4,7 +4,7 @@
 
 TBD WG                                                        C. Lemmons
 Internet-Draft                                                   Comcast
-Intended status: Informational                           24 October 2022
+Intended status: Standards Track                         24 October 2022
 Expires: 27 April 2023
 
 
