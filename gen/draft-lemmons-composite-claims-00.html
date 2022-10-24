@@ -31,7 +31,7 @@ between sets of claims and provide for private claim values via encryption.
     setuptools 65.3.0
     six 1.16.0
 -->
-<link href="composite-claims.xml" rel="alternate" type="application/rfc+xml">
+<link href="draft-lemmons-composite-claims-00.xml" rel="alternate" type="application/rfc+xml">
 <link href="#copyright" rel="license">
 <style type="text/css">/*
 
@@ -1312,6 +1312,12 @@ between sets of claims and provide for private claim values via encryption.<a hr
 </li>
             </ul>
 </li>
+          <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.4">
+            <p id="section-toc.1-1.4.1"><a href="#section-4" class="xref">4</a>.  <a href="#name-normative-references" class="xref">Normative References</a></p>
+</li>
+          <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.5">
+            <p id="section-toc.1-1.5.1"><a href="#appendix-A" class="xref"></a><a href="#name-authors-address" class="xref">Author's Address</a></p>
+</li>
         </ul>
 </nav>
 </section>
@@ -1321,7 +1327,7 @@ between sets of claims and provide for private claim values via encryption.<a hr
       <h2 id="name-introduction">
 <a href="#section-1" class="section-number selfRef">1. </a><a href="#name-introduction" class="section-name selfRef">Introduction</a>
       </h2>
-<p id="section-1-1">Composition claims are claims defined for CBOR Web Tokens (CWTs) [RFC7519].
+<p id="section-1-1">Composition claims are claims defined for CBOR Web Tokens (CWTs) <span>[<a href="#RFC7519" class="xref">RFC7519</a>]</span>.
 These claims include logical operators "or", "nor", and "and" as well as a
 wrapper that encrypts the values, but not the keys, of some claims.<a href="#section-1-1" class="pilcrow">¶</a></p>
 <div id="notational-conventions">
@@ -1331,7 +1337,7 @@ wrapper that encrypts the values, but not the keys, of some claims.<a href="#sec
         </h3>
 <p id="section-1.1-1">The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD",
 "SHOULD NOT", "RECOMMENDED", "NOT RECOMMENDED", "MAY", and "OPTIONAL" in this
-document are to be interpreted as described in BCP 14 [RFC2119] [RFC8174] when,
+document are to be interpreted as described in BCP 14 <span>[<a href="#RFC2119" class="xref">RFC2119</a>]</span> <span>[<a href="#RFC8174" class="xref">RFC8174</a>]</span> when,
 and only when, they appear in all capitals, as shown here.<a href="#section-1.1-1" class="pilcrow">¶</a></p>
 </section>
 </div>
@@ -1434,8 +1440,9 @@ order to determine if a claim set is acceptable.<a href="#section-3.2-1" class="
 be read by a processor that does not possess the decryption key. The type of
 this claim is a map; the keys of the map are either claim keys (string,
 unsigned integer, or negative integer) or arrays of claim keys; the values of
-the map are COSE_Encrypt or COSE_Encrypt0 objects, as defined by [RFC8152]
-Section 5. The plaintext of the Enveloped Message is either a CBOR data item or
+the map are COSE_Encrypt or COSE_Encrypt0 objects, as defined by
+<span><a href="https://rfc-editor.org/rfc/rfc8152" class="relref">Section 5</a> of [<a href="#RFC8152" class="xref">RFC8152</a>]</span>. The plaintext of the Enveloped Message is either a CBOR
+data item or
 a CBOR array of data items.<a href="#section-3.2.1-1" class="pilcrow">¶</a></p>
 <p id="section-3.2.1-2">Each element of the map is interpreted as follows:
   - If the key is a claim key, the plaintext of the Enveloped Message in its
@@ -1490,6 +1497,44 @@ identify this claim.<a href="#section-3.2.2-7" class="pilcrow">¶</a></p>
 </div>
 </section>
 </div>
+</section>
+</div>
+<section id="section-4">
+      <h2 id="name-normative-references">
+<a href="#section-4" class="section-number selfRef">4. </a><a href="#name-normative-references" class="section-name selfRef">Normative References</a>
+      </h2>
+<dl class="references">
+<dt id="RFC2119">[RFC2119]</dt>
+      <dd>
+<span class="refAuthor">Bradner, S.</span>, <span class="refTitle">"Key words for use in RFCs to Indicate Requirement Levels"</span>, <span class="seriesInfo">BCP 14</span>, <span class="seriesInfo">RFC 2119</span>, <span class="seriesInfo">DOI 10.17487/RFC2119</span>, <time datetime="1997-03" class="refDate">March 1997</time>, <span>&lt;<a href="https://www.rfc-editor.org/info/rfc2119">https://www.rfc-editor.org/info/rfc2119</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="RFC7519">[RFC7519]</dt>
+      <dd>
+<span class="refAuthor">Jones, M.</span>, <span class="refAuthor">Bradley, J.</span>, and <span class="refAuthor">N. Sakimura</span>, <span class="refTitle">"JSON Web Token (JWT)"</span>, <span class="seriesInfo">RFC 7519</span>, <span class="seriesInfo">DOI 10.17487/RFC7519</span>, <time datetime="2015-05" class="refDate">May 2015</time>, <span>&lt;<a href="https://www.rfc-editor.org/info/rfc7519">https://www.rfc-editor.org/info/rfc7519</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="RFC8152">[RFC8152]</dt>
+      <dd>
+<span class="refAuthor">Schaad, J.</span>, <span class="refTitle">"CBOR Object Signing and Encryption (COSE)"</span>, <span class="seriesInfo">RFC 8152</span>, <span class="seriesInfo">DOI 10.17487/RFC8152</span>, <time datetime="2017-07" class="refDate">July 2017</time>, <span>&lt;<a href="https://www.rfc-editor.org/info/rfc8152">https://www.rfc-editor.org/info/rfc8152</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="RFC8174">[RFC8174]</dt>
+    <dd>
+<span class="refAuthor">Leiba, B.</span>, <span class="refTitle">"Ambiguity of Uppercase vs Lowercase in RFC 2119 Key Words"</span>, <span class="seriesInfo">BCP 14</span>, <span class="seriesInfo">RFC 8174</span>, <span class="seriesInfo">DOI 10.17487/RFC8174</span>, <time datetime="2017-05" class="refDate">May 2017</time>, <span>&lt;<a href="https://www.rfc-editor.org/info/rfc8174">https://www.rfc-editor.org/info/rfc8174</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+</dl>
+</section>
+<div id="authors-addresses">
+<section id="appendix-A">
+      <h2 id="name-authors-address">
+<a href="#name-authors-address" class="section-name selfRef">Author's Address</a>
+      </h2>
+<address class="vcard">
+        <div dir="auto" class="left"><span class="fn nameRole">Chris Lemmons</span></div>
+<div dir="auto" class="left"><span class="org">Comcast</span></div>
+<div class="email">
+<span>Email:</span>
+<a href="mailto:chris_lemmons@comcast.com" class="email">chris_lemmons@comcast.com</a>
+</div>
+</address>
 </section>
 </div>
 <script>const toc = document.getElementById("toc");

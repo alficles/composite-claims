@@ -34,7 +34,7 @@ between sets of claims and provide for private claim values via encryption.
 
 # Introduction
 
-Composition claims are claims defined for CBOR Web Tokens (CWTs) [RFC7519].
+Composition claims are claims defined for CBOR Web Tokens (CWTs) [@!RFC7519].
 These claims include logical operators "or", "nor", and "and" as well as a
 wrapper that encrypts the values, but not the keys, of some claims.
 
@@ -42,7 +42,7 @@ wrapper that encrypts the values, but not the keys, of some claims.
 
 The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD",
 "SHOULD NOT", "RECOMMENDED", "NOT RECOMMENDED", "MAY", and "OPTIONAL" in this
-document are to be interpreted as described in BCP 14 [RFC2119] [RFC8174] when,
+document are to be interpreted as described in BCP 14 [@!RFC2119] [@!RFC8174] when,
 and only when, they appear in all capitals, as shown here.
 
 # Terminology
@@ -122,8 +122,9 @@ The "env" (Enveloped) claim allows an issuer to make private claims that cannot
 be read by a processor that does not possess the decryption key. The type of
 this claim is a map; the keys of the map are either claim keys (string,
 unsigned integer, or negative integer) or arrays of claim keys; the values of
-the map are COSE_Encrypt or COSE_Encrypt0 objects, as defined by [RFC8152]
-Section 5. The plaintext of the Enveloped Message is either a CBOR data item or
+the map are COSE_Encrypt or COSE_Encrypt0 objects, as defined by
+[@!RFC8152, section 5]. The plaintext of the Enveloped Message is either a CBOR
+data item or
 a CBOR array of data items.
 
 Each element of the map is interpreted as follows:
@@ -181,3 +182,4 @@ assumed to be non-critical.
 Use of this claim is OPTIONAL. The Claim Key [add key number] is used to
 identify this claim.
 
+{backmatter}

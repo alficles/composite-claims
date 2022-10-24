@@ -20,14 +20,14 @@ between sets of claims and provide for private claim values via encryption.</t>
 <middle>
 
 <section anchor="introduction"><name>Introduction</name>
-<t>Composition claims are claims defined for CBOR Web Tokens (CWTs) [RFC7519].
+<t>Composition claims are claims defined for CBOR Web Tokens (CWTs) <xref target="RFC7519"></xref>.
 These claims include logical operators &quot;or&quot;, &quot;nor&quot;, and &quot;and&quot; as well as a
 wrapper that encrypts the values, but not the keys, of some claims.</t>
 
 <section anchor="notational-conventions"><name>Notational Conventions</name>
 <t>The key words &quot;MUST&quot;, &quot;MUST NOT&quot;, &quot;REQUIRED&quot;, &quot;SHALL&quot;, &quot;SHALL NOT&quot;, &quot;SHOULD&quot;,
 &quot;SHOULD NOT&quot;, &quot;RECOMMENDED&quot;, &quot;NOT RECOMMENDED&quot;, &quot;MAY&quot;, and &quot;OPTIONAL&quot; in this
-document are to be interpreted as described in BCP 14 [RFC2119] [RFC8174] when,
+document are to be interpreted as described in BCP 14 <xref target="RFC2119"></xref> <xref target="RFC8174"></xref> when,
 and only when, they appear in all capitals, as shown here.</t>
 </section>
 </section>
@@ -99,8 +99,9 @@ order to determine if a claim set is acceptable.</t>
 be read by a processor that does not possess the decryption key. The type of
 this claim is a map; the keys of the map are either claim keys (string,
 unsigned integer, or negative integer) or arrays of claim keys; the values of
-the map are COSE_Encrypt or COSE_Encrypt0 objects, as defined by [RFC8152]
-Section 5. The plaintext of the Enveloped Message is either a CBOR data item or
+the map are COSE_Encrypt or COSE_Encrypt0 objects, as defined by
+<xref target="RFC8152" sectionFormat="of" relative="#" section="5"></xref>. The plaintext of the Enveloped Message is either a CBOR
+data item or
 a CBOR array of data items.</t>
 <t>Each element of the map is interpreted as follows:
   - If the key is a claim key, the plaintext of the Enveloped Message in its
@@ -152,5 +153,15 @@ identify this claim.</t>
 </section>
 
 </middle>
+
+<back>
+<references><name>Normative References</name>
+<xi:include href="https://xml2rfc.ietf.org/public/rfc/bibxml/reference.RFC.2119.xml"/>
+<xi:include href="https://xml2rfc.ietf.org/public/rfc/bibxml/reference.RFC.7519.xml"/>
+<xi:include href="https://xml2rfc.ietf.org/public/rfc/bibxml/reference.RFC.8152.xml"/>
+<xi:include href="https://xml2rfc.ietf.org/public/rfc/bibxml/reference.RFC.8174.xml"/>
+</references>
+
+</back>
 
 </rfc>

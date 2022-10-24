@@ -1,13 +1,16 @@
-ALL: gen/composite-claims.txt gen/composite-claims.html
+VERSION=00
+NAME=draft-lemmons-composite-claims-$(VERSION)
+
+ALL: gen/$(NAME).txt gen/$(NAME).html
 
 clean:
-	rm gen/composite-claims.xml gen/composite-claims.txt gen/composite-claims.html
+	rm gen/*.xml gen/*.txt gen/*.html
 
-gen/composite-claims.xml: composite-claims.md
-	mmark composite-claims.md > gen/composite-claims.xml
+gen/$(NAME).xml: composite-claims.md
+	mmark composite-claims.md > gen/$(NAME).xml
 
-gen/composite-claims.txt: gen/composite-claims.xml
-	cd gen; xml2rfc --v3 --text composite-claims.xml
+gen/$(NAME).txt: gen/$(NAME).xml
+	cd gen; xml2rfc --v3 --text $(NAME).xml
 
-gen/composite-claims.html: gen/composite-claims.xml
-	cd gen; xml2rfc --v3 --html composite-claims.xml
+gen/$(NAME).html: gen/$(NAME).xml
+	cd gen; xml2rfc --v3 --html $(NAME).xml

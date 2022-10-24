@@ -71,6 +71,8 @@ Table of Contents
      3.2.  Enveloped Claims  . . . . . . . . . . . . . . . . . . . .   4
        3.2.1.  env (Enveloped) Claim . . . . . . . . . . . . . . . .   4
        3.2.2.  crit (Critical) Claim . . . . . . . . . . . . . . . .   5
+   4.  Normative References  . . . . . . . . . . . . . . . . . . . .   5
+   Author's Address  . . . . . . . . . . . . . . . . . . . . . . . .   6
 
 1.  Introduction
 
@@ -103,8 +105,6 @@ Table of Contents
    sets of claims, so it instead refers to accepting or rejecting claim
    sets.  If the primary claim set is unacceptable, the CWT is
    unacceptable and MUST be rejected.
-
-
 
 
 
@@ -188,7 +188,7 @@ Internet-Draft           Composite Token Claims             October 2022
    decryption key.  The type of this claim is a map; the keys of the map
    are either claim keys (string, unsigned integer, or negative integer)
    or arrays of claim keys; the values of the map are COSE_Encrypt or
-   COSE_Encrypt0 objects, as defined by [RFC8152] Section 5.  The
+   COSE_Encrypt0 objects, as defined by Section 5 of [RFC8152].  The
    plaintext of the Enveloped Message is either a CBOR data item or a
    CBOR array of data items.
 
@@ -260,21 +260,77 @@ Internet-Draft           Composite Token Claims             October 2022
    Use of this claim is OPTIONAL.  The Claim Key [add key number] is
    used to identify this claim.
 
+4.  Normative References
 
+   [RFC2119]  Bradner, S., "Key words for use in RFCs to Indicate
+              Requirement Levels", BCP 14, RFC 2119,
+              DOI 10.17487/RFC2119, March 1997,
+              <https://www.rfc-editor.org/info/rfc2119>.
 
+   [RFC7519]  Jones, M., Bradley, J., and N. Sakimura, "JSON Web Token
+              (JWT)", RFC 7519, DOI 10.17487/RFC7519, May 2015,
+              <https://www.rfc-editor.org/info/rfc7519>.
 
-
-
-
-
-
-
-
-
-
-
-
+   [RFC8152]  Schaad, J., "CBOR Object Signing and Encryption (COSE)",
+              RFC 8152, DOI 10.17487/RFC8152, July 2017,
+              <https://www.rfc-editor.org/info/rfc8152>.
 
 
 
 Lemmons                   Expires 27 April 2023                 [Page 5]
+
+Internet-Draft           Composite Token Claims             October 2022
+
+
+   [RFC8174]  Leiba, B., "Ambiguity of Uppercase vs Lowercase in RFC
+              2119 Key Words", BCP 14, RFC 8174, DOI 10.17487/RFC8174,
+              May 2017, <https://www.rfc-editor.org/info/rfc8174>.
+
+Author's Address
+
+   Chris Lemmons
+   Comcast
+   Email: chris_lemmons@comcast.com
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Lemmons                   Expires 27 April 2023                 [Page 6]
