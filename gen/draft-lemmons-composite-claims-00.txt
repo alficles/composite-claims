@@ -70,7 +70,9 @@ Table of Contents
      3.2.  Enveloped Claims  . . . . . . . . . . . . . . . . . . . .   4
        3.2.1.  env (Enveloped) Claim . . . . . . . . . . . . . . . .   4
        3.2.2.  crit (Critical) Claim . . . . . . . . . . . . . . . .   5
-   4.  Normative References  . . . . . . . . . . . . . . . . . . . .   5
+   4.  Security Considerations . . . . . . . . . . . . . . . . . . .   5
+   5.  IANA Considerations . . . . . . . . . . . . . . . . . . . . .   6
+   6.  Normative References  . . . . . . . . . . . . . . . . . . . .   6
    Author's Address  . . . . . . . . . . . . . . . . . . . . . . . .   6
 
 1.  Introduction
@@ -101,8 +103,6 @@ Table of Contents
    Composition claims identify claim sets and define how the
    acceptability of the claim sets affects the acceptability of the
    composition claim.
-
-
 
 
 
@@ -267,12 +267,12 @@ Internet-Draft           Composite Token Claims             October 2022
    Use of this claim is OPTIONAL.  The Claim Key [add key number] is
    used to identify this claim.
 
-4.  Normative References
+4.  Security Considerations
 
-   [RFC2119]  Bradner, S., "Key words for use in RFCs to Indicate
-              Requirement Levels", BCP 14, RFC 2119,
-              DOI 10.17487/RFC2119, March 1997,
-              <https://www.rfc-editor.org/info/rfc2119>.
+   All security considerations relevant to CWTs in general will apply to
+   CWTs that use composition claims.
+
+
 
 
 
@@ -281,6 +281,25 @@ Lemmons                   Expires 27 April 2023                 [Page 5]
 
 Internet-Draft           Composite Token Claims             October 2022
 
+
+   Additionally, processors of CWTs with composition claims will need to
+   be aware of the possibility of receiving highly nested tokens.
+   Excessive nesting can lead to overflows or other processing errors.
+
+   The security of the "env" claim is subject to all the considerations
+   detailed for COSE objects in Section 12 of [RFC9052].
+
+5.  IANA Considerations
+
+   [When claims keys have been identified and selected, this section
+   will ask IANA to register those keys.]
+
+6.  Normative References
+
+   [RFC2119]  Bradner, S., "Key words for use in RFCs to Indicate
+              Requirement Levels", BCP 14, RFC 2119,
+              DOI 10.17487/RFC2119, March 1997,
+              <https://www.rfc-editor.org/info/rfc2119>.
 
    [RFC7519]  Jones, M., Bradley, J., and N. Sakimura, "JSON Web Token
               (JWT)", RFC 7519, DOI 10.17487/RFC7519, May 2015,
@@ -300,25 +319,6 @@ Author's Address
    Chris Lemmons
    Comcast
    Email: chris_lemmons@comcast.com
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 

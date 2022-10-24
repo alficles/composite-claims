@@ -185,4 +185,21 @@ assumed to be non-critical.
 Use of this claim is OPTIONAL. The Claim Key [add key number] is used to
 identify this claim.
 
+# Security Considerations
+
+All security considerations relevant to CWTs in general will apply to CWTs that
+use composition claims.
+
+Additionally, processors of CWTs with composition claims will need to be aware
+of the possibility of receiving highly nested tokens. Excessive nesting can
+lead to overflows or other processing errors.
+
+The security of the "env" claim is subject to all the considerations detailed
+for COSE objects in [@!RFC9052, section 12].
+
+# IANA Considerations
+
+[When claims keys have been identified and selected, this section will ask IANA
+to register those keys.]
+
 {backmatter}
