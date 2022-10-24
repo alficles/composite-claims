@@ -123,9 +123,8 @@ be read by a processor that does not possess the decryption key. The type of
 this claim is a map; the keys of the map are either claim keys (string,
 unsigned integer, or negative integer) or arrays of claim keys; the values of
 the map are COSE_Encrypt or COSE_Encrypt0 objects, as defined by
-[@!RFC8152, section 5]. The plaintext of the Enveloped Message is either a CBOR
-data item or
-a CBOR array of data items.
+[@!RFC9052, section 5]. The plaintext of the Enveloped Message is either a CBOR
+data item or a CBOR array of data items.
 
 Each element of the map is interpreted as follows:
   - If the key is a claim key, the plaintext of the Enveloped Message in its
