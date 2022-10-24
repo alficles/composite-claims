@@ -106,15 +106,18 @@ unsigned integer, or negative integer) or arrays of claim keys; the values of
 the map are COSE_Encrypt or COSE_Encrypt0 objects, as defined by
 <xref target="RFC9052" sectionFormat="of" relative="#" section="5"></xref>. The plaintext of the Enveloped Message is either a CBOR
 data item or a CBOR array of data items.</t>
-<t>Each element of the map is interpreted as follows:
-  - If the key is a claim key, the plaintext of the Enveloped Message in its
-    value is a CBOR data item that is appropriate as a value for that claim.
-  - If the key is an array of claim keys, the plaintext of the Enveloped
-    Message in its value is an array with the same cardinality as the array of
-    claim keys. Each member of the array in the plaintext corresponds with the
-    member in the array in the key with the same index. The members of the
-    array in the plaintext are CBOR data items that are appropriate as values
-    for the corresponding claim.</t>
+<t>Each element of the map is interpreted as follows:</t>
+
+<ul spacing="compact">
+<li>If the key is a claim key, the plaintext of the Enveloped Message in its
+value is a CBOR data item that is appropriate as a value for that claim.</li>
+<li>If the key is an array of claim keys, the plaintext of the Enveloped
+Message in its value is an array with the same cardinality as the array of
+claim keys. Each member of the array in the plaintext corresponds with the
+member in the array in the key with the same index. The members of the
+array in the plaintext are CBOR data items that are appropriate as values
+for the corresponding claim.</li>
+</ul>
 <t>For each claim described in the &quot;env&quot; claim that the processor can decrypt,
 the claim MAY be processed exactly as though it were a sibling claim to the
 &quot;env&quot; claim, including the limitation that a map of claims is invalid if it

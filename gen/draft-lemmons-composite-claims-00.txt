@@ -198,15 +198,18 @@ Internet-Draft           Composite Token Claims             October 2022
    plaintext of the Enveloped Message is either a CBOR data item or a
    CBOR array of data items.
 
-   Each element of the map is interpreted as follows: - If the key is a
-   claim key, the plaintext of the Enveloped Message in its value is a
-   CBOR data item that is appropriate as a value for that claim.  - If
-   the key is an array of claim keys, the plaintext of the Enveloped
-   Message in its value is an array with the same cardinality as the
-   array of claim keys.  Each member of the array in the plaintext
-   corresponds with the member in the array in the key with the same
-   index.  The members of the array in the plaintext are CBOR data items
-   that are appropriate as values for the corresponding claim.
+   Each element of the map is interpreted as follows:
+
+   *  If the key is a claim key, the plaintext of the Enveloped Message
+      in its value is a CBOR data item that is appropriate as a value
+      for that claim.
+   *  If the key is an array of claim keys, the plaintext of the
+      Enveloped Message in its value is an array with the same
+      cardinality as the array of claim keys.  Each member of the array
+      in the plaintext corresponds with the member in the array in the
+      key with the same index.  The members of the array in the
+      plaintext are CBOR data items that are appropriate as values for
+      the corresponding claim.
 
    For each claim described in the "env" claim that the processor can
    decrypt, the claim MAY be processed exactly as though it were a
@@ -215,9 +218,6 @@ Internet-Draft           Composite Token Claims             October 2022
    invalid claim set MUST be rejected.  A claim set that contains
    duplicate claims MUST be rejected, even if the duplicates are not
    decrypted.
-
-
-
 
 
 

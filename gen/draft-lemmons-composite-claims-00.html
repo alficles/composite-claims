@@ -1445,25 +1445,29 @@ unsigned integer, or negative integer) or arrays of claim keys; the values of
 the map are COSE_Encrypt or COSE_Encrypt0 objects, as defined by
 <span><a href="https://rfc-editor.org/rfc/rfc9052" class="relref">Section 5</a> of [<a href="#RFC9052" class="xref">RFC9052</a>]</span>. The plaintext of the Enveloped Message is either a CBOR
 data item or a CBOR array of data items.<a href="#section-3.2.1-1" class="pilcrow">¶</a></p>
-<p id="section-3.2.1-2">Each element of the map is interpreted as follows:
-  - If the key is a claim key, the plaintext of the Enveloped Message in its
-    value is a CBOR data item that is appropriate as a value for that claim.
-  - If the key is an array of claim keys, the plaintext of the Enveloped
-    Message in its value is an array with the same cardinality as the array of
-    claim keys. Each member of the array in the plaintext corresponds with the
-    member in the array in the key with the same index. The members of the
-    array in the plaintext are CBOR data items that are appropriate as values
-    for the corresponding claim.<a href="#section-3.2.1-2" class="pilcrow">¶</a></p>
-<p id="section-3.2.1-3">For each claim described in the "env" claim that the processor can decrypt,
+<p id="section-3.2.1-2">Each element of the map is interpreted as follows:<a href="#section-3.2.1-2" class="pilcrow">¶</a></p>
+<ul class="compact">
+<li class="compact" id="section-3.2.1-3.1">If the key is a claim key, the plaintext of the Enveloped Message in its
+value is a CBOR data item that is appropriate as a value for that claim.<a href="#section-3.2.1-3.1" class="pilcrow">¶</a>
+</li>
+            <li class="compact" id="section-3.2.1-3.2">If the key is an array of claim keys, the plaintext of the Enveloped
+Message in its value is an array with the same cardinality as the array of
+claim keys. Each member of the array in the plaintext corresponds with the
+member in the array in the key with the same index. The members of the
+array in the plaintext are CBOR data items that are appropriate as values
+for the corresponding claim.<a href="#section-3.2.1-3.2" class="pilcrow">¶</a>
+</li>
+          </ul>
+<p id="section-3.2.1-4">For each claim described in the "env" claim that the processor can decrypt,
 the claim MAY be processed exactly as though it were a sibling claim to the
 "env" claim, including the limitation that a map of claims is invalid if it
 contains a claim more than once. An invalid claim set MUST be rejected. A claim
 set that contains duplicate claims MUST be rejected, even if the duplicates are
-not decrypted.<a href="#section-3.2.1-3" class="pilcrow">¶</a></p>
-<p id="section-3.2.1-4">Since claims are optionally decrypted and added as sibling claims, issuers can
-ensure that this occurs by adding them to the "crit" claim.<a href="#section-3.2.1-4" class="pilcrow">¶</a></p>
-<p id="section-3.2.1-5">Use of this claim is OPTIONAL. The Claim Key [add key number] is used to
-identify this claim.<a href="#section-3.2.1-5" class="pilcrow">¶</a></p>
+not decrypted.<a href="#section-3.2.1-4" class="pilcrow">¶</a></p>
+<p id="section-3.2.1-5">Since claims are optionally decrypted and added as sibling claims, issuers can
+ensure that this occurs by adding them to the "crit" claim.<a href="#section-3.2.1-5" class="pilcrow">¶</a></p>
+<p id="section-3.2.1-6">Use of this claim is OPTIONAL. The Claim Key [add key number] is used to
+identify this claim.<a href="#section-3.2.1-6" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="crit-critical-claim">

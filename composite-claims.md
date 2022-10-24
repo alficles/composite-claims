@@ -131,6 +131,7 @@ the map are COSE_Encrypt or COSE_Encrypt0 objects, as defined by
 data item or a CBOR array of data items.
 
 Each element of the map is interpreted as follows:
+
   - If the key is a claim key, the plaintext of the Enveloped Message in its
     value is a CBOR data item that is appropriate as a value for that claim.
   - If the key is an array of claim keys, the plaintext of the Enveloped
