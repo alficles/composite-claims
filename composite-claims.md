@@ -38,16 +38,20 @@ Composition claims are claims defined for CBOR Web Tokens (CWTs) [@!RFC7519].
 These claims include logical operators "or", "nor", and "and" as well as a
 wrapper that encrypts the values, but not the keys, of some claims.
 
-## Notational Conventions
+# Terminology
 
 The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD",
 "SHOULD NOT", "RECOMMENDED", "NOT RECOMMENDED", "MAY", and "OPTIONAL" in this
 document are to be interpreted as described in BCP 14 [@!RFC2119] [@!RFC8174] when,
 and only when, they appear in all capitals, as shown here.
 
-# Terminology
+This document reuses terminology from CWT [@!RFC7519] and COSE [@!RFC9052].
 
-[Identify terminology used and cite references here.]
+This term is defined by this specification:
+
+Composition Claim
+: A composition claim is a CWT claim that contains, as part of its value, one
+or more CWT claim sets.
 
 # Claims
 

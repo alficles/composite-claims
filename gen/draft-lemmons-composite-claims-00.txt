@@ -61,7 +61,6 @@ Internet-Draft           Composite Token Claims             October 2022
 Table of Contents
 
    1.  Introduction  . . . . . . . . . . . . . . . . . . . . . . . .   2
-     1.1.  Notational Conventions  . . . . . . . . . . . . . . . . .   2
    2.  Terminology . . . . . . . . . . . . . . . . . . . . . . . . .   2
    3.  Claims  . . . . . . . . . . . . . . . . . . . . . . . . . . .   2
      3.1.  Logical Claims  . . . . . . . . . . . . . . . . . . . . .   3
@@ -81,7 +80,7 @@ Table of Contents
    "and" as well as a wrapper that encrypts the values, but not the
    keys, of some claims.
 
-1.1.  Notational Conventions
+2.  Terminology
 
    The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT",
    "SHOULD", "SHOULD NOT", "RECOMMENDED", "NOT RECOMMENDED", "MAY", and
@@ -89,9 +88,13 @@ Table of Contents
    14 [RFC2119] [RFC8174] when, and only when, they appear in all
    capitals, as shown here.
 
-2.  Terminology
+   This document reuses terminology from CWT [RFC7519] and COSE
+   [RFC9052].
 
-   [Identify terminology used and cite references here.]
+   This term is defined by this specification:
+
+   Composition Claim  A composition claim is a CWT claim that contains,
+      as part of its value, one or more CWT claim sets.
 
 3.  Claims
 
@@ -99,12 +102,9 @@ Table of Contents
    acceptability of the claim sets affects the acceptability of the
    composition claim.
 
-   In CWTs without composition claims, there is exactly one set of
-   claims, so the acceptability of the claim set decides the
-   acceptability of the CWT.  However, this document defines multiple
-   sets of claims, so it instead refers to accepting or rejecting claim
-   sets.  If the primary claim set is unacceptable, the CWT is
-   unacceptable and MUST be rejected.
+
+
+
 
 
 
@@ -113,6 +113,13 @@ Lemmons                   Expires 27 April 2023                 [Page 2]
 
 Internet-Draft           Composite Token Claims             October 2022
 
+
+   In CWTs without composition claims, there is exactly one set of
+   claims, so the acceptability of the claim set decides the
+   acceptability of the CWT.  However, this document defines multiple
+   sets of claims, so it instead refers to accepting or rejecting claim
+   sets.  If the primary claim set is unacceptable, the CWT is
+   unacceptable and MUST be rejected.
 
    Composition claims can be nested to an arbitrary level of depth.
    Implementations MAY limit the depth of composition nesting by
@@ -156,19 +163,18 @@ Internet-Draft           Composite Token Claims             October 2022
    with all other relevant claims, result in the claim set being
    rejected, the claim set containing the "and" claim MUST be rejected.
 
-   The "and" claim is often unnecessary because a given claim set is
-   only accepted when all its claims are acceptable.  However, CBOR maps
-   cannot have duplicate keys, so claims cannot be repeated more than
-   once.  The "and" claim is useful for claims that may be claimed
-   multiple times, including the "or" and "nor" claims.
-
-
 
 
 Lemmons                   Expires 27 April 2023                 [Page 3]
 
 Internet-Draft           Composite Token Claims             October 2022
 
+
+   The "and" claim is often unnecessary because a given claim set is
+   only accepted when all its claims are acceptable.  However, CBOR maps
+   cannot have duplicate keys, so claims cannot be repeated more than
+   once.  The "and" claim is useful for claims that may be claimed
+   multiple times, including the "or" and "nor" claims.
 
    Use of this claim is OPTIONAL.  The Claim Key [add key number] is
    used to identify this claim.
@@ -210,12 +216,6 @@ Internet-Draft           Composite Token Claims             October 2022
    duplicate claims MUST be rejected, even if the duplicates are not
    decrypted.
 
-   Since claims are optionally decrypted and added as sibling claims,
-   issuers can ensure that this occurs by adding them to the "crit"
-   claim.
-
-   Use of this claim is OPTIONAL.  The Claim Key [add key number] is
-   used to identify this claim.
 
 
 
@@ -225,6 +225,13 @@ Lemmons                   Expires 27 April 2023                 [Page 4]
 
 Internet-Draft           Composite Token Claims             October 2022
 
+
+   Since claims are optionally decrypted and added as sibling claims,
+   issuers can ensure that this occurs by adding them to the "crit"
+   claim.
+
+   Use of this claim is OPTIONAL.  The Claim Key [add key number] is
+   used to identify this claim.
 
 3.2.2.  crit (Critical) Claim
 
@@ -267,13 +274,6 @@ Internet-Draft           Composite Token Claims             October 2022
               DOI 10.17487/RFC2119, March 1997,
               <https://www.rfc-editor.org/info/rfc2119>.
 
-   [RFC7519]  Jones, M., Bradley, J., and N. Sakimura, "JSON Web Token
-              (JWT)", RFC 7519, DOI 10.17487/RFC7519, May 2015,
-              <https://www.rfc-editor.org/info/rfc7519>.
-
-   [RFC8174]  Leiba, B., "Ambiguity of Uppercase vs Lowercase in RFC
-              2119 Key Words", BCP 14, RFC 8174, DOI 10.17487/RFC8174,
-              May 2017, <https://www.rfc-editor.org/info/rfc8174>.
 
 
 
@@ -281,6 +281,14 @@ Lemmons                   Expires 27 April 2023                 [Page 5]
 
 Internet-Draft           Composite Token Claims             October 2022
 
+
+   [RFC7519]  Jones, M., Bradley, J., and N. Sakimura, "JSON Web Token
+              (JWT)", RFC 7519, DOI 10.17487/RFC7519, May 2015,
+              <https://www.rfc-editor.org/info/rfc7519>.
+
+   [RFC8174]  Leiba, B., "Ambiguity of Uppercase vs Lowercase in RFC
+              2119 Key Words", BCP 14, RFC 8174, DOI 10.17487/RFC8174,
+              May 2017, <https://www.rfc-editor.org/info/rfc8174>.
 
    [RFC9052]  Schaad, J., "CBOR Object Signing and Encryption (COSE):
               Structures and Process", STD 96, RFC 9052,
@@ -292,14 +300,6 @@ Author's Address
    Chris Lemmons
    Comcast
    Email: chris_lemmons@comcast.com
-
-
-
-
-
-
-
-
 
 
 
