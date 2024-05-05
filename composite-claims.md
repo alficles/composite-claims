@@ -11,7 +11,7 @@ updates = [ ]
 
 [seriesInfo]
 name = "Internet-Draft"
-value = "draft-lemmons-composite-claims-00"
+value = "draft-lemmons-composite-claims-01"
 stream = "IETF"
 status = "standard"
 
@@ -135,18 +135,22 @@ Each element of the map is interpreted as follows:
   - If the key is a claim key, the plaintext of the Enveloped Message in its
     value is a CBOR data item that is appropriate as a value for that claim.
   - If the key is an array of claim keys, the plaintext of the Enveloped
-    Message in its value is an array with the same cardinality as the array of
-    claim keys. Each member of the array in the plaintext corresponds with the
-    member in the array in the key with the same index. The members of the
-    array in the plaintext are CBOR data items that are appropriate as values
-    for the corresponding claim.
+    Message in its value is an array with the cardinality equal to or larger
+    than the array of claim keys. Each member of the array in the plaintext
+    corresponds with the member in the array in the key with the same index.
+    Elements of the value array with indexes that do not correspond with
+    elements of the key array MUST be ignored. The members of the array in the
+    plaintext are CBOR data items that are appropriate as values for the
+    corresponding claim.
 
-For each claim described in the "env" claim that the processor can decrypt,
-the claim **MAY** be processed exactly as though it were a sibling claim to the
-"env" claim, including the limitation that a map of claims is invalid if it
-contains a claim more than once. An invalid claim set **MUST** be rejected. A
-claim set that contains duplicate claims **MUST** be rejected, even if the
-duplicates are not decrypted.
+These claims described in the "env" claim **MAY** be processed exactly as
+though the "env" claim were replaced with the decrypted claims, including the
+limitation that a map of claims is invalid if it contains a claim more than
+once. The "env" claim is removed from the map before looking for duplicates, so
+an "env" claim that contains an "env" claim may potentially be accepted. An
+invalid claim set **MUST** be rejected. A claim set that contains
+duplicate claims **MUST** be rejected, even if the duplicates are not
+decrypted.
 
 Since claims are optionally decrypted and added as sibling claims, issuers can
 ensure that this occurs by adding them to the "crit" claim.
@@ -196,7 +200,17 @@ of the possibility of receiving highly nested tokens. Excessive nesting can
 lead to overflows or other processing errors.
 
 The security of the "env" claim is subject to all the considerations detailed
-for COSE objects in [@!RFC9052, section 12].
+for COSE objects in [@!RFC9052, section 12]. Particular attention is required
+to length attacks. If the length of the Enveloped Claims is revealing as to its
+contents, as it most often will be in this context, issuers MUST pad the
+content appropriately in order to maintain the secrecy of its contents. "env"
+claims permit additional elements to be added after arrays of claim keys that
+can be used for padding when it is required.
+
+Additionally, since the "env" claim only encrypts the contents of the claim and
+not its key, it discloses the presence of a given claim. When this is
+undesirable, another composite claim like "and", "or", or even potentially
+"env" can be be used to mask the presence of the claim within.
 
 # IANA Considerations
 
