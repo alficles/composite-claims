@@ -1,5 +1,5 @@
-VERSION=01
-NAME=draft-lemmons-composite-claims-$(VERSION)
+VERSION=02
+NAME=draft-lemmons-cose-composite-claims-$(VERSION)
 
 ALL: gen/$(NAME).txt gen/$(NAME).html
 

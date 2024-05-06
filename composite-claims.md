@@ -3,7 +3,7 @@ title = "Composite Token Claims"
 abbrev = "Composite Token Claims"
 ipr= "trust200902"
 area = "Security"
-workgroup = "TBD WG"
+workgroup = "COSE WG"
 submissiontype = "IETF"
 keyword = [""]
 updates = [ ]
@@ -11,7 +11,7 @@ updates = [ ]
 
 [seriesInfo]
 name = "Internet-Draft"
-value = "draft-lemmons-composite-claims-01"
+value = "draft-lemmons-cose-composite-claims-02"
 stream = "IETF"
 status = "standard"
 
@@ -75,6 +75,9 @@ one or more sets of claims in a logical relation. The type of these claims is
 array and the elements of the array are maps that are themselves sets of
 claims.
 
+For the following CDDL, `cwt-claims` is a map of claims as defined in
+[@!RFC8392]. It is described informatively in [draft-ietf-rats-eat] Appendix D.
+
 ### or (Or) Claim
 
 The "or" (Or) claim identifies one or more sets of claims of which at least one
@@ -84,6 +87,14 @@ claim set containing the "or" claim **MUST** be rejected.
 
 Use of this claim is **OPTIONAL**. The Claim Key [add key number] is used to
 identify this claim.
+
+The "or" (OR) claim is described by the following CDDL:
+
+```cddl
+$$Claims-Set-Claims //= ( or-claim-label => or-claim-value )
+or-claim-label = TBD
+or-claim-value = [ + Claims-Set ]
+```
 
 ### nor (Not Or) Claim
 
@@ -96,6 +107,14 @@ This is the logical negation of the "or" claim.
 
 Use of this claim is **OPTIONAL**. The Claim Key [add key number] is used to
 identify this claim.
+
+The "nor" (NOR) claim is described by the following CDDL:
+
+```cddl
+$$Claims-Set-Claims //= ( nor-claim-label => nor-claim-value )
+nor-claim-label = TBD
+nor-claim-value = [ + Claims-Set ]
+```
 
 ### and (And) Claim
 
@@ -112,6 +131,74 @@ claims.
 
 Use of this claim is **OPTIONAL**. The Claim Key [add key number] is used to
 identify this claim.
+
+The "and" (AND) claim is described by the following CDDL:
+
+```cddl
+$$Claims-Set-Claims //= ( and-claim-label => and-claim-value )
+and-claim-label = TBD
+and-claim-value = [ + Claims-Set ]
+```
+
+### Examples
+
+These logical claims can be used to describe to claim more complex
+relationships between claims. For example, the following claim set describes a
+token with multiple subject claims. This token describes a situation where either
+of the two subjects must be true, but the issuer is not disclosing which one
+must be true or even whether the two subjects are genuinely different.
+
+```
+{
+  /or/ TBD: [
+    { /sub/ 2: "george@example.net" },
+    { /sub/ 2: "harriet@example.net" }
+  ]
+}
+```
+
+A relying party that receives this token does not know if the bearer is George
+or Harriet, but it knows that the bearer is one of them.
+
+The "nor" claim is useful both as a logical negation, even when only one claim is present. For example, consider the following claim set:
+
+```
+{
+  /nor/ TBD: [
+    { /aud/ 3: "https://example.com" }
+  ]
+}
+```
+
+This token is intended for any audience except "example.com".
+
+And if a truly complex relationship is required, the "and" claim can be used to combine multiple claims. For example, consider the following claim set:
+
+```
+{
+  /and/ TBD: [
+    {
+      /or/ TBD: [
+        { /sub/ 2: "george@example.net" },
+        { /sub/ 2: "harriet@example.net" }
+      ]
+    },
+    {
+      /or/ TBD: [
+        { /aud/ 3: "https://example.com" },
+        { /aud/ 3: "https://example.net" }
+      ]
+    }
+  ]
+}
+```
+
+This admittedly contrived example describes a token that is valid for either
+George or Harriet and is intended for either https://example.com or
+https://example.net. It is a bit contrived because the "aud" claim already
+describes a list of acceptable audiences. The use of the "and" claim is
+required in order to effectively repeat the "or" claim, because a single claim
+set cannot contain the same claim twice.
 
 ## Enveloped Claims
 
@@ -153,7 +240,10 @@ duplicate claims **MUST** be rejected, even if the duplicates are not
 decrypted.
 
 Since claims are optionally decrypted and added as sibling claims, issuers can
-ensure that this occurs by adding them to the "crit" claim.
+ensure that this occurs by adding them to the "crit" claim. In the absence of a
+"crit" claim, the relying party **MAY** choose not to decrypt the claims.
+Indeed, a relying party may not even have the decryption key for claims that
+are not relevant to its processing.
 
 Use of this claim is **OPTIONAL**. The Claim Key [add key number] is used to
 identify this claim.
@@ -190,6 +280,76 @@ may be assumed to be non-critical.
 Use of this claim is **OPTIONAL**. The Claim Key [add key number] is used to
 identify this claim.
 
+### Example
+
+Consider a very simple token that might be passed like this:
+
+```
+{
+  /iss/ 1: "https://example.com",
+  /sub/ 2: "george@example.net",
+  /aud/ 3: "https://example.com"
+}
+```
+The identity of George is present and clear in the token. Some parties
+receiving this token might need to know that George is the subject. However,
+some may not. For example:
+
+- An intermediary proxy that only needs to know that the issuer is
+  https://example.com and the audience is https://example.com.
+- An origin behind the proxy that needs to know that George is the subject as
+  well, so that it can customize its response.
+
+The intermediary is a relying party but does not need to know George's
+identity. The origin, however does. A token that permits this might look like
+this:
+
+```
+{
+  /iss/ 1: "https://example.com",
+  /aud/ 3: "https://example.com",
+  /env/ TBD: {
+    [/sub/ 2]: [
+      h'<cose-protected-header>',
+      h'<cose-unprotected-header>',
+      h'<cose-ciphertext>'
+    ]
+  }
+}
+```
+
+And the contents of the ciphertext might be:
+
+```
+["george@example.net", h'b73814740f877e8aa691fdab6cda']
+```
+
+The intermediary can process the token without decrypting the "env" claim. The
+origin can decrypt the "env" claim and learn that George is the subject. The
+issuer used additional padding in the plaintext in order to avoid disclosing
+the length of the subject value.
+
+### Other methods of selectively disclosing claims
+
+The "env" claim is only suitable for protecting claims under the following circumstances:
+
+- The issuer is the one that decides which claims are disclosed and to whom.
+- The issuer can reasonably pad the plaintext to avoid revealing the length of
+  the claim. This requires the issuer to know the maximum length of claims that might be present.
+- The bearer does not need to control which claims are disclosed.
+- The claim labels are not sensitive information.
+
+If these are not the case, the "env" claim is not suitable. If the bearer is
+the one that controls selective disclosure,
+[draft-ietf-oauth-selective-disclosure-08] may be more appropriate. SD-JWTs
+also protect the claim labels, which the "env" claim does not.
+
+When the claims for different audiences are significantly different, multiple
+encrypted tokens can be used. This is likely to lead to larger sets of tokens
+in general, but is a very flexible approach. This protects the entire contents
+of each token from all parties that do not possess the decryption key for that
+token.
+
 # Security Considerations
 
 All security considerations relevant to CWTs in general will apply to CWTs that
@@ -214,7 +374,42 @@ undesirable, another composite claim like "and", "or", or even potentially
 
 # IANA Considerations
 
-[When claims keys have been identified and selected, this section will ask IANA
-to register those keys.]
+This specification requests that IANA register the following claim keys in the
+"CBOR Web Token (CWT) Claims" registry established by [@!RFC8392]:
+
+Claim Name: or
+Claim Description: Logical OR
+JWT Claim Name: N/A
+Claim Key: TBD (greater than 285)
+Claim Value Type(s): array
+Change Controller: IETF
+
+Claim Name: nor
+Claim Description: Logical NOR
+JWT Claim Name: N/A
+Claim Key: TBD (greater than 285)
+Claim Value Type(s): array
+Change Controller: IETF
+
+Claim Name: and
+Claim Description: Logical AND
+JWT Claim Name: N/A
+Claim Key: TBD (greater than 285)
+Claim Value Type(s): array
+Change Controller: IETF
+
+Claim Name: enc
+Claim Description: Logical AND
+JWT Claim Name: N/A
+Claim Key: TBD (greater than 285)
+Claim Value Type(s): array
+Change Controller: IETF
+
+Claim Name: crit
+Claim Description: Logical AND
+JWT Claim Name: N/A
+Claim Key: TBD (between 41 and 255)
+Claim Value Type(s): array
+Change Controller: IETF
 
 {backmatter}
