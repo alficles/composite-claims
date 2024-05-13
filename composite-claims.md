@@ -263,16 +263,16 @@ The "crit" (Critical) claim lists the claims required to process this token.
 
 The type of this claim is array and the elements of the array are strings,
 negative integers, or unsigned integers. The elements of the array correspond
-to claims that may be present in the token.
+to claims that MUST be present in the token.
 
 If a claim listed in the "crit" claim is present in a claim set and the
-processor cannot understand or process the claim, the claim set **MUST** be
+processor cannot process the claim for any reason, the claim set **MUST** be
 rejected.
 
 If a claim listed in the "crit" claim is not present in a claim set, the claim
 set **MUST** be rejected.
 
-If a claim listed in the "crit" claim is present in a claim set as part of a
+If a claim listed in the "crit" claim is present in a claim set as part of an
 "env" claim (and, should it be decrypted, be processed as a sibling of that
 "env" claim), if the value of the claim is not decrypted (for any reason) and
 processed and any possible value of the claim would result in the request being
@@ -283,8 +283,9 @@ would require rejection.
 
 If a "crit" claim is present in a claim set, a processor **SHOULD** consider
 claims it does not understand to be acceptable if they are not present in the
-"crit" claim. That is, when a "crit" claim is present, any claims not listed
-may be assumed to be non-critical.
+"crit" claim, unless application-specific processing defines otherwise. That
+is, when a "crit" claim is present, any claims not listed may by default be
+assumed to be non-critical.
 
 Use of this claim is **OPTIONAL**. The Claim Key [add key number] is used to
 identify this claim.

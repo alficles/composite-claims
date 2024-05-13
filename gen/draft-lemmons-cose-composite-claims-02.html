@@ -1593,13 +1593,13 @@ identify this claim.<a href="#section-3.2.1-6" class="pilcrow">¶</a></p>
 <p id="section-3.2.2-1">The "crit" (Critical) claim lists the claims required to process this token.<a href="#section-3.2.2-1" class="pilcrow">¶</a></p>
 <p id="section-3.2.2-2">The type of this claim is array and the elements of the array are strings,
 negative integers, or unsigned integers. The elements of the array correspond
-to claims that may be present in the token.<a href="#section-3.2.2-2" class="pilcrow">¶</a></p>
+to claims that MUST be present in the token.<a href="#section-3.2.2-2" class="pilcrow">¶</a></p>
 <p id="section-3.2.2-3">If a claim listed in the "crit" claim is present in a claim set and the
-processor cannot understand or process the claim, the claim set <span class="bcp14">MUST</span> be
+processor cannot process the claim for any reason, the claim set <span class="bcp14">MUST</span> be
 rejected.<a href="#section-3.2.2-3" class="pilcrow">¶</a></p>
 <p id="section-3.2.2-4">If a claim listed in the "crit" claim is not present in a claim set, the claim
 set <span class="bcp14">MUST</span> be rejected.<a href="#section-3.2.2-4" class="pilcrow">¶</a></p>
-<p id="section-3.2.2-5">If a claim listed in the "crit" claim is present in a claim set as part of a
+<p id="section-3.2.2-5">If a claim listed in the "crit" claim is present in a claim set as part of an
 "env" claim (and, should it be decrypted, be processed as a sibling of that
 "env" claim), if the value of the claim is not decrypted (for any reason) and
 processed and any possible value of the claim would result in the request being
@@ -1609,8 +1609,9 @@ decrypt or not decrypt claim values in a "env" claim, this means a processor
 would require rejection.<a href="#section-3.2.2-5" class="pilcrow">¶</a></p>
 <p id="section-3.2.2-6">If a "crit" claim is present in a claim set, a processor <span class="bcp14">SHOULD</span> consider
 claims it does not understand to be acceptable if they are not present in the
-"crit" claim. That is, when a "crit" claim is present, any claims not listed
-may be assumed to be non-critical.<a href="#section-3.2.2-6" class="pilcrow">¶</a></p>
+"crit" claim, unless application-specific processing defines otherwise. That
+is, when a "crit" claim is present, any claims not listed may by default be
+assumed to be non-critical.<a href="#section-3.2.2-6" class="pilcrow">¶</a></p>
 <p id="section-3.2.2-7">Use of this claim is <span class="bcp14">OPTIONAL</span>. The Claim Key [add key number] is used to
 identify this claim.<a href="#section-3.2.2-7" class="pilcrow">¶</a></p>
 </section>

@@ -227,13 +227,13 @@ identify this claim.</t>
 <t>The &quot;crit&quot; (Critical) claim lists the claims required to process this token.</t>
 <t>The type of this claim is array and the elements of the array are strings,
 negative integers, or unsigned integers. The elements of the array correspond
-to claims that may be present in the token.</t>
+to claims that MUST be present in the token.</t>
 <t>If a claim listed in the &quot;crit&quot; claim is present in a claim set and the
-processor cannot understand or process the claim, the claim set <bcp14>MUST</bcp14> be
+processor cannot process the claim for any reason, the claim set <bcp14>MUST</bcp14> be
 rejected.</t>
 <t>If a claim listed in the &quot;crit&quot; claim is not present in a claim set, the claim
 set <bcp14>MUST</bcp14> be rejected.</t>
-<t>If a claim listed in the &quot;crit&quot; claim is present in a claim set as part of a
+<t>If a claim listed in the &quot;crit&quot; claim is present in a claim set as part of an
 &quot;env&quot; claim (and, should it be decrypted, be processed as a sibling of that
 &quot;env&quot; claim), if the value of the claim is not decrypted (for any reason) and
 processed and any possible value of the claim would result in the request being
@@ -243,8 +243,9 @@ decrypt or not decrypt claim values in a &quot;env&quot; claim, this means a pro
 would require rejection.</t>
 <t>If a &quot;crit&quot; claim is present in a claim set, a processor <bcp14>SHOULD</bcp14> consider
 claims it does not understand to be acceptable if they are not present in the
-&quot;crit&quot; claim. That is, when a &quot;crit&quot; claim is present, any claims not listed
-may be assumed to be non-critical.</t>
+&quot;crit&quot; claim, unless application-specific processing defines otherwise. That
+is, when a &quot;crit&quot; claim is present, any claims not listed may by default be
+assumed to be non-critical.</t>
 <t>Use of this claim is <bcp14>OPTIONAL</bcp14>. The Claim Key [add key number] is used to
 identify this claim.</t>
 </section>
