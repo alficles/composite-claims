@@ -41,28 +41,33 @@ or more CWT claim sets.</dd>
 </section>
 
 <section anchor="claims"><name>Claims</name>
-<t>Composition claims identify claim sets and define how the acceptability of the
-claim sets affects the acceptability of the composition claim.</t>
+<t>Composition claims contain one or more claim sets.</t>
 <t>In CWTs without composition claims, there is exactly one set of claims, so the
 acceptability of the claim set decides the acceptability of the CWT. However,
-this document defines multiple sets of claims, so it instead refers to
+this document defines multiple sets of claim sets, so it instead refers to
 accepting or rejecting claim sets. If the primary claim set is unacceptable,
 the CWT is unacceptable and <bcp14>MUST</bcp14> be rejected.</t>
+<t>Some applications use tokens to convey information. For example, a token might
+simply have a subject claim that identifies the bearer and the relying party
+simply uses that as information, not necessarily as a means by which to provide
+or deny access or make some other kind of decision. In this context, the token
+simply describes all situations in which the token would accurately describe
+that situation. That is to say, the token describes the set of contexts in
+which it would be acceptable.</t>
 <t>Composition claims can be nested to an arbitrary level of depth.
 Implementations <bcp14>MAY</bcp14> limit the depth of composition nesting by rejecting
 CWTs with too many levels but <bcp14>MUST</bcp14> support at least four levels of nesting.</t>
 
 <section anchor="logical-claims"><name>Logical Claims</name>
-<t>These claims allow multiple claim sets to be evaluated. This claim identifies
-one or more sets of claims in a logical relation. The type of these claims is
-array and the elements of the array are maps that are themselves sets of
-claims.</t>
-<t>For the following CDDL, <tt>cwt-claims</tt> is a map of claims as defined in
+<t>These claims identify one or more sets of claims in a logical relation. The
+type of these claims is array and the elements of the array are maps that are
+themselves sets of claims.</t>
+<t>For the following CDDL, <tt>Claims-Set</tt> is a map of claims as defined in
 <xref target="RFC8392"></xref>. It is described informatively in [draft-ietf-rats-eat] Appendix D.</t>
 
 <section anchor="or-or-claim"><name>or (Or) Claim</name>
 <t>The &quot;or&quot; (Or) claim identifies one or more sets of claims of which at least one
-is valid. If every set of claims in an &quot;or&quot; claim would, when considered with
+is acceptable. If every set of claims in an &quot;or&quot; claim would, when considered with
 all the other relevant claims, result in the claim set being rejected, the
 claim set containing the &quot;or&quot; claim <bcp14>MUST</bcp14> be rejected.</t>
 <t>Use of this claim is <bcp14>OPTIONAL</bcp14>. The Claim Key [add key number] is used to
@@ -78,7 +83,7 @@ or-claim-value = [ + Claims-Set ]
 
 <section anchor="nor-not-or-claim"><name>nor (Not Or) Claim</name>
 <t>The &quot;nor&quot; (Nor) claim identifies one or more sets of claims of which none are
-valid. If any set of claims in a &quot;nor&quot; claim would, when considered with all
+acceptable. If any set of claims in a &quot;nor&quot; claim would, when considered with all
 other relevant claims, result in the claim set being accepted, the claim set
 containing the &quot;nor&quot; <bcp14>MUST</bcp14> be rejected.</t>
 <t>This is the logical negation of the &quot;or&quot; claim.</t>
@@ -94,8 +99,8 @@ nor-claim-value = [ + Claims-Set ]
 </section>
 
 <section anchor="and-and-claim"><name>and (And) Claim</name>
-<t>The &quot;and&quot; (And) claim idenfies one or more sets of claims of which all are
-valid. If any claim in an &quot;and&quot; claim would, when considered with all other
+<t>The &quot;and&quot; (And) claim identifies one or more sets of claims of which all are
+acceptable. If any claim in an &quot;and&quot; claim would, when considered with all other
 relevant claims, result in the claim set being rejected, the claim set
 containing the &quot;and&quot; claim <bcp14>MUST</bcp14> be rejected.</t>
 <t>The &quot;and&quot; claim is often unnecessary because a given claim set is only accepted
@@ -115,11 +120,11 @@ and-claim-value = [ + Claims-Set ]
 </section>
 
 <section anchor="examples"><name>Examples</name>
-<t>These logical claims can be used to describe to claim more complex
-relationships between claims. For example, the following claim set describes a
-token with multiple subject claims. This token describes a situation where either
-of the two subjects must be true, but the issuer is not disclosing which one
-must be true or even whether the two subjects are genuinely different.</t>
+<t>These logical claims can be used to describe more complex relationships between
+claims. For example, the following claim set describes a token with multiple
+subject claims. This token describes a situation where either of the two
+subjects must be true, but the issuer is not disclosing which one must be true
+or even whether the two subjects are genuinely different.</t>
 
 <artwork><![CDATA[{
   /or/ TBD: [
@@ -131,7 +136,8 @@ must be true or even whether the two subjects are genuinely different.</t>
 </artwork>
 <t>A relying party that receives this token does not know if the bearer is George
 or Harriet, but it knows that the bearer is one of them.</t>
-<t>The &quot;nor&quot; claim is useful both as a logical negation, even when only one claim is present. For example, consider the following claim set:</t>
+<t>The &quot;nor&quot; claim is useful both as a logical negation, even when only one claim
+is present. For example, consider the following claim set:</t>
 
 <artwork><![CDATA[{
   /nor/ TBD: [
@@ -141,7 +147,8 @@ or Harriet, but it knows that the bearer is one of them.</t>
 ]]>
 </artwork>
 <t>This token is intended for any audience except &quot;example.com&quot;.</t>
-<t>And if a truly complex relationship is required, the &quot;and&quot; claim can be used to combine multiple claims. For example, consider the following claim set:</t>
+<t>And if a very complex relationship is required, the &quot;and&quot; claim can be used to
+combine multiple claims. For example, consider the following claim set:</t>
 
 <artwork><![CDATA[{
   /and/ TBD: [
@@ -171,7 +178,7 @@ set cannot contain the same claim twice.</t>
 </section>
 
 <section anchor="enveloped-claims"><name>Enveloped Claims</name>
-<t>Eveloped claims identify a set of claims that should be considered as part of a
+<t>Enveloped claims identify a set of claims that should be considered as part of a
 set of claims, but that require decryption before they can be processed. This
 is sometimes useful when some processors do not need to evaluate some claims in
 order to determine if a claim set is acceptable.</t>
@@ -196,7 +203,8 @@ corresponds with the member in the array in the key with the same index.
 Elements of the value array with indexes that do not correspond with
 elements of the key array MUST be ignored. The members of the array in the
 plaintext are CBOR data items that are appropriate as values for the
-corresponding claim.</li>
+corresponding claim. The array of claim keys <bcp14>MUST</bcp14> contain at least one
+element.</li>
 </ul>
 <t>These claims described in the &quot;env&quot; claim <bcp14>MAY</bcp14> be processed exactly as
 though the &quot;env&quot; claim were replaced with the decrypted claims, including the
@@ -289,6 +297,19 @@ issuer used additional padding in the plaintext in order to avoid disclosing
 the length of the subject value.</t>
 </section>
 
+<section anchor="profiling-the-env-claim"><name>Profiling the &quot;env&quot; Claim</name>
+<t>The &quot;env&quot; claim is only useful when the issuer can reliably expect a relying party that needs to understand the claim to be able to decrypt it. This document does not specify several important required details:</t>
+
+<ul spacing="compact">
+<li>How the issuer and relying party establish trust.</li>
+<li>How the issuer conveys the decryption key to the relying party.</li>
+<li>How the issuer and relying party agree on the supported ciphers.</li>
+</ul>
+<t>These details are of necessity left to the application profile, since they will
+vary between applications. The &quot;crit&quot; claim can be used to ensure that the
+relying party knows which claims are encrypted and must be decrypted.</t>
+</section>
+
 <section anchor="other-methods-of-selectively-disclosing-claims"><name>Other methods of selectively disclosing claims</name>
 <t>The &quot;env&quot; claim is only suitable for protecting claims under the following circumstances:</t>
 
@@ -325,10 +346,10 @@ contents, as it most often will be in this context, issuers MUST pad the
 content appropriately in order to maintain the secrecy of its contents. &quot;env&quot;
 claims permit additional elements to be added after arrays of claim keys that
 can be used for padding when it is required.</t>
-<t>Additionally, since the &quot;env&quot; claim only encrypts the contents of the claim and
-not its key, it discloses the presence of a given claim. When this is
-undesirable, another composite claim like &quot;and&quot;, &quot;or&quot;, or even potentially
-&quot;env&quot; can be be used to mask the presence of the claim within.</t>
+<t>Since the &quot;env&quot; claim only encrypts the contents of the claim and not its key,
+it discloses the presence of a given claim. When this is undesirable, another
+composite claim like &quot;and&quot;, &quot;or&quot;, or even potentially &quot;env&quot; can be be used to
+mask the presence of the claim within.</t>
 </section>
 
 <section anchor="iana-considerations"><name>IANA Considerations</name>

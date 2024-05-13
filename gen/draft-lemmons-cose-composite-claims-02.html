@@ -28,7 +28,7 @@ between sets of claims and provide for private claim values via encryption.
     pyflakes 3.0.1
     PyYAML 5.3.1
     requests 2.23.0
-    setuptools 39.2.0
+    setuptools 59.6.0
     six 1.14.0
 -->
 <link href="draft-lemmons-cose-composite-claims-02.xml" rel="alternate" type="application/rfc+xml">
@@ -1189,7 +1189,7 @@ li > p:last-of-type {
 </tr></thead>
 <tfoot><tr>
 <td class="left">Lemmons</td>
-<td class="center">Expires 7 November 2024</td>
+<td class="center">Expires 14 November 2024</td>
 <td class="right">[Page]</td>
 </tr></tfoot>
 </table>
@@ -1202,12 +1202,12 @@ li > p:last-of-type {
 <dd class="internet-draft">draft-lemmons-cose-composite-claims-02</dd>
 <dt class="label-published">Published:</dt>
 <dd class="published">
-<time datetime="2024-05-06" class="published">6 May 2024</time>
+<time datetime="2024-05-13" class="published">13 May 2024</time>
     </dd>
 <dt class="label-intended-status">Intended Status:</dt>
 <dd class="intended-status">Standards Track</dd>
 <dt class="label-expires">Expires:</dt>
-<dd class="expires"><time datetime="2024-11-07">7 November 2024</time></dd>
+<dd class="expires"><time datetime="2024-11-14">14 November 2024</time></dd>
 <dt class="label-authors">Author:</dt>
 <dd class="authors">
 <div class="author">
@@ -1242,7 +1242,7 @@ between sets of claims and provide for private claim values via encryption.<a hr
         time. It is inappropriate to use Internet-Drafts as reference
         material or to cite them other than as "work in progress."<a href="#section-boilerplate.1-3" class="pilcrow">¶</a></p>
 <p id="section-boilerplate.1-4">
-        This Internet-Draft will expire on 7 November 2024.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
+        This Internet-Draft will expire on 14 November 2024.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="copyright">
@@ -1310,7 +1310,10 @@ between sets of claims and provide for private claim values via encryption.<a hr
                     <p id="section-toc.1-1.3.2.2.2.3.1"><a href="#section-3.2.3" class="xref">3.2.3</a>.  <a href="#name-example" class="xref">Example</a></p>
 </li>
                   <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3.2.2.2.4">
-                    <p id="section-toc.1-1.3.2.2.2.4.1"><a href="#section-3.2.4" class="xref">3.2.4</a>.  <a href="#name-other-methods-of-selectivel" class="xref">Other methods of selectively disclosing claims</a></p>
+                    <p id="section-toc.1-1.3.2.2.2.4.1"><a href="#section-3.2.4" class="xref">3.2.4</a>.  <a href="#name-profiling-the-env-claim" class="xref">Profiling the "env" Claim</a></p>
+</li>
+                  <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3.2.2.2.5">
+                    <p id="section-toc.1-1.3.2.2.2.5.1"><a href="#section-3.2.5" class="xref">3.2.5</a>.  <a href="#name-other-methods-of-selectivel" class="xref">Other methods of selectively disclosing claims</a></p>
 </li>
                 </ul>
 </li>
@@ -1367,26 +1370,31 @@ or more CWT claim sets.<a href="#section-2-4.2" class="pilcrow">¶</a>
       <h2 id="name-claims">
 <a href="#section-3" class="section-number selfRef">3. </a><a href="#name-claims" class="section-name selfRef">Claims</a>
       </h2>
-<p id="section-3-1">Composition claims identify claim sets and define how the acceptability of the
-claim sets affects the acceptability of the composition claim.<a href="#section-3-1" class="pilcrow">¶</a></p>
+<p id="section-3-1">Composition claims contain one or more claim sets.<a href="#section-3-1" class="pilcrow">¶</a></p>
 <p id="section-3-2">In CWTs without composition claims, there is exactly one set of claims, so the
 acceptability of the claim set decides the acceptability of the CWT. However,
-this document defines multiple sets of claims, so it instead refers to
+this document defines multiple sets of claim sets, so it instead refers to
 accepting or rejecting claim sets. If the primary claim set is unacceptable,
 the CWT is unacceptable and <span class="bcp14">MUST</span> be rejected.<a href="#section-3-2" class="pilcrow">¶</a></p>
-<p id="section-3-3">Composition claims can be nested to an arbitrary level of depth.
+<p id="section-3-3">Some applications use tokens to convey information. For example, a token might
+simply have a subject claim that identifies the bearer and the relying party
+simply uses that as information, not necessarily as a means by which to provide
+or deny access or make some other kind of decision. In this context, the token
+simply describes all situations in which the token would accurately describe
+that situation. That is to say, the token describes the set of contexts in
+which it would be acceptable.<a href="#section-3-3" class="pilcrow">¶</a></p>
+<p id="section-3-4">Composition claims can be nested to an arbitrary level of depth.
 Implementations <span class="bcp14">MAY</span> limit the depth of composition nesting by rejecting
-CWTs with too many levels but <span class="bcp14">MUST</span> support at least four levels of nesting.<a href="#section-3-3" class="pilcrow">¶</a></p>
+CWTs with too many levels but <span class="bcp14">MUST</span> support at least four levels of nesting.<a href="#section-3-4" class="pilcrow">¶</a></p>
 <div id="logical-claims">
 <section id="section-3.1">
         <h3 id="name-logical-claims">
 <a href="#section-3.1" class="section-number selfRef">3.1. </a><a href="#name-logical-claims" class="section-name selfRef">Logical Claims</a>
         </h3>
-<p id="section-3.1-1">These claims allow multiple claim sets to be evaluated. This claim identifies
-one or more sets of claims in a logical relation. The type of these claims is
-array and the elements of the array are maps that are themselves sets of
-claims.<a href="#section-3.1-1" class="pilcrow">¶</a></p>
-<p id="section-3.1-2">For the following CDDL, <code>cwt-claims</code> is a map of claims as defined in
+<p id="section-3.1-1">These claims identify one or more sets of claims in a logical relation. The
+type of these claims is array and the elements of the array are maps that are
+themselves sets of claims.<a href="#section-3.1-1" class="pilcrow">¶</a></p>
+<p id="section-3.1-2">For the following CDDL, <code>Claims-Set</code> is a map of claims as defined in
 <span>[<a href="#RFC8392" class="xref">RFC8392</a>]</span>. It is described informatively in [draft-ietf-rats-eat] Appendix D.<a href="#section-3.1-2" class="pilcrow">¶</a></p>
 <div id="or-or-claim">
 <section id="section-3.1.1">
@@ -1394,7 +1402,7 @@ claims.<a href="#section-3.1-1" class="pilcrow">¶</a></p>
 <a href="#section-3.1.1" class="section-number selfRef">3.1.1. </a><a href="#name-or-or-claim" class="section-name selfRef">or (Or) Claim</a>
           </h4>
 <p id="section-3.1.1-1">The "or" (Or) claim identifies one or more sets of claims of which at least one
-is valid. If every set of claims in an "or" claim would, when considered with
+is acceptable. If every set of claims in an "or" claim would, when considered with
 all the other relevant claims, result in the claim set being rejected, the
 claim set containing the "or" claim <span class="bcp14">MUST</span> be rejected.<a href="#section-3.1.1-1" class="pilcrow">¶</a></p>
 <p id="section-3.1.1-2">Use of this claim is <span class="bcp14">OPTIONAL</span>. The Claim Key [add key number] is used to
@@ -1415,7 +1423,7 @@ or-claim-value = [ + Claims-Set ]
 <a href="#section-3.1.2" class="section-number selfRef">3.1.2. </a><a href="#name-nor-not-or-claim" class="section-name selfRef">nor (Not Or) Claim</a>
           </h4>
 <p id="section-3.1.2-1">The "nor" (Nor) claim identifies one or more sets of claims of which none are
-valid. If any set of claims in a "nor" claim would, when considered with all
+acceptable. If any set of claims in a "nor" claim would, when considered with all
 other relevant claims, result in the claim set being accepted, the claim set
 containing the "nor" <span class="bcp14">MUST</span> be rejected.<a href="#section-3.1.2-1" class="pilcrow">¶</a></p>
 <p id="section-3.1.2-2">This is the logical negation of the "or" claim.<a href="#section-3.1.2-2" class="pilcrow">¶</a></p>
@@ -1436,8 +1444,8 @@ nor-claim-value = [ + Claims-Set ]
           <h4 id="name-and-and-claim">
 <a href="#section-3.1.3" class="section-number selfRef">3.1.3. </a><a href="#name-and-and-claim" class="section-name selfRef">and (And) Claim</a>
           </h4>
-<p id="section-3.1.3-1">The "and" (And) claim idenfies one or more sets of claims of which all are
-valid. If any claim in an "and" claim would, when considered with all other
+<p id="section-3.1.3-1">The "and" (And) claim identifies one or more sets of claims of which all are
+acceptable. If any claim in an "and" claim would, when considered with all other
 relevant claims, result in the claim set being rejected, the claim set
 containing the "and" claim <span class="bcp14">MUST</span> be rejected.<a href="#section-3.1.3-1" class="pilcrow">¶</a></p>
 <p id="section-3.1.3-2">The "and" claim is often unnecessary because a given claim set is only accepted
@@ -1462,11 +1470,11 @@ and-claim-value = [ + Claims-Set ]
           <h4 id="name-examples">
 <a href="#section-3.1.4" class="section-number selfRef">3.1.4. </a><a href="#name-examples" class="section-name selfRef">Examples</a>
           </h4>
-<p id="section-3.1.4-1">These logical claims can be used to describe to claim more complex
-relationships between claims. For example, the following claim set describes a
-token with multiple subject claims. This token describes a situation where either
-of the two subjects must be true, but the issuer is not disclosing which one
-must be true or even whether the two subjects are genuinely different.<a href="#section-3.1.4-1" class="pilcrow">¶</a></p>
+<p id="section-3.1.4-1">These logical claims can be used to describe more complex relationships between
+claims. For example, the following claim set describes a token with multiple
+subject claims. This token describes a situation where either of the two
+subjects must be true, but the issuer is not disclosing which one must be true
+or even whether the two subjects are genuinely different.<a href="#section-3.1.4-1" class="pilcrow">¶</a></p>
 <div class="alignLeft art-text artwork" id="section-3.1.4-2">
 <pre>{
   /or/ TBD: [
@@ -1479,7 +1487,8 @@ must be true or even whether the two subjects are genuinely different.<a href="#
 </div>
 <p id="section-3.1.4-3">A relying party that receives this token does not know if the bearer is George
 or Harriet, but it knows that the bearer is one of them.<a href="#section-3.1.4-3" class="pilcrow">¶</a></p>
-<p id="section-3.1.4-4">The "nor" claim is useful both as a logical negation, even when only one claim is present. For example, consider the following claim set:<a href="#section-3.1.4-4" class="pilcrow">¶</a></p>
+<p id="section-3.1.4-4">The "nor" claim is useful both as a logical negation, even when only one claim
+is present. For example, consider the following claim set:<a href="#section-3.1.4-4" class="pilcrow">¶</a></p>
 <div class="alignLeft art-text artwork" id="section-3.1.4-5">
 <pre>{
   /nor/ TBD: [
@@ -1490,7 +1499,8 @@ or Harriet, but it knows that the bearer is one of them.<a href="#section-3.1.4-
 </pre><a href="#section-3.1.4-5" class="pilcrow">¶</a>
 </div>
 <p id="section-3.1.4-6">This token is intended for any audience except "example.com".<a href="#section-3.1.4-6" class="pilcrow">¶</a></p>
-<p id="section-3.1.4-7">And if a truly complex relationship is required, the "and" claim can be used to combine multiple claims. For example, consider the following claim set:<a href="#section-3.1.4-7" class="pilcrow">¶</a></p>
+<p id="section-3.1.4-7">And if a very complex relationship is required, the "and" claim can be used to
+combine multiple claims. For example, consider the following claim set:<a href="#section-3.1.4-7" class="pilcrow">¶</a></p>
 <div class="alignLeft art-text artwork" id="section-3.1.4-8">
 <pre>{
   /and/ TBD: [
@@ -1526,7 +1536,7 @@ set cannot contain the same claim twice.<a href="#section-3.1.4-9" class="pilcro
         <h3 id="name-enveloped-claims">
 <a href="#section-3.2" class="section-number selfRef">3.2. </a><a href="#name-enveloped-claims" class="section-name selfRef">Enveloped Claims</a>
         </h3>
-<p id="section-3.2-1">Eveloped claims identify a set of claims that should be considered as part of a
+<p id="section-3.2-1">Enveloped claims identify a set of claims that should be considered as part of a
 set of claims, but that require decryption before they can be processed. This
 is sometimes useful when some processors do not need to evaluate some claims in
 order to determine if a claim set is acceptable.<a href="#section-3.2-1" class="pilcrow">¶</a></p>
@@ -1554,7 +1564,8 @@ corresponds with the member in the array in the key with the same index.
 Elements of the value array with indexes that do not correspond with
 elements of the key array MUST be ignored. The members of the array in the
 plaintext are CBOR data items that are appropriate as values for the
-corresponding claim.<a href="#section-3.2.1-3.2" class="pilcrow">¶</a>
+corresponding claim. The array of claim keys <span class="bcp14">MUST</span> contain at least one
+element.<a href="#section-3.2.1-3.2" class="pilcrow">¶</a>
 </li>
           </ul>
 <p id="section-3.2.1-4">These claims described in the "env" claim <span class="bcp14">MAY</span> be processed exactly as
@@ -1660,32 +1671,51 @@ issuer used additional padding in the plaintext in order to avoid disclosing
 the length of the subject value.<a href="#section-3.2.3-9" class="pilcrow">¶</a></p>
 </section>
 </div>
-<div id="other-methods-of-selectively-disclosing-claims">
+<div id="profiling-the-env-claim">
 <section id="section-3.2.4">
-          <h4 id="name-other-methods-of-selectivel">
-<a href="#section-3.2.4" class="section-number selfRef">3.2.4. </a><a href="#name-other-methods-of-selectivel" class="section-name selfRef">Other methods of selectively disclosing claims</a>
+          <h4 id="name-profiling-the-env-claim">
+<a href="#section-3.2.4" class="section-number selfRef">3.2.4. </a><a href="#name-profiling-the-env-claim" class="section-name selfRef">Profiling the "env" Claim</a>
           </h4>
-<p id="section-3.2.4-1">The "env" claim is only suitable for protecting claims under the following circumstances:<a href="#section-3.2.4-1" class="pilcrow">¶</a></p>
+<p id="section-3.2.4-1">The "env" claim is only useful when the issuer can reliably expect a relying party that needs to understand the claim to be able to decrypt it. This document does not specify several important required details:<a href="#section-3.2.4-1" class="pilcrow">¶</a></p>
 <ul class="compact">
-<li class="compact" id="section-3.2.4-2.1">The issuer is the one that decides which claims are disclosed and to whom.<a href="#section-3.2.4-2.1" class="pilcrow">¶</a>
+<li class="compact" id="section-3.2.4-2.1">How the issuer and relying party establish trust.<a href="#section-3.2.4-2.1" class="pilcrow">¶</a>
 </li>
-            <li class="compact" id="section-3.2.4-2.2">The issuer can reasonably pad the plaintext to avoid revealing the length of
-the claim. This requires the issuer to know the maximum length of claims that might be present.<a href="#section-3.2.4-2.2" class="pilcrow">¶</a>
+            <li class="compact" id="section-3.2.4-2.2">How the issuer conveys the decryption key to the relying party.<a href="#section-3.2.4-2.2" class="pilcrow">¶</a>
 </li>
-            <li class="compact" id="section-3.2.4-2.3">The bearer does not need to control which claims are disclosed.<a href="#section-3.2.4-2.3" class="pilcrow">¶</a>
-</li>
-            <li class="compact" id="section-3.2.4-2.4">The claim labels are not sensitive information.<a href="#section-3.2.4-2.4" class="pilcrow">¶</a>
+            <li class="compact" id="section-3.2.4-2.3">How the issuer and relying party agree on the supported ciphers.<a href="#section-3.2.4-2.3" class="pilcrow">¶</a>
 </li>
           </ul>
-<p id="section-3.2.4-3">If these are not the case, the "env" claim is not suitable. If the bearer is
+<p id="section-3.2.4-3">These details are of necessity left to the application profile, since they will
+vary between applications. The "crit" claim can be used to ensure that the
+relying party knows which claims are encrypted and must be decrypted.<a href="#section-3.2.4-3" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="other-methods-of-selectively-disclosing-claims">
+<section id="section-3.2.5">
+          <h4 id="name-other-methods-of-selectivel">
+<a href="#section-3.2.5" class="section-number selfRef">3.2.5. </a><a href="#name-other-methods-of-selectivel" class="section-name selfRef">Other methods of selectively disclosing claims</a>
+          </h4>
+<p id="section-3.2.5-1">The "env" claim is only suitable for protecting claims under the following circumstances:<a href="#section-3.2.5-1" class="pilcrow">¶</a></p>
+<ul class="compact">
+<li class="compact" id="section-3.2.5-2.1">The issuer is the one that decides which claims are disclosed and to whom.<a href="#section-3.2.5-2.1" class="pilcrow">¶</a>
+</li>
+            <li class="compact" id="section-3.2.5-2.2">The issuer can reasonably pad the plaintext to avoid revealing the length of
+the claim. This requires the issuer to know the maximum length of claims that might be present.<a href="#section-3.2.5-2.2" class="pilcrow">¶</a>
+</li>
+            <li class="compact" id="section-3.2.5-2.3">The bearer does not need to control which claims are disclosed.<a href="#section-3.2.5-2.3" class="pilcrow">¶</a>
+</li>
+            <li class="compact" id="section-3.2.5-2.4">The claim labels are not sensitive information.<a href="#section-3.2.5-2.4" class="pilcrow">¶</a>
+</li>
+          </ul>
+<p id="section-3.2.5-3">If these are not the case, the "env" claim is not suitable. If the bearer is
 the one that controls selective disclosure,
 [draft-ietf-oauth-selective-disclosure-08] may be more appropriate. SD-JWTs
-also protect the claim labels, which the "env" claim does not.<a href="#section-3.2.4-3" class="pilcrow">¶</a></p>
-<p id="section-3.2.4-4">When the claims for different audiences are significantly different, multiple
+also protect the claim labels, which the "env" claim does not.<a href="#section-3.2.5-3" class="pilcrow">¶</a></p>
+<p id="section-3.2.5-4">When the claims for different audiences are significantly different, multiple
 encrypted tokens can be used. This is likely to lead to larger sets of tokens
 in general, but is a very flexible approach. This protects the entire contents
 of each token from all parties that do not possess the decryption key for that
-token.<a href="#section-3.2.4-4" class="pilcrow">¶</a></p>
+token.<a href="#section-3.2.5-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 </section>
@@ -1709,10 +1739,10 @@ contents, as it most often will be in this context, issuers MUST pad the
 content appropriately in order to maintain the secrecy of its contents. "env"
 claims permit additional elements to be added after arrays of claim keys that
 can be used for padding when it is required.<a href="#section-4-3" class="pilcrow">¶</a></p>
-<p id="section-4-4">Additionally, since the "env" claim only encrypts the contents of the claim and
-not its key, it discloses the presence of a given claim. When this is
-undesirable, another composite claim like "and", "or", or even potentially
-"env" can be be used to mask the presence of the claim within.<a href="#section-4-4" class="pilcrow">¶</a></p>
+<p id="section-4-4">Since the "env" claim only encrypts the contents of the claim and not its key,
+it discloses the presence of a given claim. When this is undesirable, another
+composite claim like "and", "or", or even potentially "env" can be be used to
+mask the presence of the claim within.<a href="#section-4-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="iana-considerations">

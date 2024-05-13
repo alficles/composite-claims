@@ -4,8 +4,8 @@
 
 COSE WG                                                       C. Lemmons
 Internet-Draft                                                   Comcast
-Intended status: Standards Track                              6 May 2024
-Expires: 7 November 2024
+Intended status: Standards Track                             13 May 2024
+Expires: 14 November 2024
 
 
                          Composite Token Claims
@@ -32,7 +32,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 7 November 2024.
+   This Internet-Draft will expire on 14 November 2024.
 
 Copyright Notice
 
@@ -53,7 +53,7 @@ Copyright Notice
 
 
 
-Lemmons                  Expires 7 November 2024                [Page 1]
+Lemmons                 Expires 14 November 2024                [Page 1]
 
 Internet-Draft           Composite Token Claims                 May 2024
 
@@ -65,18 +65,19 @@ Table of Contents
    3.  Claims  . . . . . . . . . . . . . . . . . . . . . . . . . . .   2
      3.1.  Logical Claims  . . . . . . . . . . . . . . . . . . . . .   3
        3.1.1.  or (Or) Claim . . . . . . . . . . . . . . . . . . . .   3
-       3.1.2.  nor (Not Or) Claim  . . . . . . . . . . . . . . . . .   3
+       3.1.2.  nor (Not Or) Claim  . . . . . . . . . . . . . . . . .   4
        3.1.3.  and (And) Claim . . . . . . . . . . . . . . . . . . .   4
-       3.1.4.  Examples  . . . . . . . . . . . . . . . . . . . . . .   4
+       3.1.4.  Examples  . . . . . . . . . . . . . . . . . . . . . .   5
      3.2.  Enveloped Claims  . . . . . . . . . . . . . . . . . . . .   6
        3.2.1.  env (Enveloped) Claim . . . . . . . . . . . . . . . .   6
        3.2.2.  crit (Critical) Claim . . . . . . . . . . . . . . . .   7
-       3.2.3.  Example . . . . . . . . . . . . . . . . . . . . . . .   7
-       3.2.4.  Other methods of selectively disclosing claims  . . .   8
-   4.  Security Considerations . . . . . . . . . . . . . . . . . . .   9
-   5.  IANA Considerations . . . . . . . . . . . . . . . . . . . . .   9
-   6.  Normative References  . . . . . . . . . . . . . . . . . . . .  10
-   Author's Address  . . . . . . . . . . . . . . . . . . . . . . . .  10
+       3.2.3.  Example . . . . . . . . . . . . . . . . . . . . . . .   8
+       3.2.4.  Profiling the "env" Claim . . . . . . . . . . . . . .   9
+       3.2.5.  Other methods of selectively disclosing claims  . . .   9
+   4.  Security Considerations . . . . . . . . . . . . . . . . . . .  10
+   5.  IANA Considerations . . . . . . . . . . . . . . . . . . . . .  10
+   6.  Normative References  . . . . . . . . . . . . . . . . . . . .  11
+   Author's Address  . . . . . . . . . . . . . . . . . . . . . . . .  11
 
 1.  Introduction
 
@@ -103,13 +104,12 @@ Table of Contents
 
 3.  Claims
 
-   Composition claims identify claim sets and define how the
-   acceptability of the claim sets affects the acceptability of the
-   composition claim.
+   Composition claims contain one or more claim sets.
 
 
 
-Lemmons                  Expires 7 November 2024                [Page 2]
+
+Lemmons                 Expires 14 November 2024                [Page 2]
 
 Internet-Draft           Composite Token Claims                 May 2024
 
@@ -117,9 +117,18 @@ Internet-Draft           Composite Token Claims                 May 2024
    In CWTs without composition claims, there is exactly one set of
    claims, so the acceptability of the claim set decides the
    acceptability of the CWT.  However, this document defines multiple
-   sets of claims, so it instead refers to accepting or rejecting claim
-   sets.  If the primary claim set is unacceptable, the CWT is
+   sets of claim sets, so it instead refers to accepting or rejecting
+   claim sets.  If the primary claim set is unacceptable, the CWT is
    unacceptable and MUST be rejected.
+
+   Some applications use tokens to convey information.  For example, a
+   token might simply have a subject claim that identifies the bearer
+   and the relying party simply uses that as information, not
+   necessarily as a means by which to provide or deny access or make
+   some other kind of decision.  In this context, the token simply
+   describes all situations in which the token would accurately describe
+   that situation.  That is to say, the token describes the set of
+   contexts in which it would be acceptable.
 
    Composition claims can be nested to an arbitrary level of depth.
    Implementations MAY limit the depth of composition nesting by
@@ -128,21 +137,20 @@ Internet-Draft           Composite Token Claims                 May 2024
 
 3.1.  Logical Claims
 
-   These claims allow multiple claim sets to be evaluated.  This claim
-   identifies one or more sets of claims in a logical relation.  The
-   type of these claims is array and the elements of the array are maps
-   that are themselves sets of claims.
+   These claims identify one or more sets of claims in a logical
+   relation.  The type of these claims is array and the elements of the
+   array are maps that are themselves sets of claims.
 
-   For the following CDDL, cwt-claims is a map of claims as defined in
+   For the following CDDL, Claims-Set is a map of claims as defined in
    [RFC8392].  It is described informatively in [draft-ietf-rats-eat]
    Appendix D.
 
 3.1.1.  or (Or) Claim
 
    The "or" (Or) claim identifies one or more sets of claims of which at
-   least one is valid.  If every set of claims in an "or" claim would,
-   when considered with all the other relevant claims, result in the
-   claim set being rejected, the claim set containing the "or" claim
+   least one is acceptable.  If every set of claims in an "or" claim
+   would, when considered with all the other relevant claims, result in
+   the claim set being rejected, the claim set containing the "or" claim
    MUST be rejected.
 
    Use of this claim is OPTIONAL.  The Claim Key [add key number] is
@@ -154,21 +162,23 @@ Internet-Draft           Composite Token Claims                 May 2024
    or-claim-label = TBD
    or-claim-value = [ + Claims-Set ]
 
-3.1.2.  nor (Not Or) Claim
-
-   The "nor" (Nor) claim identifies one or more sets of claims of which
-   none are valid.  If any set of claims in a "nor" claim would, when
-   considered with all other relevant claims, result in the claim set
-   being accepted, the claim set containing the "nor" MUST be rejected.
-
-   This is the logical negation of the "or" claim.
 
 
 
-Lemmons                  Expires 7 November 2024                [Page 3]
+Lemmons                 Expires 14 November 2024                [Page 3]
 
 Internet-Draft           Composite Token Claims                 May 2024
 
+
+3.1.2.  nor (Not Or) Claim
+
+   The "nor" (Nor) claim identifies one or more sets of claims of which
+   none are acceptable.  If any set of claims in a "nor" claim would,
+   when considered with all other relevant claims, result in the claim
+   set being accepted, the claim set containing the "nor" MUST be
+   rejected.
+
+   This is the logical negation of the "or" claim.
 
    Use of this claim is OPTIONAL.  The Claim Key [add key number] is
    used to identify this claim.
@@ -181,10 +191,11 @@ Internet-Draft           Composite Token Claims                 May 2024
 
 3.1.3.  and (And) Claim
 
-   The "and" (And) claim idenfies one or more sets of claims of which
-   all are valid.  If any claim in an "and" claim would, when considered
-   with all other relevant claims, result in the claim set being
-   rejected, the claim set containing the "and" claim MUST be rejected.
+   The "and" (And) claim identifies one or more sets of claims of which
+   all are acceptable.  If any claim in an "and" claim would, when
+   considered with all other relevant claims, result in the claim set
+   being rejected, the claim set containing the "and" claim MUST be
+   rejected.
 
    The "and" claim is often unnecessary because a given claim set is
    only accepted when all its claims are acceptable.  However, CBOR maps
@@ -201,9 +212,23 @@ Internet-Draft           Composite Token Claims                 May 2024
    and-claim-label = TBD
    and-claim-value = [ + Claims-Set ]
 
+
+
+
+
+
+
+
+
+
+Lemmons                 Expires 14 November 2024                [Page 4]
+
+Internet-Draft           Composite Token Claims                 May 2024
+
+
 3.1.4.  Examples
 
-   These logical claims can be used to describe to claim more complex
+   These logical claims can be used to describe more complex
    relationships between claims.  For example, the following claim set
    describes a token with multiple subject claims.  This token describes
    a situation where either of the two subjects must be true, but the
@@ -216,15 +241,6 @@ Internet-Draft           Composite Token Claims                 May 2024
        { /sub/ 2: "harriet@example.net" }
      ]
    }
-
-
-
-
-
-Lemmons                  Expires 7 November 2024                [Page 4]
-
-Internet-Draft           Composite Token Claims                 May 2024
-
 
    A relying party that receives this token does not know if the bearer
    is George or Harriet, but it knows that the bearer is one of them.
@@ -240,9 +256,31 @@ Internet-Draft           Composite Token Claims                 May 2024
 
    This token is intended for any audience except "example.com".
 
-   And if a truly complex relationship is required, the "and" claim can
+   And if a very complex relationship is required, the "and" claim can
    be used to combine multiple claims.  For example, consider the
    following claim set:
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Lemmons                 Expires 14 November 2024                [Page 5]
+
+Internet-Draft           Composite Token Claims                 May 2024
+
 
    {
      /and/ TBD: [
@@ -270,25 +308,13 @@ Internet-Draft           Composite Token Claims                 May 2024
    claim, because a single claim set cannot contain the same claim
    twice.
 
-
-
-
-
-
-
-
-Lemmons                  Expires 7 November 2024                [Page 5]
-
-Internet-Draft           Composite Token Claims                 May 2024
-
-
 3.2.  Enveloped Claims
 
-   Eveloped claims identify a set of claims that should be considered as
-   part of a set of claims, but that require decryption before they can
-   be processed.  This is sometimes useful when some processors do not
-   need to evaluate some claims in order to determine if a claim set is
-   acceptable.
+   Enveloped claims identify a set of claims that should be considered
+   as part of a set of claims, but that require decryption before they
+   can be processed.  This is sometimes useful when some processors do
+   not need to evaluate some claims in order to determine if a claim set
+   is acceptable.
 
 3.2.1.  env (Enveloped) Claim
 
@@ -303,6 +329,15 @@ Internet-Draft           Composite Token Claims                 May 2024
 
    Each element of the map is interpreted as follows:
 
+
+
+
+
+Lemmons                 Expires 14 November 2024                [Page 6]
+
+Internet-Draft           Composite Token Claims                 May 2024
+
+
    *  If the key is a claim key, the plaintext of the Enveloped Message
       in its value is a CBOR data item that is appropriate as a value
       for that claim.
@@ -314,7 +349,8 @@ Internet-Draft           Composite Token Claims                 May 2024
       with indexes that do not correspond with elements of the key array
       MUST be ignored.  The members of the array in the plaintext are
       CBOR data items that are appropriate as values for the
-      corresponding claim.
+      corresponding claim.  The array of claim keys MUST contain at
+      least one element.
 
    These claims described in the "env" claim MAY be processed exactly as
    though the "env" claim were replaced with the decrypted claims,
@@ -324,19 +360,6 @@ Internet-Draft           Composite Token Claims                 May 2024
    "env" claim may potentially be accepted.  An invalid claim set MUST
    be rejected.  A claim set that contains duplicate claims MUST be
    rejected, even if the duplicates are not decrypted.
-
-
-
-
-
-
-
-
-
-Lemmons                  Expires 7 November 2024                [Page 6]
-
-Internet-Draft           Composite Token Claims                 May 2024
-
 
    Since claims are optionally decrypted and added as sibling claims,
    issuers can ensure that this occurs by adding them to the "crit"
@@ -364,6 +387,13 @@ Internet-Draft           Composite Token Claims                 May 2024
    If a claim listed in the "crit" claim is not present in a claim set,
    the claim set MUST be rejected.
 
+
+
+Lemmons                 Expires 14 November 2024                [Page 7]
+
+Internet-Draft           Composite Token Claims                 May 2024
+
+
    If a claim listed in the "crit" claim is present in a claim set as
    part of a "env" claim (and, should it be decrypted, be processed as a
    sibling of that "env" claim), if the value of the claim is not
@@ -386,14 +416,6 @@ Internet-Draft           Composite Token Claims                 May 2024
 
    Consider a very simple token that might be passed like this:
 
-
-
-
-Lemmons                  Expires 7 November 2024                [Page 7]
-
-Internet-Draft           Composite Token Claims                 May 2024
-
-
    {
      /iss/ 1: "https://example.com",
      /sub/ 2: "george@example.net",
@@ -413,6 +435,20 @@ Internet-Draft           Composite Token Claims                 May 2024
    The intermediary is a relying party but does not need to know
    George's identity.  The origin, however does.  A token that permits
    this might look like this:
+
+
+
+
+
+
+
+
+
+
+Lemmons                 Expires 14 November 2024                [Page 8]
+
+Internet-Draft           Composite Token Claims                 May 2024
+
 
    {
      /iss/ 1: "https://example.com",
@@ -435,25 +471,41 @@ Internet-Draft           Composite Token Claims                 May 2024
    is the subject.  The issuer used additional padding in the plaintext
    in order to avoid disclosing the length of the subject value.
 
-3.2.4.  Other methods of selectively disclosing claims
+3.2.4.  Profiling the "env" Claim
+
+   The "env" claim is only useful when the issuer can reliably expect a
+   relying party that needs to understand the claim to be able to
+   decrypt it.  This document does not specify several important
+   required details:
+
+   *  How the issuer and relying party establish trust.
+   *  How the issuer conveys the decryption key to the relying party.
+   *  How the issuer and relying party agree on the supported ciphers.
+
+   These details are of necessity left to the application profile, since
+   they will vary between applications.  The "crit" claim can be used to
+   ensure that the relying party knows which claims are encrypted and
+   must be decrypted.
+
+3.2.5.  Other methods of selectively disclosing claims
 
    The "env" claim is only suitable for protecting claims under the
    following circumstances:
 
    *  The issuer is the one that decides which claims are disclosed and
       to whom.
-
-
-
-Lemmons                  Expires 7 November 2024                [Page 8]
-
-Internet-Draft           Composite Token Claims                 May 2024
-
-
    *  The issuer can reasonably pad the plaintext to avoid revealing the
       length of the claim.  This requires the issuer to know the maximum
       length of claims that might be present.
    *  The bearer does not need to control which claims are disclosed.
+
+
+
+Lemmons                 Expires 14 November 2024                [Page 9]
+
+Internet-Draft           Composite Token Claims                 May 2024
+
+
    *  The claim labels are not sensitive information.
 
    If these are not the case, the "env" claim is not suitable.  If the
@@ -485,11 +537,11 @@ Internet-Draft           Composite Token Claims                 May 2024
    additional elements to be added after arrays of claim keys that can
    be used for padding when it is required.
 
-   Additionally, since the "env" claim only encrypts the contents of the
-   claim and not its key, it discloses the presence of a given claim.
-   When this is undesirable, another composite claim like "and", "or",
-   or even potentially "env" can be be used to mask the presence of the
-   claim within.
+   Since the "env" claim only encrypts the contents of the claim and not
+   its key, it discloses the presence of a given claim.  When this is
+   undesirable, another composite claim like "and", "or", or even
+   potentially "env" can be be used to mask the presence of the claim
+   within.
 
 5.  IANA Considerations
 
@@ -497,18 +549,18 @@ Internet-Draft           Composite Token Claims                 May 2024
    keys in the "CBOR Web Token (CWT) Claims" registry established by
    [RFC8392]:
 
-
-
-
-
-Lemmons                  Expires 7 November 2024                [Page 9]
-
-Internet-Draft           Composite Token Claims                 May 2024
-
-
    Claim Name: or Claim Description: Logical OR JWT Claim Name: N/A
    Claim Key: TBD (greater than 285) Claim Value Type(s): array Change
    Controller: IETF
+
+
+
+
+
+Lemmons                 Expires 14 November 2024               [Page 10]
+
+Internet-Draft           Composite Token Claims                 May 2024
+
 
    Claim Name: nor Claim Description: Logical NOR JWT Claim Name: N/A
    Claim Key: TBD (greater than 285) Claim Value Type(s): array Change
@@ -554,14 +606,6 @@ Author's Address
 
    Chris Lemmons
    Comcast
-
-
-
-Lemmons                  Expires 7 November 2024               [Page 10]
-
-Internet-Draft           Composite Token Claims                 May 2024
-
-
    Email: chris_lemmons@comcast.com
 
 
@@ -569,48 +613,4 @@ Internet-Draft           Composite Token Claims                 May 2024
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-Lemmons                  Expires 7 November 2024               [Page 11]
+Lemmons                 Expires 14 November 2024               [Page 11]

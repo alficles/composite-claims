@@ -55,14 +55,21 @@ or more CWT claim sets.
 
 # Claims
 
-Composition claims identify claim sets and define how the acceptability of the
-claim sets affects the acceptability of the composition claim.
+Composition claims contain one or more claim sets.
 
 In CWTs without composition claims, there is exactly one set of claims, so the
 acceptability of the claim set decides the acceptability of the CWT. However,
-this document defines multiple sets of claims, so it instead refers to
+this document defines multiple sets of claim sets, so it instead refers to
 accepting or rejecting claim sets. If the primary claim set is unacceptable,
 the CWT is unacceptable and **MUST** be rejected.
+
+Some applications use tokens to convey information. For example, a token might
+simply have a subject claim that identifies the bearer and the relying party
+simply uses that as information, not necessarily as a means by which to provide
+or deny access or make some other kind of decision. In this context, the token
+simply describes all situations in which the token would accurately describe
+that situation. That is to say, the token describes the set of contexts in
+which it would be acceptable.
 
 Composition claims can be nested to an arbitrary level of depth.
 Implementations **MAY** limit the depth of composition nesting by rejecting
@@ -70,18 +77,17 @@ CWTs with too many levels but **MUST** support at least four levels of nesting.
 
 ## Logical Claims
 
-These claims allow multiple claim sets to be evaluated. This claim identifies
-one or more sets of claims in a logical relation. The type of these claims is
-array and the elements of the array are maps that are themselves sets of
-claims.
+These claims identify one or more sets of claims in a logical relation. The
+type of these claims is array and the elements of the array are maps that are
+themselves sets of claims.
 
-For the following CDDL, `cwt-claims` is a map of claims as defined in
+For the following CDDL, `Claims-Set` is a map of claims as defined in
 [@!RFC8392]. It is described informatively in [draft-ietf-rats-eat] Appendix D.
 
 ### or (Or) Claim
 
 The "or" (Or) claim identifies one or more sets of claims of which at least one
-is valid. If every set of claims in an "or" claim would, when considered with
+is acceptable. If every set of claims in an "or" claim would, when considered with
 all the other relevant claims, result in the claim set being rejected, the
 claim set containing the "or" claim **MUST** be rejected.
 
@@ -99,7 +105,7 @@ or-claim-value = [ + Claims-Set ]
 ### nor (Not Or) Claim
 
 The "nor" (Nor) claim identifies one or more sets of claims of which none are
-valid. If any set of claims in a "nor" claim would, when considered with all
+acceptable. If any set of claims in a "nor" claim would, when considered with all
 other relevant claims, result in the claim set being accepted, the claim set
 containing the "nor" **MUST** be rejected.
 
@@ -118,8 +124,8 @@ nor-claim-value = [ + Claims-Set ]
 
 ### and (And) Claim
 
-The "and" (And) claim idenfies one or more sets of claims of which all are
-valid. If any claim in an "and" claim would, when considered with all other
+The "and" (And) claim identifies one or more sets of claims of which all are
+acceptable. If any claim in an "and" claim would, when considered with all other
 relevant claims, result in the claim set being rejected, the claim set
 containing the "and" claim **MUST** be rejected.
 
@@ -142,11 +148,11 @@ and-claim-value = [ + Claims-Set ]
 
 ### Examples
 
-These logical claims can be used to describe to claim more complex
-relationships between claims. For example, the following claim set describes a
-token with multiple subject claims. This token describes a situation where either
-of the two subjects must be true, but the issuer is not disclosing which one
-must be true or even whether the two subjects are genuinely different.
+These logical claims can be used to describe more complex relationships between
+claims. For example, the following claim set describes a token with multiple
+subject claims. This token describes a situation where either of the two
+subjects must be true, but the issuer is not disclosing which one must be true
+or even whether the two subjects are genuinely different.
 
 ```
 {
@@ -160,7 +166,8 @@ must be true or even whether the two subjects are genuinely different.
 A relying party that receives this token does not know if the bearer is George
 or Harriet, but it knows that the bearer is one of them.
 
-The "nor" claim is useful both as a logical negation, even when only one claim is present. For example, consider the following claim set:
+The "nor" claim is useful both as a logical negation, even when only one claim
+is present. For example, consider the following claim set:
 
 ```
 {
@@ -172,7 +179,8 @@ The "nor" claim is useful both as a logical negation, even when only one claim i
 
 This token is intended for any audience except "example.com".
 
-And if a truly complex relationship is required, the "and" claim can be used to combine multiple claims. For example, consider the following claim set:
+And if a very complex relationship is required, the "and" claim can be used to
+combine multiple claims. For example, consider the following claim set:
 
 ```
 {
@@ -202,7 +210,7 @@ set cannot contain the same claim twice.
 
 ## Enveloped Claims
 
-Eveloped claims identify a set of claims that should be considered as part of a
+Enveloped claims identify a set of claims that should be considered as part of a
 set of claims, but that require decryption before they can be processed. This
 is sometimes useful when some processors do not need to evaluate some claims in
 order to determine if a claim set is acceptable.
@@ -228,7 +236,8 @@ Each element of the map is interpreted as follows:
     Elements of the value array with indexes that do not correspond with
     elements of the key array MUST be ignored. The members of the array in the
     plaintext are CBOR data items that are appropriate as values for the
-    corresponding claim.
+    corresponding claim. The array of claim keys **MUST** contain at least one
+    element.
 
 These claims described in the "env" claim **MAY** be processed exactly as
 though the "env" claim were replaced with the decrypted claims, including the
@@ -329,6 +338,18 @@ origin can decrypt the "env" claim and learn that George is the subject. The
 issuer used additional padding in the plaintext in order to avoid disclosing
 the length of the subject value.
 
+### Profiling the "env" Claim
+
+The "env" claim is only useful when the issuer can reliably expect a relying party that needs to understand the claim to be able to decrypt it. This document does not specify several important required details:
+
+- How the issuer and relying party establish trust.
+- How the issuer conveys the decryption key to the relying party.
+- How the issuer and relying party agree on the supported ciphers.
+
+These details are of necessity left to the application profile, since they will
+vary between applications. The "crit" claim can be used to ensure that the
+relying party knows which claims are encrypted and must be decrypted.
+
 ### Other methods of selectively disclosing claims
 
 The "env" claim is only suitable for protecting claims under the following circumstances:
@@ -367,10 +388,10 @@ content appropriately in order to maintain the secrecy of its contents. "env"
 claims permit additional elements to be added after arrays of claim keys that
 can be used for padding when it is required.
 
-Additionally, since the "env" claim only encrypts the contents of the claim and
-not its key, it discloses the presence of a given claim. When this is
-undesirable, another composite claim like "and", "or", or even potentially
-"env" can be be used to mask the presence of the claim within.
+Since the "env" claim only encrypts the contents of the claim and not its key,
+it discloses the presence of a given claim. When this is undesirable, another
+composite claim like "and", "or", or even potentially "env" can be be used to
+mask the presence of the claim within.
 
 # IANA Considerations
 
