@@ -179,6 +179,25 @@ is present. For example, consider the following claim set:
 
 This token is intended for any audience except "example.com".
 
+Complex relationshops can also be described using the claims in combination.
+The "geohash" claim [GEOHASH] describes a geographical region. For example:
+
+```
+{
+  { /aud/ 3: "https://example.com" },
+  { /geohash/ 282: "9q8yy" },
+  { /nor/ TBD: [
+      { /geohash/ 282: ["9q8yy9", "9q8yyd"] }
+    ]
+  }
+}
+```
+
+This token describes an audience of "https://example.com" and a region
+described by the geohash of "9q8yy" that does not include the region described
+by "9q8yy9" or "9q8yyd".
+
+
 And if a very complex relationship is required, the "and" claim can be used to
 combine multiple claims. For example, consider the following claim set:
 
