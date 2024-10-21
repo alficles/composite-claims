@@ -1,4 +1,4 @@
-VERSION=02
+VERSION=00
 NAME=draft-lemmons-cose-composite-claims-$(VERSION)
 
 ALL: gen/$(NAME).txt gen/$(NAME).html

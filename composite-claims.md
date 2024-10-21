@@ -11,7 +11,7 @@ updates = [ ]
 
 [seriesInfo]
 name = "Internet-Draft"
-value = "draft-lemmons-cose-composite-claims-02"
+value = "draft-lemmons-cose-composite-claims-00"
 stream = "IETF"
 status = "standard"
 
@@ -180,7 +180,7 @@ is present. For example, consider the following claim set:
 This token is intended for any audience except "example.com".
 
 Complex relationshops can also be described using the claims in combination.
-The "geohash" claim [GEOHASH] describes a geographical region. For example:
+The "geohash" claim [@?CTA5009A] describes a geographical region. For example:
 
 ```
 {
@@ -360,7 +360,9 @@ the length of the subject value.
 
 ### Profiling the "env" Claim
 
-The "env" claim is only useful when the issuer can reliably expect a relying party that needs to understand the claim to be able to decrypt it. This document does not specify several important required details:
+The "env" claim is only useful when the issuer can reliably expect a relying
+party that needs to understand the claim to be able to decrypt it. This
+document does not specify several important required details:
 
 - How the issuer and relying party establish trust.
 - How the issuer conveys the decryption key to the relying party.
@@ -372,11 +374,13 @@ relying party knows which claims are encrypted and must be decrypted.
 
 ### Other methods of selectively disclosing claims
 
-The "env" claim is only suitable for protecting claims under the following circumstances:
+The "env" claim is only suitable for protecting claims under the following
+circumstances:
 
 - The issuer is the one that decides which claims are disclosed and to whom.
 - The issuer can reasonably pad the plaintext to avoid revealing the length of
-  the claim. This requires the issuer to know the maximum length of claims that might be present.
+  the claim. This requires the issuer to know the maximum length of claims that
+  might be present.
 - The bearer does not need to control which claims are disclosed.
 - The claim labels are not sensitive information.
 
@@ -452,5 +456,15 @@ JWT Claim Name: N/A
 Claim Key: TBD (between 41 and 255)
 Claim Value Type(s): array
 Change Controller: IETF
+
+<reference anchor='CTA5009A' target='https://shop.cta.tech/products/fast-and-readable-geographical-hashing-cta-5009'>
+    <front>
+        <title>CTA 5009-A: Fast and Readable Geographical Hashing</title>
+        <author>
+            <organization>Consumer Technology Association</organization>
+        </author>
+        <date year='2024'/>
+    </front>
+</reference>
 
 {backmatter}
