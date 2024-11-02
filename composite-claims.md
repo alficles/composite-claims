@@ -443,15 +443,15 @@ Claim Key: TBD (greater than 285)
 Claim Value Type(s): array
 Change Controller: IETF
 
-Claim Name: enc
-Claim Description: Logical AND
+Claim Name: env
+Claim Description: Enveloped Claims
 JWT Claim Name: N/A
 Claim Key: TBD (greater than 285)
 Claim Value Type(s): array
 Change Controller: IETF
 
 Claim Name: crit
-Claim Description: Logical AND
+Claim Description: Critical Claims
 JWT Claim Name: N/A
 Claim Key: TBD (between 41 and 255)
 Claim Value Type(s): array
