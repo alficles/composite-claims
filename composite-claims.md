@@ -11,7 +11,7 @@ updates = [ ]
 
 [seriesInfo]
 name = "Internet-Draft"
-value = "draft-lemmons-cose-composite-claims-00"
+value = "draft-lemmons-cose-composite-claims-01"
 stream = "IETF"
 status = "standard"
 
@@ -28,7 +28,7 @@ organization = "Comcast"
 .# Abstract
 
 Composition claims are CBOR Web Token claims that define logical relationships
-between sets of claims and provide for private claim values via encryption.
+between sets of claims.
 
 {mainmatter}
 
@@ -68,8 +68,7 @@ simply have a subject claim that identifies the bearer and the relying party
 simply uses that as information, not necessarily as a means by which to provide
 or deny access or make some other kind of decision. In this context, the token
 simply describes all situations in which the token would accurately describe
-that situation. That is to say, the token describes the set of contexts in
-which it would be acceptable.
+that situation.
 
 Composition claims can be nested to an arbitrary level of depth.
 Implementations **MAY** limit the depth of composition nesting by rejecting
@@ -163,8 +162,9 @@ or even whether the two subjects are genuinely different.
 }
 ```
 
-A relying party that receives this token does not know if the bearer is George
-or Harriet, but it knows that the bearer is one of them.
+A relying party that receives this token knows that bearer claims to be both
+George and Harriet and if either subject is acceptable, the token is
+acceptable.
 
 The "nor" claim is useful both as a logical negation, even when only one claim
 is present. For example, consider the following claim set:
@@ -220,65 +220,16 @@ combine multiple claims. For example, consider the following claim set:
 }
 ```
 
-This admittedly contrived example describes a token that is valid for either
-George or Harriet and is intended for either https://example.com or
+This admittedly contrived example describes a token that is valid for both
+George and Harriet and is intended for both https://example.com and
 https://example.net. It is a bit contrived because the "aud" claim already
 describes a list of acceptable audiences. The use of the "and" claim is
 required in order to effectively repeat the "or" claim, because a single claim
 set cannot contain the same claim twice.
 
-## Enveloped Claims
+## crit (Critical) Claim
 
-Enveloped claims identify a set of claims that should be considered as part of a
-set of claims, but that require decryption before they can be processed. This
-is sometimes useful when some processors do not need to evaluate some claims in
-order to determine if a claim set is acceptable.
-
-### env (Enveloped) Claim
-
-The "env" (Enveloped) claim allows an issuer to make private claims that cannot
-be read by a processor that does not possess the decryption key. The type of
-this claim is a map; the keys of the map are either claim keys (string,
-unsigned integer, or negative integer) or arrays of claim keys; the values of
-the map are COSE_Encrypt or COSE_Encrypt0 objects, as defined by
-[@!RFC9052, section 5]. The plaintext of the Enveloped Message is either a CBOR
-data item or a CBOR array of data items.
-
-Each element of the map is interpreted as follows:
-
-  - If the key is a claim key, the plaintext of the Enveloped Message in its
-    value is a CBOR data item that is appropriate as a value for that claim.
-  - If the key is an array of claim keys, the plaintext of the Enveloped
-    Message in its value is an array with the cardinality equal to or larger
-    than the array of claim keys. Each member of the array in the plaintext
-    corresponds with the member in the array in the key with the same index.
-    Elements of the value array with indexes that do not correspond with
-    elements of the key array MUST be ignored. The members of the array in the
-    plaintext are CBOR data items that are appropriate as values for the
-    corresponding claim. The array of claim keys **MUST** contain at least one
-    element.
-
-These claims described in the "env" claim **MAY** be processed exactly as
-though the "env" claim were replaced with the decrypted claims, including the
-limitation that a map of claims is invalid if it contains a claim more than
-once. The "env" claim is removed from the map before looking for duplicates, so
-an "env" claim that contains an "env" claim may potentially be accepted. An
-invalid claim set **MUST** be rejected. A claim set that contains
-duplicate claims **MUST** be rejected, even if the duplicates are not
-decrypted.
-
-Since claims are optionally decrypted and added as sibling claims, issuers can
-ensure that this occurs by adding them to the "crit" claim. In the absence of a
-"crit" claim, the relying party **MAY** choose not to decrypt the claims.
-Indeed, a relying party may not even have the decryption key for claims that
-are not relevant to its processing.
-
-Use of this claim is **OPTIONAL**. The Claim Key [add key number] is used to
-identify this claim.
-
-### crit (Critical) Claim
-
-The "crit" (Critical) claim lists the claims required to process this token.
+The "crit" (Critical) claim lists the claims required to process this claim set.
 
 The type of this claim is array and the elements of the array are strings,
 negative integers, or unsigned integers. The elements of the array correspond
@@ -291,15 +242,6 @@ rejected.
 If a claim listed in the "crit" claim is not present in a claim set, the claim
 set **MUST** be rejected.
 
-If a claim listed in the "crit" claim is present in a claim set as part of an
-"env" claim (and, should it be decrypted, be processed as a sibling of that
-"env" claim), if the value of the claim is not decrypted (for any reason) and
-processed and any possible value of the claim would result in the request being
-rejected, the claim set **MUST** be rejected. Since any processor **MAY**
-decrypt or not decrypt claim values in a "env" claim, this means a processor
-**MAY** reject any claim set that contains a claim that could have a value that
-would require rejection.
-
 If a "crit" claim is present in a claim set, a processor **SHOULD** consider
 claims it does not understand to be acceptable if they are not present in the
 "crit" claim, unless application-specific processing defines otherwise. That
@@ -311,89 +253,23 @@ identify this claim.
 
 ### Example
 
-Consider a very simple token that might be passed like this:
+A "crit" claim can be used in conjunction with logical claims to condition a
+portion of the token on the ability to process a claim:
 
 ```
 {
-  /iss/ 1: "https://example.com",
-  /sub/ 2: "george@example.net",
-  /aud/ 3: "https://example.com"
-}
-```
-The identity of George is present and clear in the token. Some parties
-receiving this token might need to know that George is the subject. However,
-some may not. For example:
-
-- An intermediary proxy that only needs to know that the issuer is
-  https://example.com and the audience is https://example.com.
-- An origin behind the proxy that needs to know that George is the subject as
-  well, so that it can customize its response.
-
-The intermediary is a relying party but does not need to know George's
-identity. The origin, however does. A token that permits this might look like
-this:
-
-```
-{
-  /iss/ 1: "https://example.com",
-  /aud/ 3: "https://example.com",
-  /env/ TBD: {
-    [/sub/ 2]: [
-      h'<cose-protected-header>',
-      h'<cose-unprotected-header>',
-      h'<cose-ciphertext>'
-    ]
-  }
+  /or/ TBD: [
+    { /geohash/ 282: "9q8y", /crit/ TBD: [ 282 ] },
+    { /private/ -524289: "sf", /crit/ TBD: [ -524289 ] }
+  ]
 }
 ```
 
-And the contents of the ciphertext might be:
-
-```
-["george@example.net", h'b73814740f877e8aa691fdab6cda']
-```
-
-The intermediary can process the token without decrypting the "env" claim. The
-origin can decrypt the "env" claim and learn that George is the subject. The
-issuer used additional padding in the plaintext in order to avoid disclosing
-the length of the subject value.
-
-### Profiling the "env" Claim
-
-The "env" claim is only useful when the issuer can reliably expect a relying
-party that needs to understand the claim to be able to decrypt it. This
-document does not specify several important required details:
-
-- How the issuer and relying party establish trust.
-- How the issuer conveys the decryption key to the relying party.
-- How the issuer and relying party agree on the supported ciphers.
-
-These details are of necessity left to the application profile, since they will
-vary between applications. The "crit" claim can be used to ensure that the
-relying party knows which claims are encrypted and must be decrypted.
-
-### Other methods of selectively disclosing claims
-
-The "env" claim is only suitable for protecting claims under the following
-circumstances:
-
-- The issuer is the one that decides which claims are disclosed and to whom.
-- The issuer can reasonably pad the plaintext to avoid revealing the length of
-  the claim. This requires the issuer to know the maximum length of claims that
-  might be present.
-- The bearer does not need to control which claims are disclosed.
-- The claim labels are not sensitive information.
-
-If these are not the case, the "env" claim is not suitable. If the bearer is
-the one that controls selective disclosure,
-[draft-ietf-oauth-selective-disclosure-08] may be more appropriate. SD-JWTs
-also protect the claim labels, which the "env" claim does not.
-
-When the claims for different audiences are significantly different, multiple
-encrypted tokens can be used. This is likely to lead to larger sets of tokens
-in general, but is a very flexible approach. This protects the entire contents
-of each token from all parties that do not possess the decryption key for that
-token.
+This example assumes the existance of some kind of claim in the private space
+that a relying party may or may not be able to process. This token claims that
+the subject is in the described region and also that a private claim is present
+and that the relying party must be able to verify at least one of those claims,
+but it does not need to be able to process both.
 
 # Security Considerations
 
@@ -404,57 +280,45 @@ Additionally, processors of CWTs with composition claims will need to be aware
 of the possibility of receiving highly nested tokens. Excessive nesting can
 lead to overflows or other processing errors.
 
-The security of the "env" claim is subject to all the considerations detailed
-for COSE objects in [@!RFC9052, section 12]. Particular attention is required
-to length attacks. If the length of the Enveloped Claims is revealing as to its
-contents, as it most often will be in this context, issuers MUST pad the
-content appropriately in order to maintain the secrecy of its contents. "env"
-claims permit additional elements to be added after arrays of claim keys that
-can be used for padding when it is required.
-
-Since the "env" claim only encrypts the contents of the claim and not its key,
-it discloses the presence of a given claim. When this is undesirable, another
-composite claim like "and", "or", or even potentially "env" can be be used to
-mask the presence of the claim within.
+Additionally, there is a chicken-and-egg problem with the "crit" claim. A
+relying party that does not support the "crit" claim cannot be expected to
+enforce it to make other claims mandatory. As a result, an application that
+includes the "crit" claim in its CWT profile MUST make the correct processing
+of the claim REQUIRED for relying parties. It MAY be OPTIONAL for issuers. This
+allows the "crit" claim to be used to facilitate extensions and
+interoperability.
 
 # IANA Considerations
 
 This specification requests that IANA register the following claim keys in the
 "CBOR Web Token (CWT) Claims" registry established by [@!RFC8392]:
 
-Claim Name: or
-Claim Description: Logical OR
-JWT Claim Name: N/A
-Claim Key: TBD (greater than 285)
-Claim Value Type(s): array
+Claim Name: or  
+Claim Description: Logical OR  
+JWT Claim Name: N/A  
+Claim Key: TBD (greater than 285)  
+Claim Value Type(s): array  
 Change Controller: IETF
 
-Claim Name: nor
-Claim Description: Logical NOR
-JWT Claim Name: N/A
-Claim Key: TBD (greater than 285)
-Claim Value Type(s): array
+Claim Name: nor  
+Claim Description: Logical NOR  
+JWT Claim Name: N/A  
+Claim Key: TBD (greater than 285)  
+Claim Value Type(s): array  
 Change Controller: IETF
 
-Claim Name: and
-Claim Description: Logical AND
-JWT Claim Name: N/A
-Claim Key: TBD (greater than 285)
-Claim Value Type(s): array
+Claim Name: and  
+Claim Description: Logical AND  
+JWT Claim Name: N/A  
+Claim Key: TBD (greater than 285)  
+Claim Value Type(s): array  
 Change Controller: IETF
 
-Claim Name: env
-Claim Description: Enveloped Claims
-JWT Claim Name: N/A
-Claim Key: TBD (greater than 285)
-Claim Value Type(s): array
-Change Controller: IETF
-
-Claim Name: crit
-Claim Description: Critical Claims
-JWT Claim Name: N/A
-Claim Key: TBD (between 41 and 255)
-Claim Value Type(s): array
+Claim Name: crit  
+Claim Description: Critical Claims  
+JWT Claim Name: N/A  
+Claim Key: TBD (greater than 285)  
+Claim Value Type(s): array  
 Change Controller: IETF
 
 <reference anchor='CTA5009A' target='https://shop.cta.tech/products/fast-and-readable-geographical-hashing-cta-5009'>
