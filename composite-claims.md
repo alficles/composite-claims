@@ -5,7 +5,7 @@ ipr= "trust200902"
 area = "Security"
 workgroup = "COSE WG"
 submissiontype = "IETF"
-keyword = [""]
+keyword = ["CBOR", "CWT", "COSE"]
 updates = [ ]
 #date = 2003-04-01T00:00:00Z
 
@@ -34,9 +34,9 @@ between sets of claims.
 
 # Introduction
 
-Composition claims are claims defined for CBOR Web Tokens (CWTs) [@!RFC7519].
-These claims include logical operators "or", "nor", and "and" as well as a
-wrapper that encrypts the values, but not the keys, of some claims.
+Composition claims are claims defined for CBOR Web Tokens (CWTs) [@!RFC8392].
+These claims include logical operators "or", "nor", and "and", as well as a
+critical-claims list claim ("crit").
 
 # Terminology
 
@@ -45,7 +45,7 @@ The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD",
 document are to be interpreted as described in BCP 14 [@!RFC2119] [@!RFC8174] when,
 and only when, they appear in all capitals, as shown here.
 
-This document reuses terminology from CWT [@!RFC7519] and COSE [@!RFC9052].
+This document reuses terminology from CWT [@!RFC8392] and COSE [@!RFC9052].
 
 This term is defined by this specification:
 
@@ -59,8 +59,8 @@ Composition claims contain one or more claim sets.
 
 In CWTs without composition claims, there is exactly one set of claims, so the
 acceptability of the claim set decides the acceptability of the CWT. However,
-this document defines multiple sets of claim sets, so it instead refers to
-accepting or rejecting claim sets. If the primary claim set is unacceptable,
+this document defines multiple claim sets, so it instead refers to accepting
+or rejecting claim sets. If the primary claim set is unacceptable,
 the CWT is unacceptable and **MUST** be rejected.
 
 Some applications use tokens to convey information. For example, a token might
@@ -81,7 +81,7 @@ type of these claims is array and the elements of the array are maps that are
 themselves sets of claims.
 
 For the following CDDL, `Claims-Set` is a map of claims as defined in
-[@!RFC8392]. It is described informatively in [draft-ietf-rats-eat] Appendix D.
+[@!RFC8392]. It is described informatively in [@?I-D.ietf-rats-eat], Appendix D.
 
 ### or (Or) Claim
 
@@ -93,7 +93,7 @@ claim set containing the "or" claim **MUST** be rejected.
 Use of this claim is **OPTIONAL**. The Claim Key [add key number] is used to
 identify this claim.
 
-The "or" (OR) claim is described by the following CDDL:
+The "or" (Or) claim is described by the following CDDL:
 
 ```cddl
 $$Claims-Set-Claims //= ( or-claim-label => or-claim-value )
@@ -113,7 +113,7 @@ This is the logical negation of the "or" claim.
 Use of this claim is **OPTIONAL**. The Claim Key [add key number] is used to
 identify this claim.
 
-The "nor" (NOR) claim is described by the following CDDL:
+The "nor" (Nor) claim is described by the following CDDL:
 
 ```cddl
 $$Claims-Set-Claims //= ( nor-claim-label => nor-claim-value )
@@ -137,7 +137,7 @@ claims.
 Use of this claim is **OPTIONAL**. The Claim Key [add key number] is used to
 identify this claim.
 
-The "and" (AND) claim is described by the following CDDL:
+The "and" (And) claim is described by the following CDDL:
 
 ```cddl
 $$Claims-Set-Claims //= ( and-claim-label => and-claim-value )
@@ -179,24 +179,22 @@ is present. For example, consider the following claim set:
 
 This token is intended for any audience except "example.com".
 
-Complex relationshops can also be described using the claims in combination.
+Complex relationships can also be described using the claims in combination.
 The "geohash" claim [@?CTA5009A] describes a geographical region. For example:
 
 ```
 {
-  { /aud/ 3: "https://example.com" },
-  { /geohash/ 282: "9q8yy" },
-  { /nor/ TBD: [
-      { /geohash/ 282: ["9q8yy9", "9q8yyd"] }
-    ]
-  }
+  /aud/ 3: "https://example.com",
+  /geohash/ 282: "9q8yy",
+  /nor/ TBD: [
+    { /geohash/ 282: ["9q8yy9", "9q8yyd"] }
+  ]
 }
 ```
 
 This token describes an audience of "https://example.com" and a region
 described by the geohash of "9q8yy" that does not include the region described
 by "9q8yy9" or "9q8yyd".
-
 
 And if a very complex relationship is required, the "and" claim can be used to
 combine multiple claims. For example, consider the following claim set:
@@ -233,7 +231,7 @@ The "crit" (Critical) claim lists the claims required to process this claim set.
 
 The type of this claim is array and the elements of the array are strings,
 negative integers, or unsigned integers. The elements of the array correspond
-to claims that MUST be present in the token.
+to claims that MUST be present in the claim set.
 
 If a claim listed in the "crit" claim is present in a claim set and the
 processor cannot process the claim for any reason, the claim set **MUST** be
@@ -265,7 +263,7 @@ portion of the token on the ability to process a claim:
 }
 ```
 
-This example assumes the existance of some kind of claim in the private space
+This example assumes the existence of some kind of claim in the private space
 that a relying party may or may not be able to process. This token claims that
 the subject is in the described region and also that a private claim is present
 and that the relying party must be able to verify at least one of those claims,
@@ -328,6 +326,16 @@ Change Controller: IETF
             <organization>Consumer Technology Association</organization>
         </author>
         <date year='2024'/>
+    </front>
+</reference>
+
+<reference anchor='I-D.ietf-rats-eat' target='https://datatracker.ietf.org/doc/html/draft-ietf-rats-eat'>
+    <front>
+        <title>Entity Attestation Token (EAT)</title>
+        <author>
+            <organization>IETF</organization>
+        </author>
+        <date/>
     </front>
 </reference>
 
