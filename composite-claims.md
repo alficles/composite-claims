@@ -5,13 +5,13 @@ ipr= "trust200902"
 area = "Security"
 workgroup = "COSE WG"
 submissiontype = "IETF"
-keyword = ["CBOR", "CWT", "COSE"]
+keyword = ["CBOR", "CWT", "COSE", "JWT", "JSON"]
 updates = [ ]
 #date = 2003-04-01T00:00:00Z
 
 [seriesInfo]
 name = "Internet-Draft"
-value = "draft-lemmons-cose-composite-claims-01"
+value = "draft-lemmons-cose-composite-claims-02"
 stream = "IETF"
 status = "standard"
 
@@ -27,16 +27,18 @@ organization = "Comcast"
 
 .# Abstract
 
-Composition claims are CBOR Web Token claims that define logical relationships
-between sets of claims.
+Composition claims are claims for CBOR Web Tokens (CWTs) and JSON Web Tokens
+(JWTs) that define logical relationships between sets of claims.
 
 {mainmatter}
 
 # Introduction
 
-Composition claims are claims defined for CBOR Web Tokens (CWTs) [@!RFC8392].
-These claims include logical operators "or", "nor", and "and", as well as a
-critical-claims list claim ("crit").
+Composition claims are claims defined for CBOR Web Tokens (CWTs) [@!RFC8392]
+and JSON Web Tokens (JWTs) [@!RFC7519].
+
+This document defines the CWT representations of the composition claims named
+"and", "or", "nor". It also defines a CWT definition for "crit".
 
 # Terminology
 
@@ -45,23 +47,27 @@ The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD",
 document are to be interpreted as described in BCP 14 [@!RFC2119] [@!RFC8174] when,
 and only when, they appear in all capitals, as shown here.
 
-This document reuses terminology from CWT [@!RFC8392] and COSE [@!RFC9052].
+This document reuses terminology from CWT [@!RFC8392], JWT [@!RFC7519], and
+COSE [@!RFC9052].
 
 This term is defined by this specification:
 
 Composition Claim
-: A composition claim is a CWT claim that contains, as part of its value, one
-or more CWT claim sets.
+: A claim whose value contains one or more claim sets.
+
+Claim Set
+: A set of claims. For CWTs this is a CBOR map. For JWTs
+this is a JSON object.
 
 # Claims
 
 Composition claims contain one or more claim sets.
 
-In CWTs without composition claims, there is exactly one set of claims, so the
-acceptability of the claim set decides the acceptability of the CWT. However,
-this document defines multiple claim sets, so it instead refers to accepting
-or rejecting claim sets. If the primary claim set is unacceptable,
-the CWT is unacceptable and **MUST** be rejected.
+In tokens without composition claims, there is exactly one set of claims, so
+the acceptability of the claim set decides the acceptability of the token.
+However, this document defines multiple claim sets, so it instead refers to
+accepting or rejecting claim sets. If the primary claim set is unacceptable,
+the token is unacceptable and **MUST** be rejected.
 
 Some applications use tokens to convey information. For example, a token might
 simply have a subject claim that identifies the bearer and the relying party
@@ -70,9 +76,9 @@ or deny access or make some other kind of decision. In this context, the token
 simply describes all situations in which the token would accurately describe
 that situation.
 
-Composition claims can be nested to an arbitrary level of depth.
-Implementations **MAY** limit the depth of composition nesting by rejecting
-CWTs with too many levels but **MUST** support at least four levels of nesting.
+Composition claims may be nested arbitrarily. Implementations **MAY** reject
+tokens exceeding an implementation-defined nesting depth but **MUST** support at
+least four levels.
 
 ## Logical Claims
 
@@ -80,18 +86,25 @@ These claims identify one or more sets of claims in a logical relation. The
 type of these claims is array and the elements of the array are maps that are
 themselves sets of claims.
 
+In CWTs, the value is a CBOR array of CBOR maps. In JWTs, the value is a JSON
+array of JSON objects.
+
 For the following CDDL, `Claims-Set` is a map of claims as defined in
-[@!RFC8392]. It is described informatively in [@?I-D.ietf-rats-eat], Appendix D.
+[@!RFC8392]. It is described informatively in [@?RFC9711], Appendix D.
 
 ### or (Or) Claim
 
-The "or" (Or) claim identifies one or more sets of claims of which at least one
-is acceptable. If every set of claims in an "or" claim would, when considered with
-all the other relevant claims, result in the claim set being rejected, the
-claim set containing the "or" claim **MUST** be rejected.
+The "or" (Or) claim identifies one or more claim sets of which at least one is
+acceptable. If none of the claim sets in an "or" claim is acceptable, the
+claim set containing the "or" claim is also unacceptable.
 
-Use of this claim is **OPTIONAL**. The Claim Key [add key number] is used to
-identify this claim.
+Use of this claim is **OPTIONAL**.
+
+In JWTs, the Claim Name is "or" and the Claim Value is a JSON array of JSON
+objects.
+
+In CWTs, the Claim Key is TBD (to be registered in the "CBOR Web Token (CWT)
+Claims" registry).
 
 The "or" (Or) claim is described by the following CDDL:
 
@@ -103,15 +116,19 @@ or-claim-value = [ + Claims-Set ]
 
 ### nor (Not Or) Claim
 
-The "nor" (Nor) claim identifies one or more sets of claims of which none are
-acceptable. If any set of claims in a "nor" claim would, when considered with all
-other relevant claims, result in the claim set being accepted, the claim set
-containing the "nor" **MUST** be rejected.
+The "nor" (Nor) claim identifies one or more claim sets of which none are
+acceptable. If any claim set in a "nor" claim is acceptable, the claim set
+containing the "nor" claim is also unacceptable.
 
 This is the logical negation of the "or" claim.
 
-Use of this claim is **OPTIONAL**. The Claim Key [add key number] is used to
-identify this claim.
+Use of this claim is **OPTIONAL**.
+
+In JWTs, the Claim Name is "nor" and the Claim Value is a JSON array of JSON
+objects.
+
+In CWTs, the Claim Key is TBD (to be registered in the "CBOR Web Token (CWT)
+Claims" registry).
 
 The "nor" (Nor) claim is described by the following CDDL:
 
@@ -123,19 +140,22 @@ nor-claim-value = [ + Claims-Set ]
 
 ### and (And) Claim
 
-The "and" (And) claim identifies one or more sets of claims of which all are
-acceptable. If any claim in an "and" claim would, when considered with all other
-relevant claims, result in the claim set being rejected, the claim set
-containing the "and" claim **MUST** be rejected.
+The "and" (And) claim identifies one or more claim sets of which all are
+acceptable. If any claim set in an "and" claim is not acceptable, the
+claim set containing the "and" claim is also unacceptable.
 
-The "and" claim is often unnecessary because a given claim set is only accepted
-when all its claims are acceptable. However, CBOR maps cannot have duplicate
-keys, so claims cannot be repeated more than once. The "and" claim is useful
-for claims that may be claimed multiple times, including the "or" and "nor"
-claims.
+The "and" claim is often unnecessary because a claim set is only accepted when
+all its claims are acceptable. However, CBOR maps cannot have duplicate keys, so
+claims cannot be repeated. The "and" claim is useful when a claim needs to
+appear multiple times, like when using the "or" and "nor" claims.
 
-Use of this claim is **OPTIONAL**. The Claim Key [add key number] is used to
-identify this claim.
+Use of this claim is **OPTIONAL**.
+
+In JWTs, the Claim Name is "and" and the Claim Value is a JSON array of JSON
+objects.
+
+In CWTs, the Claim Key is TBD (to be registered in the "CBOR Web Token (CWT)
+Claims" registry).
 
 The "and" (And) claim is described by the following CDDL:
 
@@ -166,6 +186,17 @@ A relying party that receives this token knows that bearer claims to be both
 George and Harriet and if either subject is acceptable, the token is
 acceptable.
 
+The following JWT claim set example is equivalent:
+
+```
+{
+  "or": [
+    { "sub": "george@example.net" },
+    { "sub": "harriet@example.net" }
+  ]
+}
+```
+
 The "nor" claim is useful both as a logical negation, even when only one claim
 is present. For example, consider the following claim set:
 
@@ -178,6 +209,16 @@ is present. For example, consider the following claim set:
 ```
 
 This token is intended for any audience except "example.com".
+
+The following JWT claim set example is equivalent:
+
+```
+{
+  "nor": [
+    { "aud": "https://example.com" }
+  ]
+}
+```
 
 Complex relationships can also be described using the claims in combination.
 The "geohash" claim [@?CTA5009A] describes a geographical region. For example:
@@ -227,27 +268,38 @@ set cannot contain the same claim twice.
 
 ## crit (Critical) Claim
 
-The "crit" (Critical) claim lists the claims required to process this claim set.
+The "crit" (Critical) claim indicates critical extensions to this kind of claim
+set.
 
-The type of this claim is array and the elements of the array are strings,
-negative integers, or unsigned integers. The elements of the array correspond
-to claims that MUST be present in the claim set.
+The semantics of the JWT claim name "crit" are defined by OpenID Federation 1.0
+[@!OpenID-Federation]. This specification defines only the CWT representation.
+
+The value of this claim is an array. Each element identifies a claim within the
+same claim set.
+
+In CWTs, elements are integers or text strings identifying claim keys. The
+"crit" array **MUST NOT** be empty. Each element of the "crit" array **MUST**
+identify a claim that is present in the same claim set. Elements in the "crit"
+array **MUST** be unique.
+
+Elements in the "crit" array **MUST NOT** identify claims that are specified
+as MANDATORY to understand for the token. This will vary by application profile
+as described in [RFC7519], Section 4. As noted in [@!OpenID-Federation],
+Section 13.4, any profile that requires correct processing of the "crit" claim
+**MUST** of necessity specify that it is MANDATORY to understand.
 
 If a claim listed in the "crit" claim is present in a claim set and the
 processor cannot process the claim for any reason, the claim set **MUST** be
-rejected.
+rejected. If a claim listed in the "crit" claim is not present in a claim set,
+the claim set **MUST** be rejected. (TODO: Square this with the OpenID
+definition. The OpenID definition does not explicitly require claim sets to be
+rejected if the claim name rules like including duplicates, empty arrays, or
+the presence of claims that are not present in the claim set.)
 
-If a claim listed in the "crit" claim is not present in a claim set, the claim
-set **MUST** be rejected.
+Use of this claim is **OPTIONAL**.
 
-If a "crit" claim is present in a claim set, a processor **SHOULD** consider
-claims it does not understand to be acceptable if they are not present in the
-"crit" claim, unless application-specific processing defines otherwise. That
-is, when a "crit" claim is present, any claims not listed may by default be
-assumed to be non-critical.
-
-Use of this claim is **OPTIONAL**. The Claim Key [add key number] is used to
-identify this claim.
+In CWTs, the Claim Key is TBD (to be registered in the "CBOR Web Token (CWT)
+Claims" registry).
 
 ### Example
 
@@ -271,20 +323,12 @@ but it does not need to be able to process both.
 
 # Security Considerations
 
-All security considerations relevant to CWTs in general will apply to CWTs that
-use composition claims.
+All security considerations relevant to CWTs and JWTs in general will apply to
+tokens that use composition claims.
 
-Additionally, processors of CWTs with composition claims will need to be aware
+Additionally, processors of tokens with composition claims will need to be aware
 of the possibility of receiving highly nested tokens. Excessive nesting can
 lead to overflows or other processing errors.
-
-Additionally, there is a chicken-and-egg problem with the "crit" claim. A
-relying party that does not support the "crit" claim cannot be expected to
-enforce it to make other claims mandatory. As a result, an application that
-includes the "crit" claim in its CWT profile MUST make the correct processing
-of the claim REQUIRED for relying parties. It MAY be OPTIONAL for issuers. This
-allows the "crit" claim to be used to facilitate extensions and
-interoperability.
 
 # IANA Considerations
 
@@ -293,31 +337,52 @@ This specification requests that IANA register the following claim keys in the
 
 Claim Name: or  
 Claim Description: Logical OR  
-JWT Claim Name: N/A  
-Claim Key: TBD (greater than 285)  
+JWT Claim Name: or  
+Claim Key: TBD  
 Claim Value Type(s): array  
-Change Controller: IETF
+Change Controller: IESG
 
 Claim Name: nor  
 Claim Description: Logical NOR  
-JWT Claim Name: N/A  
-Claim Key: TBD (greater than 285)  
+JWT Claim Name: nor  
+Claim Key: TBD  
 Claim Value Type(s): array  
-Change Controller: IETF
+Change Controller: IESG
 
 Claim Name: and  
 Claim Description: Logical AND  
-JWT Claim Name: N/A  
-Claim Key: TBD (greater than 285)  
+JWT Claim Name: and  
+Claim Key: TBD  
 Claim Value Type(s): array  
-Change Controller: IETF
+Change Controller: IESG
 
 Claim Name: crit  
 Claim Description: Critical Claims  
-JWT Claim Name: N/A  
-Claim Key: TBD (greater than 285)  
+JWT Claim Name: crit  
+Claim Key: TBD  
 Claim Value Type(s): array  
-Change Controller: IETF
+Change Controller: IESG
+
+This specification requests that IANA register the following claim names in the
+"JSON Web Token Claims" registry established by [@!RFC7519]:
+
+Claim Name: or  
+Claim Description: Logical OR  
+Change Controller: IESG  
+Specification Document(s): This document
+
+Claim Name: nor  
+Claim Description: Logical NOR  
+Change Controller: IESG  
+Specification Document(s): This document
+
+Claim Name: and  
+Claim Description: Logical AND  
+Change Controller: IESG  
+Specification Document(s): This document
+
+The JWT Claim Name "crit" is already registered in the "JSON Web Token Claims"
+registry and is defined by OpenID Federation 1.0 [@!OpenID-Federation].
 
 <reference anchor='CTA5009A' target='https://shop.cta.tech/products/fast-and-readable-geographical-hashing-cta-5009'>
     <front>
@@ -329,14 +394,14 @@ Change Controller: IETF
     </front>
 </reference>
 
-<reference anchor='I-D.ietf-rats-eat' target='https://datatracker.ietf.org/doc/html/draft-ietf-rats-eat'>
-    <front>
-        <title>Entity Attestation Token (EAT)</title>
-        <author>
-            <organization>IETF</organization>
-        </author>
-        <date/>
-    </front>
+<reference anchor='OpenID-Federation' target='https://openid.net/specs/openid-federation-1_0.html'>
+  <front>
+    <title>OpenID Federation 1.0</title>
+    <author>
+      <organization>OpenID Foundation</organization>
+    </author>
+    <date/>
+  </front>
 </reference>
 
 {backmatter}
