@@ -82,9 +82,12 @@ or deny access or make some other kind of decision. In this context, the token
 simply describes all situations in which the token would accurately describe
 that situation.
 
-Composite claims may be nested arbitrarily. Implementations **MAY** reject
-tokens exceeding an implementation-defined nesting depth but **MUST** support at
-least four levels.
+Composite claims may be nested. This specification places no inherent limit on
+nesting depth. For the purpose of this requirement, the primary claim set is at
+nesting depth 0, and a claim set nested within a composite claim is at a depth
+one greater than the composite claim that contains it. Implementations **MAY**
+reject tokens whose nesting depth exceeds an implementation-defined limit, but
+that limit **MUST NOT** be less than 4.
 
 ## Logical Claims
 
@@ -105,6 +108,8 @@ In the following CDDL, `Claims-Set` is a claim set: a CBOR map for CWTs
 The "or" (Or) claim identifies one or more claim sets of which at least one is
 acceptable. If none of the claim sets in an "or" claim is acceptable, the
 claim set containing the "or" claim is also unacceptable.
+
+The "or" array **MUST NOT** be empty.
 
 Use of this claim by a token issuer is **OPTIONAL**.
 
@@ -129,6 +134,8 @@ acceptable. If any claim set in a "nor" claim is acceptable, the claim set
 containing the "nor" claim is also unacceptable.
 
 This is the logical negation of the "or" claim.
+
+The "nor" array **MUST NOT** be empty.
 
 Use of this claim by a token issuer is **OPTIONAL**.
 
@@ -156,6 +163,8 @@ The "and" claim is often unnecessary because a claim set is only accepted when
 all its claims are acceptable. However, neither a CBOR map nor a JSON object may contain duplicate keys, so
 claims cannot be repeated. The "and" claim is useful when a claim needs to
 appear multiple times, like when using the "or" and "nor" claims.
+
+The "and" array **MUST NOT** be empty.
 
 Use of this claim by a token issuer is **OPTIONAL**.
 
@@ -292,21 +301,23 @@ The semantics of the JWT claim name "crit" are defined by OpenID Federation 1.0
 
 The value of this claim is an array.
 
-In CWTs, elements are integers or text strings identifying claim keys. The
-"crit" array **MUST NOT** be empty. Each element of the "crit" array **MUST**
-identify a claim that is present in the same claim set. Elements in the "crit"
-array **MUST** be unique.
+In CWTs, elements are integers or text strings identifying claim keys.
 
-Elements in the "crit" array **MUST NOT** identify claims that are specified
-as MANDATORY to understand for the token. This will vary by application profile
-as described in [@!RFC7519], Section 4. As noted in [@!OpenID-Federation],
-Section 13.4, any profile that requires correct processing of the "crit" claim
-**MUST** specify that it is MANDATORY to understand.
+An issuer producing a "crit" claim **MUST** ensure that the "crit" array is not
+empty, that each element identifies a claim that is present in the claim set
+that directly contains the "crit" claim, and that the elements are unique.
 
-If a claim listed in the "crit" array is present in a claim set and the
-processor cannot process the claim for any reason, the claim set **MUST** be
-rejected. If a claim listed in the "crit" array is not present in a claim set,
-the claim set **MUST** be rejected.
+An issuer **MUST NOT** include in the "crit" array any claim that is already
+required to be understood and processed for the token. Which claims are required
+to be understood and processed varies by application profile, as described in
+[@!RFC7519], Section 4. As noted in [@!OpenID-Federation], Section 13.4, any
+profile that requires correct processing of the "crit" claim **MUST** specify
+that the "crit" claim itself MUST be understood and processed.
+
+A recipient **MUST** reject the claim set that directly contains a "crit" claim
+if any claim listed in that "crit" array is not present in that claim set. If a
+claim listed in the "crit" array is present but the recipient cannot process it
+for any reason, the recipient **MUST** reject that claim set.
 
 Use of this claim by a token issuer is **OPTIONAL**.
 

@@ -1431,9 +1431,12 @@ uses that as information, not necessarily as a means by which to provide
 or deny access or make some other kind of decision. In this context, the token
 simply describes all situations in which the token would accurately describe
 that situation.<a href="#section-3-3" class="pilcrow">¶</a></p>
-<p id="section-3-4">Composite claims may be nested arbitrarily. Implementations <span class="bcp14">MAY</span> reject
-tokens exceeding an implementation-defined nesting depth but <span class="bcp14">MUST</span> support at
-least four levels.<a href="#section-3-4" class="pilcrow">¶</a></p>
+<p id="section-3-4">Composite claims may be nested. This specification places no inherent limit on
+nesting depth. For the purpose of this requirement, the primary claim set is at
+nesting depth 0, and a claim set nested within a composite claim is at a depth
+one greater than the composite claim that contains it. Implementations <span class="bcp14">MAY</span>
+reject tokens whose nesting depth exceeds an implementation-defined limit, but
+that limit <span class="bcp14">MUST NOT</span> be less than 4.<a href="#section-3-4" class="pilcrow">¶</a></p>
 <div id="logical-claims">
 <section id="section-3.1">
         <h3 id="name-logical-claims">
@@ -1456,17 +1459,18 @@ array of JSON objects.<a href="#section-3.1-2" class="pilcrow">¶</a></p>
 <p id="section-3.1.1-1">The "or" (Or) claim identifies one or more claim sets of which at least one is
 acceptable. If none of the claim sets in an "or" claim is acceptable, the
 claim set containing the "or" claim is also unacceptable.<a href="#section-3.1.1-1" class="pilcrow">¶</a></p>
-<p id="section-3.1.1-2">Use of this claim by a token issuer is <span class="bcp14">OPTIONAL</span>.<a href="#section-3.1.1-2" class="pilcrow">¶</a></p>
-<p id="section-3.1.1-3">In JWTs, the Claim Name is "or" and the Claim Value is a JSON array of JSON
-objects.<a href="#section-3.1.1-3" class="pilcrow">¶</a></p>
-<p id="section-3.1.1-4">In CWTs, the Claim Key is TBD_OR (to be registered in the "CBOR Web Token (CWT)
-Claims" registry).<a href="#section-3.1.1-4" class="pilcrow">¶</a></p>
-<p id="section-3.1.1-5">The "or" (Or) claim is described by the following CDDL:<a href="#section-3.1.1-5" class="pilcrow">¶</a></p>
-<div class="lang-cddl sourcecode" id="section-3.1.1-6">
+<p id="section-3.1.1-2">The "or" array <span class="bcp14">MUST NOT</span> be empty.<a href="#section-3.1.1-2" class="pilcrow">¶</a></p>
+<p id="section-3.1.1-3">Use of this claim by a token issuer is <span class="bcp14">OPTIONAL</span>.<a href="#section-3.1.1-3" class="pilcrow">¶</a></p>
+<p id="section-3.1.1-4">In JWTs, the Claim Name is "or" and the Claim Value is a JSON array of JSON
+objects.<a href="#section-3.1.1-4" class="pilcrow">¶</a></p>
+<p id="section-3.1.1-5">In CWTs, the Claim Key is TBD_OR (to be registered in the "CBOR Web Token (CWT)
+Claims" registry).<a href="#section-3.1.1-5" class="pilcrow">¶</a></p>
+<p id="section-3.1.1-6">The "or" (Or) claim is described by the following CDDL:<a href="#section-3.1.1-6" class="pilcrow">¶</a></p>
+<div class="lang-cddl sourcecode" id="section-3.1.1-7">
 <pre>$$Claims-Set-Claims //= ( or-claim-label =&gt; or-claim-value )
 or-claim-label = TBD_OR
 or-claim-value = [ + Claims-Set ]
-</pre><a href="#section-3.1.1-6" class="pilcrow">¶</a>
+</pre><a href="#section-3.1.1-7" class="pilcrow">¶</a>
 </div>
 </section>
 </div>
@@ -1479,17 +1483,18 @@ or-claim-value = [ + Claims-Set ]
 acceptable. If any claim set in a "nor" claim is acceptable, the claim set
 containing the "nor" claim is also unacceptable.<a href="#section-3.1.2-1" class="pilcrow">¶</a></p>
 <p id="section-3.1.2-2">This is the logical negation of the "or" claim.<a href="#section-3.1.2-2" class="pilcrow">¶</a></p>
-<p id="section-3.1.2-3">Use of this claim by a token issuer is <span class="bcp14">OPTIONAL</span>.<a href="#section-3.1.2-3" class="pilcrow">¶</a></p>
-<p id="section-3.1.2-4">In JWTs, the Claim Name is "nor" and the Claim Value is a JSON array of JSON
-objects.<a href="#section-3.1.2-4" class="pilcrow">¶</a></p>
-<p id="section-3.1.2-5">In CWTs, the Claim Key is TBD_NOR (to be registered in the "CBOR Web Token (CWT)
-Claims" registry).<a href="#section-3.1.2-5" class="pilcrow">¶</a></p>
-<p id="section-3.1.2-6">The "nor" (Nor) claim is described by the following CDDL:<a href="#section-3.1.2-6" class="pilcrow">¶</a></p>
-<div class="lang-cddl sourcecode" id="section-3.1.2-7">
+<p id="section-3.1.2-3">The "nor" array <span class="bcp14">MUST NOT</span> be empty.<a href="#section-3.1.2-3" class="pilcrow">¶</a></p>
+<p id="section-3.1.2-4">Use of this claim by a token issuer is <span class="bcp14">OPTIONAL</span>.<a href="#section-3.1.2-4" class="pilcrow">¶</a></p>
+<p id="section-3.1.2-5">In JWTs, the Claim Name is "nor" and the Claim Value is a JSON array of JSON
+objects.<a href="#section-3.1.2-5" class="pilcrow">¶</a></p>
+<p id="section-3.1.2-6">In CWTs, the Claim Key is TBD_NOR (to be registered in the "CBOR Web Token (CWT)
+Claims" registry).<a href="#section-3.1.2-6" class="pilcrow">¶</a></p>
+<p id="section-3.1.2-7">The "nor" (Nor) claim is described by the following CDDL:<a href="#section-3.1.2-7" class="pilcrow">¶</a></p>
+<div class="lang-cddl sourcecode" id="section-3.1.2-8">
 <pre>$$Claims-Set-Claims //= ( nor-claim-label =&gt; nor-claim-value )
 nor-claim-label = TBD_NOR
 nor-claim-value = [ + Claims-Set ]
-</pre><a href="#section-3.1.2-7" class="pilcrow">¶</a>
+</pre><a href="#section-3.1.2-8" class="pilcrow">¶</a>
 </div>
 </section>
 </div>
@@ -1505,17 +1510,18 @@ claim set containing the "and" claim is also unacceptable.<a href="#section-3.1.
 all its claims are acceptable. However, neither a CBOR map nor a JSON object may contain duplicate keys, so
 claims cannot be repeated. The "and" claim is useful when a claim needs to
 appear multiple times, like when using the "or" and "nor" claims.<a href="#section-3.1.3-2" class="pilcrow">¶</a></p>
-<p id="section-3.1.3-3">Use of this claim by a token issuer is <span class="bcp14">OPTIONAL</span>.<a href="#section-3.1.3-3" class="pilcrow">¶</a></p>
-<p id="section-3.1.3-4">In JWTs, the Claim Name is "and" and the Claim Value is a JSON array of JSON
-objects.<a href="#section-3.1.3-4" class="pilcrow">¶</a></p>
-<p id="section-3.1.3-5">In CWTs, the Claim Key is TBD_AND (to be registered in the "CBOR Web Token (CWT)
-Claims" registry).<a href="#section-3.1.3-5" class="pilcrow">¶</a></p>
-<p id="section-3.1.3-6">The "and" (And) claim is described by the following CDDL:<a href="#section-3.1.3-6" class="pilcrow">¶</a></p>
-<div class="lang-cddl sourcecode" id="section-3.1.3-7">
+<p id="section-3.1.3-3">The "and" array <span class="bcp14">MUST NOT</span> be empty.<a href="#section-3.1.3-3" class="pilcrow">¶</a></p>
+<p id="section-3.1.3-4">Use of this claim by a token issuer is <span class="bcp14">OPTIONAL</span>.<a href="#section-3.1.3-4" class="pilcrow">¶</a></p>
+<p id="section-3.1.3-5">In JWTs, the Claim Name is "and" and the Claim Value is a JSON array of JSON
+objects.<a href="#section-3.1.3-5" class="pilcrow">¶</a></p>
+<p id="section-3.1.3-6">In CWTs, the Claim Key is TBD_AND (to be registered in the "CBOR Web Token (CWT)
+Claims" registry).<a href="#section-3.1.3-6" class="pilcrow">¶</a></p>
+<p id="section-3.1.3-7">The "and" (And) claim is described by the following CDDL:<a href="#section-3.1.3-7" class="pilcrow">¶</a></p>
+<div class="lang-cddl sourcecode" id="section-3.1.3-8">
 <pre>$$Claims-Set-Claims //= ( and-claim-label =&gt; and-claim-value )
 and-claim-label = TBD_AND
 and-claim-value = [ + Claims-Set ]
-</pre><a href="#section-3.1.3-7" class="pilcrow">¶</a>
+</pre><a href="#section-3.1.3-8" class="pilcrow">¶</a>
 </div>
 </section>
 </div>
@@ -1634,28 +1640,29 @@ claim; it is defined here because it is used together with them.<a href="#sectio
 <span>[<a href="#OpenID-Federation" class="cite xref">OpenID-Federation</a>]</span>. This specification defines the CWT representation of
 "crit" and the CWT-specific processing rules below.<a href="#section-3.2-2" class="pilcrow">¶</a></p>
 <p id="section-3.2-3">The value of this claim is an array.<a href="#section-3.2-3" class="pilcrow">¶</a></p>
-<p id="section-3.2-4">In CWTs, elements are integers or text strings identifying claim keys. The
-"crit" array <span class="bcp14">MUST NOT</span> be empty. Each element of the "crit" array <span class="bcp14">MUST</span>
-identify a claim that is present in the same claim set. Elements in the "crit"
-array <span class="bcp14">MUST</span> be unique.<a href="#section-3.2-4" class="pilcrow">¶</a></p>
-<p id="section-3.2-5">Elements in the "crit" array <span class="bcp14">MUST NOT</span> identify claims that are specified
-as MANDATORY to understand for the token. This will vary by application profile
-as described in <span>[<a href="#RFC7519" class="cite xref">RFC7519</a>]</span>, Section 4. As noted in <span>[<a href="#OpenID-Federation" class="cite xref">OpenID-Federation</a>]</span>,
-Section 13.4, any profile that requires correct processing of the "crit" claim
-<span class="bcp14">MUST</span> specify that it is MANDATORY to understand.<a href="#section-3.2-5" class="pilcrow">¶</a></p>
-<p id="section-3.2-6">If a claim listed in the "crit" array is present in a claim set and the
-processor cannot process the claim for any reason, the claim set <span class="bcp14">MUST</span> be
-rejected. If a claim listed in the "crit" array is not present in a claim set,
-the claim set <span class="bcp14">MUST</span> be rejected.<a href="#section-3.2-6" class="pilcrow">¶</a></p>
-<p id="section-3.2-7">Use of this claim by a token issuer is <span class="bcp14">OPTIONAL</span>.<a href="#section-3.2-7" class="pilcrow">¶</a></p>
-<p id="section-3.2-8">In CWTs, the Claim Key is TBD_CRIT (to be registered in the "CBOR Web Token (CWT)
-Claims" registry).<a href="#section-3.2-8" class="pilcrow">¶</a></p>
-<p id="section-3.2-9">The "crit" (Critical) claim is described by the following CDDL:<a href="#section-3.2-9" class="pilcrow">¶</a></p>
-<div class="lang-cddl sourcecode" id="section-3.2-10">
+<p id="section-3.2-4">In CWTs, elements are integers or text strings identifying claim keys.<a href="#section-3.2-4" class="pilcrow">¶</a></p>
+<p id="section-3.2-5">An issuer producing a "crit" claim <span class="bcp14">MUST</span> ensure that the "crit" array is not
+empty, that each element identifies a claim that is present in the claim set
+that directly contains the "crit" claim, and that the elements are unique.<a href="#section-3.2-5" class="pilcrow">¶</a></p>
+<p id="section-3.2-6">An issuer <span class="bcp14">MUST NOT</span> include in the "crit" array any claim that is already
+required to be understood and processed for the token. Which claims are required
+to be understood and processed varies by application profile, as described in
+<span>[<a href="#RFC7519" class="cite xref">RFC7519</a>]</span>, Section 4. As noted in <span>[<a href="#OpenID-Federation" class="cite xref">OpenID-Federation</a>]</span>, Section 13.4, any
+profile that requires correct processing of the "crit" claim <span class="bcp14">MUST</span> specify
+that the "crit" claim itself MUST be understood and processed.<a href="#section-3.2-6" class="pilcrow">¶</a></p>
+<p id="section-3.2-7">A recipient <span class="bcp14">MUST</span> reject the claim set that directly contains a "crit" claim
+if any claim listed in that "crit" array is not present in that claim set. If a
+claim listed in the "crit" array is present but the recipient cannot process it
+for any reason, the recipient <span class="bcp14">MUST</span> reject that claim set.<a href="#section-3.2-7" class="pilcrow">¶</a></p>
+<p id="section-3.2-8">Use of this claim by a token issuer is <span class="bcp14">OPTIONAL</span>.<a href="#section-3.2-8" class="pilcrow">¶</a></p>
+<p id="section-3.2-9">In CWTs, the Claim Key is TBD_CRIT (to be registered in the "CBOR Web Token (CWT)
+Claims" registry).<a href="#section-3.2-9" class="pilcrow">¶</a></p>
+<p id="section-3.2-10">The "crit" (Critical) claim is described by the following CDDL:<a href="#section-3.2-10" class="pilcrow">¶</a></p>
+<div class="lang-cddl sourcecode" id="section-3.2-11">
 <pre>$$Claims-Set-Claims //= ( crit-claim-label =&gt; crit-claim-value )
 crit-claim-label = TBD_CRIT
 crit-claim-value = [ + (int / tstr) ]
-</pre><a href="#section-3.2-10" class="pilcrow">¶</a>
+</pre><a href="#section-3.2-11" class="pilcrow">¶</a>
 </div>
 <div id="example">
 <section id="section-3.2.1">

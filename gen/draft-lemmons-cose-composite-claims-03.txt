@@ -70,7 +70,7 @@ Table of Contents
        3.1.4.  Examples  . . . . . . . . . . . . . . . . . . . . . .   5
      3.2.  crit (Critical) Claim . . . . . . . . . . . . . . . . . .   7
        3.2.1.  Example . . . . . . . . . . . . . . . . . . . . . . .   8
-   4.  Security Considerations . . . . . . . . . . . . . . . . . . .   8
+   4.  Security Considerations . . . . . . . . . . . . . . . . . . .   9
    5.  IANA Considerations . . . . . . . . . . . . . . . . . . . . .   9
    6.  References  . . . . . . . . . . . . . . . . . . . . . . . . .  10
      6.1.  Normative References  . . . . . . . . . . . . . . . . . .  10
@@ -133,9 +133,13 @@ Internet-Draft           Composite Token Claims                July 2026
    In this context, the token simply describes all situations in which
    the token would accurately describe that situation.
 
-   Composite claims may be nested arbitrarily.  Implementations MAY
-   reject tokens exceeding an implementation-defined nesting depth but
-   MUST support at least four levels.
+   Composite claims may be nested.  This specification places no
+   inherent limit on nesting depth.  For the purpose of this
+   requirement, the primary claim set is at nesting depth 0, and a claim
+   set nested within a composite claim is at a depth one greater than
+   the composite claim that contains it.  Implementations MAY reject
+   tokens whose nesting depth exceeds an implementation-defined limit,
+   but that limit MUST NOT be less than 4.
 
 3.1.  Logical Claims
 
@@ -158,10 +162,6 @@ Internet-Draft           Composite Token Claims                July 2026
    is acceptable, the claim set containing the "or" claim is also
    unacceptable.
 
-   Use of this claim by a token issuer is OPTIONAL.
-
-   In JWTs, the Claim Name is "or" and the Claim Value is a JSON array
-   of JSON objects.
 
 
 
@@ -169,6 +169,13 @@ Lemmons                  Expires 7 January 2027                 [Page 3]
 
 Internet-Draft           Composite Token Claims                July 2026
 
+
+   The "or" array MUST NOT be empty.
+
+   Use of this claim by a token issuer is OPTIONAL.
+
+   In JWTs, the Claim Name is "or" and the Claim Value is a JSON array
+   of JSON objects.
 
    In CWTs, the Claim Key is TBD_OR (to be registered in the "CBOR Web
    Token (CWT) Claims" registry).
@@ -186,6 +193,8 @@ Internet-Draft           Composite Token Claims                July 2026
    claim set containing the "nor" claim is also unacceptable.
 
    This is the logical negation of the "or" claim.
+
+   The "nor" array MUST NOT be empty.
 
    Use of this claim by a token issuer is OPTIONAL.
 
@@ -208,16 +217,7 @@ Internet-Draft           Composite Token Claims                July 2026
    acceptable, the claim set containing the "and" claim is also
    unacceptable.
 
-   The "and" claim is often unnecessary because a claim set is only
-   accepted when all its claims are acceptable.  However, neither a CBOR
-   map nor a JSON object may contain duplicate keys, so claims cannot be
-   repeated.  The "and" claim is useful when a claim needs to appear
-   multiple times, like when using the "or" and "nor" claims.
 
-   Use of this claim by a token issuer is OPTIONAL.
-
-   In JWTs, the Claim Name is "and" and the Claim Value is a JSON array
-   of JSON objects.
 
 
 
@@ -225,6 +225,19 @@ Lemmons                  Expires 7 January 2027                 [Page 4]
 
 Internet-Draft           Composite Token Claims                July 2026
 
+
+   The "and" claim is often unnecessary because a claim set is only
+   accepted when all its claims are acceptable.  However, neither a CBOR
+   map nor a JSON object may contain duplicate keys, so claims cannot be
+   repeated.  The "and" claim is useful when a claim needs to appear
+   multiple times, like when using the "or" and "nor" claims.
+
+   The "and" array MUST NOT be empty.
+
+   Use of this claim by a token issuer is OPTIONAL.
+
+   In JWTs, the Claim Name is "and" and the Claim Value is a JSON array
+   of JSON objects.
 
    In CWTs, the Claim Key is TBD_AND (to be registered in the "CBOR Web
    Token (CWT) Claims" registry).
@@ -262,6 +275,13 @@ Internet-Draft           Composite Token Claims                July 2026
 
    The following JWT claim set example is equivalent:
 
+
+
+Lemmons                  Expires 7 January 2027                 [Page 5]
+
+Internet-Draft           Composite Token Claims                July 2026
+
+
    {
      "or": [
        { "sub": "george@example.net" },
@@ -271,16 +291,6 @@ Internet-Draft           Composite Token Claims                July 2026
 
    The "nor" claim is useful as a logical negation, even when only one
    claim set is present.  For example, consider the following claim set:
-
-
-
-
-
-
-Lemmons                  Expires 7 January 2027                 [Page 5]
-
-Internet-Draft           Composite Token Claims                July 2026
-
 
    {
      /nor/ TBD_NOR: [
@@ -318,16 +328,6 @@ Internet-Draft           Composite Token Claims                July 2026
    If a more complex relationship is required, the "and" claim can be
    used to combine multiple claims.  For example, consider the following
    claim set:
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -381,9 +381,9 @@ Internet-Draft           Composite Token Claims                July 2026
    The value of this claim is an array.
 
    In CWTs, elements are integers or text strings identifying claim
-   keys.  The "crit" array MUST NOT be empty.  Each element of the
-   "crit" array MUST identify a claim that is present in the same claim
-   set.  Elements in the "crit" array MUST be unique.
+   keys.
+
+
 
 
 
@@ -394,17 +394,24 @@ Lemmons                  Expires 7 January 2027                 [Page 7]
 Internet-Draft           Composite Token Claims                July 2026
 
 
-   Elements in the "crit" array MUST NOT identify claims that are
-   specified as MANDATORY to understand for the token.  This will vary
-   by application profile as described in [RFC7519], Section 4.  As
-   noted in [OpenID-Federation], Section 13.4, any profile that requires
-   correct processing of the "crit" claim MUST specify that it is
-   MANDATORY to understand.
+   An issuer producing a "crit" claim MUST ensure that the "crit" array
+   is not empty, that each element identifies a claim that is present in
+   the claim set that directly contains the "crit" claim, and that the
+   elements are unique.
 
-   If a claim listed in the "crit" array is present in a claim set and
-   the processor cannot process the claim for any reason, the claim set
-   MUST be rejected.  If a claim listed in the "crit" array is not
-   present in a claim set, the claim set MUST be rejected.
+   An issuer MUST NOT include in the "crit" array any claim that is
+   already required to be understood and processed for the token.  Which
+   claims are required to be understood and processed varies by
+   application profile, as described in [RFC7519], Section 4.  As noted
+   in [OpenID-Federation], Section 13.4, any profile that requires
+   correct processing of the "crit" claim MUST specify that the "crit"
+   claim itself MUST be understood and processed.
+
+   A recipient MUST reject the claim set that directly contains a "crit"
+   claim if any claim listed in that "crit" array is not present in that
+   claim set.  If a claim listed in the "crit" array is present but the
+   recipient cannot process it for any reason, the recipient MUST reject
+   that claim set.
 
    Use of this claim by a token issuer is OPTIONAL.
 
@@ -436,19 +443,17 @@ Internet-Draft           Composite Token Claims                July 2026
    least one of them: the "geohash" claim or the private claim.  It does
    not need to be able to process and verify both.
 
-4.  Security Considerations
-
-   All security considerations relevant to CWTs and JWTs in general will
-   apply to tokens that use composite claims.
-
-
-
 
 
 Lemmons                  Expires 7 January 2027                 [Page 8]
 
 Internet-Draft           Composite Token Claims                July 2026
 
+
+4.  Security Considerations
+
+   All security considerations relevant to CWTs and JWTs in general will
+   apply to tokens that use composite claims.
 
    Additionally, processors of tokens with composite claims will need to
    be aware of the possibility of receiving highly nested tokens.
@@ -493,11 +498,6 @@ Internet-Draft           Composite Token Claims                July 2026
    Claim Value Type(s): array
    Change Controller: IESG
 
-   This specification requests that IANA register the following claim
-   names in the "JSON Web Token Claims" registry established by
-   [RFC7519]:
-
-
 
 
 
@@ -505,6 +505,10 @@ Lemmons                  Expires 7 January 2027                 [Page 9]
 
 Internet-Draft           Composite Token Claims                July 2026
 
+
+   This specification requests that IANA register the following claim
+   names in the "JSON Web Token Claims" registry established by
+   [RFC7519]:
 
    Claim Name: or
    Claim Description: Logical OR
@@ -550,10 +554,6 @@ Internet-Draft           Composite Token Claims                July 2026
    [RFC8392]  Jones, M., Wahlstroem, E., Erdtman, S., and H. Tschofenig,
               "CBOR Web Token (CWT)", RFC 8392, DOI 10.17487/RFC8392,
               May 2018, <https://www.rfc-editor.org/info/rfc8392>.
-
-
-
-
 
 
 

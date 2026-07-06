@@ -70,9 +70,12 @@ uses that as information, not necessarily as a means by which to provide
 or deny access or make some other kind of decision. In this context, the token
 simply describes all situations in which the token would accurately describe
 that situation.</t>
-<t>Composite claims may be nested arbitrarily. Implementations <bcp14>MAY</bcp14> reject
-tokens exceeding an implementation-defined nesting depth but <bcp14>MUST</bcp14> support at
-least four levels.</t>
+<t>Composite claims may be nested. This specification places no inherent limit on
+nesting depth. For the purpose of this requirement, the primary claim set is at
+nesting depth 0, and a claim set nested within a composite claim is at a depth
+one greater than the composite claim that contains it. Implementations <bcp14>MAY</bcp14>
+reject tokens whose nesting depth exceeds an implementation-defined limit, but
+that limit <bcp14>MUST NOT</bcp14> be less than 4.</t>
 
 <section anchor="logical-claims"><name>Logical Claims</name>
 <t>These claims identify one or more sets of claims in a logical relation. The
@@ -89,6 +92,7 @@ array of JSON objects.</t>
 <t>The &quot;or&quot; (Or) claim identifies one or more claim sets of which at least one is
 acceptable. If none of the claim sets in an &quot;or&quot; claim is acceptable, the
 claim set containing the &quot;or&quot; claim is also unacceptable.</t>
+<t>The &quot;or&quot; array <bcp14>MUST NOT</bcp14> be empty.</t>
 <t>Use of this claim by a token issuer is <bcp14>OPTIONAL</bcp14>.</t>
 <t>In JWTs, the Claim Name is &quot;or&quot; and the Claim Value is a JSON array of JSON
 objects.</t>
@@ -107,6 +111,7 @@ or-claim-value = [ + Claims-Set ]
 acceptable. If any claim set in a &quot;nor&quot; claim is acceptable, the claim set
 containing the &quot;nor&quot; claim is also unacceptable.</t>
 <t>This is the logical negation of the &quot;or&quot; claim.</t>
+<t>The &quot;nor&quot; array <bcp14>MUST NOT</bcp14> be empty.</t>
 <t>Use of this claim by a token issuer is <bcp14>OPTIONAL</bcp14>.</t>
 <t>In JWTs, the Claim Name is &quot;nor&quot; and the Claim Value is a JSON array of JSON
 objects.</t>
@@ -128,6 +133,7 @@ claim set containing the &quot;and&quot; claim is also unacceptable.</t>
 all its claims are acceptable. However, neither a CBOR map nor a JSON object may contain duplicate keys, so
 claims cannot be repeated. The &quot;and&quot; claim is useful when a claim needs to
 appear multiple times, like when using the &quot;or&quot; and &quot;nor&quot; claims.</t>
+<t>The &quot;and&quot; array <bcp14>MUST NOT</bcp14> be empty.</t>
 <t>Use of this claim by a token issuer is <bcp14>OPTIONAL</bcp14>.</t>
 <t>In JWTs, the Claim Name is &quot;and&quot; and the Claim Value is a JSON array of JSON
 objects.</t>
@@ -241,19 +247,20 @@ claim; it is defined here because it is used together with them.</t>
 <xref target="OpenID-Federation"></xref>. This specification defines the CWT representation of
 &quot;crit&quot; and the CWT-specific processing rules below.</t>
 <t>The value of this claim is an array.</t>
-<t>In CWTs, elements are integers or text strings identifying claim keys. The
-&quot;crit&quot; array <bcp14>MUST NOT</bcp14> be empty. Each element of the &quot;crit&quot; array <bcp14>MUST</bcp14>
-identify a claim that is present in the same claim set. Elements in the &quot;crit&quot;
-array <bcp14>MUST</bcp14> be unique.</t>
-<t>Elements in the &quot;crit&quot; array <bcp14>MUST NOT</bcp14> identify claims that are specified
-as MANDATORY to understand for the token. This will vary by application profile
-as described in <xref target="RFC7519"></xref>, Section 4. As noted in <xref target="OpenID-Federation"></xref>,
-Section 13.4, any profile that requires correct processing of the &quot;crit&quot; claim
-<bcp14>MUST</bcp14> specify that it is MANDATORY to understand.</t>
-<t>If a claim listed in the &quot;crit&quot; array is present in a claim set and the
-processor cannot process the claim for any reason, the claim set <bcp14>MUST</bcp14> be
-rejected. If a claim listed in the &quot;crit&quot; array is not present in a claim set,
-the claim set <bcp14>MUST</bcp14> be rejected.</t>
+<t>In CWTs, elements are integers or text strings identifying claim keys.</t>
+<t>An issuer producing a &quot;crit&quot; claim <bcp14>MUST</bcp14> ensure that the &quot;crit&quot; array is not
+empty, that each element identifies a claim that is present in the claim set
+that directly contains the &quot;crit&quot; claim, and that the elements are unique.</t>
+<t>An issuer <bcp14>MUST NOT</bcp14> include in the &quot;crit&quot; array any claim that is already
+required to be understood and processed for the token. Which claims are required
+to be understood and processed varies by application profile, as described in
+<xref target="RFC7519"></xref>, Section 4. As noted in <xref target="OpenID-Federation"></xref>, Section 13.4, any
+profile that requires correct processing of the &quot;crit&quot; claim <bcp14>MUST</bcp14> specify
+that the &quot;crit&quot; claim itself MUST be understood and processed.</t>
+<t>A recipient <bcp14>MUST</bcp14> reject the claim set that directly contains a &quot;crit&quot; claim
+if any claim listed in that &quot;crit&quot; array is not present in that claim set. If a
+claim listed in the &quot;crit&quot; array is present but the recipient cannot process it
+for any reason, the recipient <bcp14>MUST</bcp14> reject that claim set.</t>
 <t>Use of this claim by a token issuer is <bcp14>OPTIONAL</bcp14>.</t>
 <t>In CWTs, the Claim Key is TBD_CRIT (to be registered in the &quot;CBOR Web Token (CWT)
 Claims&quot; registry).</t>
