@@ -65,7 +65,7 @@ this specification defines acceptability at the level of individual claim sets.
 The top-level claim set of a token is its primary claim set. If the primary
 claim set is unacceptable, the token is unacceptable and <bcp14>MUST</bcp14> be rejected.</t>
 <t>Some applications use tokens to convey information. For example, a token might
-have a subject claim that identifies the bearer and the relying party
+have a subject claim that identifies the bearer and the recipient
 uses that as information, not necessarily as a means by which to provide
 or deny access or make some other kind of decision. In this context, the token
 simply describes all situations in which the token would accurately describe
@@ -165,7 +165,7 @@ or even whether the two subjects are genuinely different.</t>
   ]
 }
 ]]></artwork>
-<t>A relying party that receives this token knows that the bearer claims to be
+<t>A recipient that receives this token knows that the bearer claims to be
 George or Harriet, and if either subject is acceptable, the token is
 acceptable.</t>
 <t>The following JWT claim set example is equivalent:</t>
@@ -283,7 +283,7 @@ portion of the token on the ability to process a claim:</t>
 }
 ]]></artwork>
 <t>This example assumes the existence of some kind of claim in the private space
-that a relying party may or may not be able to process and verify. Because the
+that a recipient may or may not be able to process and verify. Because the
 two claim sets are combined with &quot;or&quot;, the token is acceptable if the relying
 party can process and verify at least one of them: the &quot;geohash&quot; claim or the
 private claim. It does not need to be able to process and verify both.</t>
@@ -294,7 +294,7 @@ private claim. It does not need to be able to process and verify both.</t>
 <section anchor="security-considerations"><name>Security Considerations</name>
 <t>All security considerations relevant to CWTs and JWTs in general will apply to
 tokens that use composite claims.</t>
-<t>Additionally, processors of tokens with composite claims will need to be aware
+<t>Additionally, recipients of tokens with composite claims will need to be aware
 of the possibility of receiving highly nested tokens. Excessive nesting can
 lead to overflows or other processing errors.</t>
 </section>
