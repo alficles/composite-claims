@@ -174,11 +174,12 @@ Internet-Draft           Composite Token Claims                July 2026
 
    Use of this claim by a token issuer is OPTIONAL.
 
+   In CWTs, the Claim Key is TBD_OR (to be registered in the "CBOR Web
+   Token (CWT) Claims" registry) and the Claim Value is a CBOR array of
+   CBOR maps.
+
    In JWTs, the Claim Name is "or" and the Claim Value is a JSON array
    of JSON objects.
-
-   In CWTs, the Claim Key is TBD_OR (to be registered in the "CBOR Web
-   Token (CWT) Claims" registry).
 
    The "or" (Or) claim is described by the following CDDL:
 
@@ -198,11 +199,12 @@ Internet-Draft           Composite Token Claims                July 2026
 
    Use of this claim by a token issuer is OPTIONAL.
 
+   In CWTs, the Claim Key is TBD_NOR (to be registered in the "CBOR Web
+   Token (CWT) Claims" registry) and the Claim Value is a CBOR array of
+   CBOR maps.
+
    In JWTs, the Claim Name is "nor" and the Claim Value is a JSON array
    of JSON objects.
-
-   In CWTs, the Claim Key is TBD_NOR (to be registered in the "CBOR Web
-   Token (CWT) Claims" registry).
 
    The "nor" (Nor) claim is described by the following CDDL:
 
@@ -216,8 +218,6 @@ Internet-Draft           Composite Token Claims                July 2026
    are acceptable.  If any claim set in an "and" claim is not
    acceptable, the claim set containing the "and" claim is also
    unacceptable.
-
-
 
 
 
@@ -236,11 +236,12 @@ Internet-Draft           Composite Token Claims                July 2026
 
    Use of this claim by a token issuer is OPTIONAL.
 
+   In CWTs, the Claim Key is TBD_AND (to be registered in the "CBOR Web
+   Token (CWT) Claims" registry) and the Claim Value is a CBOR array of
+   CBOR maps.
+
    In JWTs, the Claim Name is "and" and the Claim Value is a JSON array
    of JSON objects.
-
-   In CWTs, the Claim Key is TBD_AND (to be registered in the "CBOR Web
-   Token (CWT) Claims" registry).
 
    The "and" (And) claim is described by the following CDDL:
 
@@ -273,7 +274,6 @@ Internet-Draft           Composite Token Claims                July 2026
    to be George or Harriet, and if either subject is acceptable, the
    token is acceptable.
 
-   The following JWT claim set example is equivalent:
 
 
 
@@ -281,6 +281,8 @@ Lemmons                  Expires 7 January 2027                 [Page 5]
 
 Internet-Draft           Composite Token Claims                July 2026
 
+
+   The following JWT claim set example is equivalent:
 
    {
      "or": [
@@ -328,8 +330,6 @@ Internet-Draft           Composite Token Claims                July 2026
    If a more complex relationship is required, the "and" claim can be
    used to combine multiple claims.  For example, consider the following
    claim set:
-
-
 
 
 

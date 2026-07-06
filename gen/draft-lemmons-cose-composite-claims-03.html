@@ -1461,10 +1461,10 @@ acceptable. If none of the claim sets in an "or" claim is acceptable, the
 claim set containing the "or" claim is also unacceptable.<a href="#section-3.1.1-1" class="pilcrow">¶</a></p>
 <p id="section-3.1.1-2">The "or" array <span class="bcp14">MUST NOT</span> be empty.<a href="#section-3.1.1-2" class="pilcrow">¶</a></p>
 <p id="section-3.1.1-3">Use of this claim by a token issuer is <span class="bcp14">OPTIONAL</span>.<a href="#section-3.1.1-3" class="pilcrow">¶</a></p>
-<p id="section-3.1.1-4">In JWTs, the Claim Name is "or" and the Claim Value is a JSON array of JSON
-objects.<a href="#section-3.1.1-4" class="pilcrow">¶</a></p>
-<p id="section-3.1.1-5">In CWTs, the Claim Key is TBD_OR (to be registered in the "CBOR Web Token (CWT)
-Claims" registry).<a href="#section-3.1.1-5" class="pilcrow">¶</a></p>
+<p id="section-3.1.1-4">In CWTs, the Claim Key is TBD_OR (to be registered in the "CBOR Web Token (CWT)
+Claims" registry) and the Claim Value is a CBOR array of CBOR maps.<a href="#section-3.1.1-4" class="pilcrow">¶</a></p>
+<p id="section-3.1.1-5">In JWTs, the Claim Name is "or" and the Claim Value is a JSON array of JSON
+objects.<a href="#section-3.1.1-5" class="pilcrow">¶</a></p>
 <p id="section-3.1.1-6">The "or" (Or) claim is described by the following CDDL:<a href="#section-3.1.1-6" class="pilcrow">¶</a></p>
 <div class="lang-cddl sourcecode" id="section-3.1.1-7">
 <pre>$$Claims-Set-Claims //= ( or-claim-label =&gt; or-claim-value )
@@ -1485,10 +1485,10 @@ containing the "nor" claim is also unacceptable.<a href="#section-3.1.2-1" class
 <p id="section-3.1.2-2">This is the logical negation of the "or" claim.<a href="#section-3.1.2-2" class="pilcrow">¶</a></p>
 <p id="section-3.1.2-3">The "nor" array <span class="bcp14">MUST NOT</span> be empty.<a href="#section-3.1.2-3" class="pilcrow">¶</a></p>
 <p id="section-3.1.2-4">Use of this claim by a token issuer is <span class="bcp14">OPTIONAL</span>.<a href="#section-3.1.2-4" class="pilcrow">¶</a></p>
-<p id="section-3.1.2-5">In JWTs, the Claim Name is "nor" and the Claim Value is a JSON array of JSON
-objects.<a href="#section-3.1.2-5" class="pilcrow">¶</a></p>
-<p id="section-3.1.2-6">In CWTs, the Claim Key is TBD_NOR (to be registered in the "CBOR Web Token (CWT)
-Claims" registry).<a href="#section-3.1.2-6" class="pilcrow">¶</a></p>
+<p id="section-3.1.2-5">In CWTs, the Claim Key is TBD_NOR (to be registered in the "CBOR Web Token (CWT)
+Claims" registry) and the Claim Value is a CBOR array of CBOR maps.<a href="#section-3.1.2-5" class="pilcrow">¶</a></p>
+<p id="section-3.1.2-6">In JWTs, the Claim Name is "nor" and the Claim Value is a JSON array of JSON
+objects.<a href="#section-3.1.2-6" class="pilcrow">¶</a></p>
 <p id="section-3.1.2-7">The "nor" (Nor) claim is described by the following CDDL:<a href="#section-3.1.2-7" class="pilcrow">¶</a></p>
 <div class="lang-cddl sourcecode" id="section-3.1.2-8">
 <pre>$$Claims-Set-Claims //= ( nor-claim-label =&gt; nor-claim-value )
@@ -1512,10 +1512,10 @@ claims cannot be repeated. The "and" claim is useful when a claim needs to
 appear multiple times, like when using the "or" and "nor" claims.<a href="#section-3.1.3-2" class="pilcrow">¶</a></p>
 <p id="section-3.1.3-3">The "and" array <span class="bcp14">MUST NOT</span> be empty.<a href="#section-3.1.3-3" class="pilcrow">¶</a></p>
 <p id="section-3.1.3-4">Use of this claim by a token issuer is <span class="bcp14">OPTIONAL</span>.<a href="#section-3.1.3-4" class="pilcrow">¶</a></p>
-<p id="section-3.1.3-5">In JWTs, the Claim Name is "and" and the Claim Value is a JSON array of JSON
-objects.<a href="#section-3.1.3-5" class="pilcrow">¶</a></p>
-<p id="section-3.1.3-6">In CWTs, the Claim Key is TBD_AND (to be registered in the "CBOR Web Token (CWT)
-Claims" registry).<a href="#section-3.1.3-6" class="pilcrow">¶</a></p>
+<p id="section-3.1.3-5">In CWTs, the Claim Key is TBD_AND (to be registered in the "CBOR Web Token (CWT)
+Claims" registry) and the Claim Value is a CBOR array of CBOR maps.<a href="#section-3.1.3-5" class="pilcrow">¶</a></p>
+<p id="section-3.1.3-6">In JWTs, the Claim Name is "and" and the Claim Value is a JSON array of JSON
+objects.<a href="#section-3.1.3-6" class="pilcrow">¶</a></p>
 <p id="section-3.1.3-7">The "and" (And) claim is described by the following CDDL:<a href="#section-3.1.3-7" class="pilcrow">¶</a></p>
 <div class="lang-cddl sourcecode" id="section-3.1.3-8">
 <pre>$$Claims-Set-Claims //= ( and-claim-label =&gt; and-claim-value )

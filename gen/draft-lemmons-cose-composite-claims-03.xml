@@ -94,10 +94,10 @@ acceptable. If none of the claim sets in an &quot;or&quot; claim is acceptable, 
 claim set containing the &quot;or&quot; claim is also unacceptable.</t>
 <t>The &quot;or&quot; array <bcp14>MUST NOT</bcp14> be empty.</t>
 <t>Use of this claim by a token issuer is <bcp14>OPTIONAL</bcp14>.</t>
+<t>In CWTs, the Claim Key is TBD_OR (to be registered in the &quot;CBOR Web Token (CWT)
+Claims&quot; registry) and the Claim Value is a CBOR array of CBOR maps.</t>
 <t>In JWTs, the Claim Name is &quot;or&quot; and the Claim Value is a JSON array of JSON
 objects.</t>
-<t>In CWTs, the Claim Key is TBD_OR (to be registered in the &quot;CBOR Web Token (CWT)
-Claims&quot; registry).</t>
 <t>The &quot;or&quot; (Or) claim is described by the following CDDL:</t>
 
 <sourcecode type="cddl"><![CDATA[$$Claims-Set-Claims //= ( or-claim-label => or-claim-value )
@@ -113,10 +113,10 @@ containing the &quot;nor&quot; claim is also unacceptable.</t>
 <t>This is the logical negation of the &quot;or&quot; claim.</t>
 <t>The &quot;nor&quot; array <bcp14>MUST NOT</bcp14> be empty.</t>
 <t>Use of this claim by a token issuer is <bcp14>OPTIONAL</bcp14>.</t>
+<t>In CWTs, the Claim Key is TBD_NOR (to be registered in the &quot;CBOR Web Token (CWT)
+Claims&quot; registry) and the Claim Value is a CBOR array of CBOR maps.</t>
 <t>In JWTs, the Claim Name is &quot;nor&quot; and the Claim Value is a JSON array of JSON
 objects.</t>
-<t>In CWTs, the Claim Key is TBD_NOR (to be registered in the &quot;CBOR Web Token (CWT)
-Claims&quot; registry).</t>
 <t>The &quot;nor&quot; (Nor) claim is described by the following CDDL:</t>
 
 <sourcecode type="cddl"><![CDATA[$$Claims-Set-Claims //= ( nor-claim-label => nor-claim-value )
@@ -135,10 +135,10 @@ claims cannot be repeated. The &quot;and&quot; claim is useful when a claim need
 appear multiple times, like when using the &quot;or&quot; and &quot;nor&quot; claims.</t>
 <t>The &quot;and&quot; array <bcp14>MUST NOT</bcp14> be empty.</t>
 <t>Use of this claim by a token issuer is <bcp14>OPTIONAL</bcp14>.</t>
+<t>In CWTs, the Claim Key is TBD_AND (to be registered in the &quot;CBOR Web Token (CWT)
+Claims&quot; registry) and the Claim Value is a CBOR array of CBOR maps.</t>
 <t>In JWTs, the Claim Name is &quot;and&quot; and the Claim Value is a JSON array of JSON
 objects.</t>
-<t>In CWTs, the Claim Key is TBD_AND (to be registered in the &quot;CBOR Web Token (CWT)
-Claims&quot; registry).</t>
 <t>The &quot;and&quot; (And) claim is described by the following CDDL:</t>
 
 <sourcecode type="cddl"><![CDATA[$$Claims-Set-Claims //= ( and-claim-label => and-claim-value )

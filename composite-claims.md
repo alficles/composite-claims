@@ -113,11 +113,11 @@ The "or" array **MUST NOT** be empty.
 
 Use of this claim by a token issuer is **OPTIONAL**.
 
+In CWTs, the Claim Key is TBD_OR (to be registered in the "CBOR Web Token (CWT)
+Claims" registry) and the Claim Value is a CBOR array of CBOR maps.
+
 In JWTs, the Claim Name is "or" and the Claim Value is a JSON array of JSON
 objects.
-
-In CWTs, the Claim Key is TBD_OR (to be registered in the "CBOR Web Token (CWT)
-Claims" registry).
 
 The "or" (Or) claim is described by the following CDDL:
 
@@ -139,11 +139,11 @@ The "nor" array **MUST NOT** be empty.
 
 Use of this claim by a token issuer is **OPTIONAL**.
 
+In CWTs, the Claim Key is TBD_NOR (to be registered in the "CBOR Web Token (CWT)
+Claims" registry) and the Claim Value is a CBOR array of CBOR maps.
+
 In JWTs, the Claim Name is "nor" and the Claim Value is a JSON array of JSON
 objects.
-
-In CWTs, the Claim Key is TBD_NOR (to be registered in the "CBOR Web Token (CWT)
-Claims" registry).
 
 The "nor" (Nor) claim is described by the following CDDL:
 
@@ -168,11 +168,11 @@ The "and" array **MUST NOT** be empty.
 
 Use of this claim by a token issuer is **OPTIONAL**.
 
+In CWTs, the Claim Key is TBD_AND (to be registered in the "CBOR Web Token (CWT)
+Claims" registry) and the Claim Value is a CBOR array of CBOR maps.
+
 In JWTs, the Claim Name is "and" and the Claim Value is a JSON array of JSON
 objects.
-
-In CWTs, the Claim Key is TBD_AND (to be registered in the "CBOR Web Token (CWT)
-Claims" registry).
 
 The "and" (And) claim is described by the following CDDL:
 
