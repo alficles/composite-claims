@@ -8,7 +8,7 @@
 </postal><email>chris_lemmons@comcast.com</email>
 </address></author><date/>
 <area>Security</area>
-<workgroup>COSE WG</workgroup>
+<workgroup>COSE</workgroup>
 <keyword>CBOR</keyword>
 <keyword>CWT</keyword>
 <keyword>COSE</keyword>
@@ -28,7 +28,7 @@
 <t>Composition claims are claims defined for CBOR Web Tokens (CWTs) <xref target="RFC8392"></xref>
 and JSON Web Tokens (JWTs) <xref target="RFC7519"></xref>.</t>
 <t>This document defines the CWT representations of the composition claims named
-&quot;and&quot;, &quot;or&quot;, &quot;nor&quot;. It also defines a CWT definition for &quot;crit&quot;.</t>
+&quot;or&quot;, &quot;nor&quot;, and &quot;and&quot;. It also defines a CWT definition for &quot;crit&quot;.</t>
 </section>
 
 <section anchor="terminology"><name>Terminology</name>
@@ -38,7 +38,7 @@ document are to be interpreted as described in BCP 14 <xref target="RFC2119"></x
 and only when, they appear in all capitals, as shown here.</t>
 <t>This document reuses terminology from CWT <xref target="RFC8392"></xref>, JWT <xref target="RFC7519"></xref>, and
 COSE <xref target="RFC9052"></xref>.</t>
-<t>This term is defined by this specification:</t>
+<t>The following terms are defined by this specification:</t>
 
 <dl spacing="compact">
 <dt>Composition Claim</dt>
@@ -92,7 +92,7 @@ or-claim-value = [ + Claims-Set ]
 ]]></sourcecode>
 </section>
 
-<section anchor="nor-not-or-claim"><name>nor (Not Or) Claim</name>
+<section anchor="nor-nor-claim"><name>nor (Nor) Claim</name>
 <t>The &quot;nor&quot; (Nor) claim identifies one or more claim sets of which none is
 acceptable. If any claim set in a &quot;nor&quot; claim is acceptable, the claim set
 containing the &quot;nor&quot; claim is also unacceptable.</t>
@@ -170,7 +170,7 @@ is present. For example, consider the following claim set:</t>
   ]
 }
 ]]></artwork>
-<t>This token is intended for any audience except &quot;example.com&quot;.</t>
+<t>This token is intended for any audience except &quot;<eref target="https://example.com&quot;">https://example.com"</eref>.</t>
 <t>The following JWT claim set example is equivalent:</t>
 
 <artwork><![CDATA[{
@@ -191,8 +191,7 @@ The &quot;geohash&quot; claim <xref target="CTA5009A"></xref> describes a geogra
 }
 ]]></artwork>
 <t>This token describes an audience of &quot;<eref target="https://example.com&quot;">https://example.com"</eref> and a region
-described by the geohash of &quot;9q8yy&quot; that does not include the region described
-by &quot;9q8yy9&quot; or &quot;9q8yyd&quot;.</t>
+described by the geohash &quot;9q8yy&quot;, excluding the regions &quot;9q8yy9&quot; and &quot;9q8yyd&quot;.</t>
 <t>If a more complex relationship is required, the &quot;and&quot; claim can be used to
 combine multiple claims. For example, consider the following claim set:</t>
 
@@ -227,8 +226,7 @@ set cannot contain the same claim twice.</t>
 set.</t>
 <t>The semantics of the JWT claim name &quot;crit&quot; are defined by OpenID Federation 1.0
 <xref target="OpenID-Federation"></xref>. This specification defines only the CWT representation.</t>
-<t>The value of this claim is an array. Each element identifies a claim within the
-same claim set.</t>
+<t>The value of this claim is an array.</t>
 <t>In CWTs, elements are integers or text strings identifying claim keys. The
 &quot;crit&quot; array <bcp14>MUST NOT</bcp14> be empty. Each element of the &quot;crit&quot; array <bcp14>MUST</bcp14>
 identify a claim that is present in the same claim set. Elements in the &quot;crit&quot;
@@ -261,10 +259,10 @@ portion of the token on the ability to process a claim:</t>
 }
 ]]></artwork>
 <t>This example assumes the existence of some kind of claim in the private space
-that a relying party may or may not be able to process. This token claims that
-the subject is in the described region and also that a private claim is present
-and that the relying party must be able to verify at least one of those claims,
-but it does not need to be able to process both.</t>
+that a relying party may or may not be able to process and verify. Because the
+two claim sets are combined with &quot;or&quot;, the token is acceptable if the relying
+party can process and verify at least one of them: the &quot;geohash&quot; claim or the
+private claim. It does not need to be able to process and verify both.</t>
 </section>
 </section>
 </section>

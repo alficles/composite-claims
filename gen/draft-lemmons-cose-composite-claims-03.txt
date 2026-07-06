@@ -2,7 +2,7 @@
 
 
 
-COSE WG                                                       C. Lemmons
+COSE                                                          C. Lemmons
 Internet-Draft                                                   Comcast
 Intended status: Standards Track                             6 July 2026
 Expires: 7 January 2027
@@ -65,7 +65,7 @@ Table of Contents
    3.  Claims  . . . . . . . . . . . . . . . . . . . . . . . . . . .   3
      3.1.  Logical Claims  . . . . . . . . . . . . . . . . . . . . .   3
        3.1.1.  or (Or) Claim . . . . . . . . . . . . . . . . . . . .   3
-       3.1.2.  nor (Not Or) Claim  . . . . . . . . . . . . . . . . .   4
+       3.1.2.  nor (Nor) Claim . . . . . . . . . . . . . . . . . . .   4
        3.1.3.  and (And) Claim . . . . . . . . . . . . . . . . . . .   4
        3.1.4.  Examples  . . . . . . . . . . . . . . . . . . . . . .   5
      3.2.  crit (Critical) Claim . . . . . . . . . . . . . . . . . .   7
@@ -83,8 +83,8 @@ Table of Contents
    [RFC8392] and JSON Web Tokens (JWTs) [RFC7519].
 
    This document defines the CWT representations of the composition
-   claims named "and", "or", "nor".  It also defines a CWT definition
-   for "crit".
+   claims named "or", "nor", and "and".  It also defines a CWT
+   definition for "crit".
 
 2.  Terminology
 
@@ -97,7 +97,7 @@ Table of Contents
    This document reuses terminology from CWT [RFC8392], JWT [RFC7519],
    and COSE [RFC9052].
 
-   This term is defined by this specification:
+   The following terms are defined by this specification:
 
    Composition Claim  A claim whose value contains one or more claim
       sets.
@@ -176,7 +176,7 @@ Internet-Draft           Composite Token Claims                July 2026
    or-claim-label = TBD
    or-claim-value = [ + Claims-Set ]
 
-3.1.2.  nor (Not Or) Claim
+3.1.2.  nor (Nor) Claim
 
    The "nor" (Nor) claim identifies one or more claim sets of which none
    is acceptable.  If any claim set in a "nor" claim is acceptable, the
@@ -282,7 +282,8 @@ Lemmons                  Expires 7 January 2027                 [Page 5]
 Internet-Draft           Composite Token Claims                July 2026
 
 
-   This token is intended for any audience except "example.com".
+   This token is intended for any audience except "https://example.com"
+   (https://example.com").
 
    The following JWT claim set example is equivalent:
 
@@ -305,9 +306,8 @@ Internet-Draft           Composite Token Claims                July 2026
    }
 
    This token describes an audience of "https://example.com"
-   (https://example.com") and a region described by the geohash of
-   "9q8yy" that does not include the region described by "9q8yy9" or
-   "9q8yyd".
+   (https://example.com") and a region described by the geohash "9q8yy",
+   excluding the regions "9q8yy9" and "9q8yyd".
 
    If a more complex relationship is required, the "and" claim can be
    used to combine multiple claims.  For example, consider the following
@@ -356,8 +356,7 @@ Internet-Draft           Composite Token Claims                July 2026
    Federation 1.0 [OpenID-Federation].  This specification defines only
    the CWT representation.
 
-   The value of this claim is an array.  Each element identifies a claim
-   within the same claim set.
+   The value of this claim is an array.
 
    In CWTs, elements are integers or text strings identifying claim
    keys.  The "crit" array MUST NOT be empty.  Each element of the
@@ -389,6 +388,7 @@ Internet-Draft           Composite Token Claims                July 2026
 
 
 
+
 Lemmons                  Expires 7 January 2027                 [Page 7]
 
 Internet-Draft           Composite Token Claims                July 2026
@@ -407,11 +407,11 @@ Internet-Draft           Composite Token Claims                July 2026
    }
 
    This example assumes the existence of some kind of claim in the
-   private space that a relying party may or may not be able to process.
-   This token claims that the subject is in the described region and
-   also that a private claim is present and that the relying party must
-   be able to verify at least one of those claims, but it does not need
-   to be able to process both.
+   private space that a relying party may or may not be able to process
+   and verify.  Because the two claim sets are combined with "or", the
+   token is acceptable if the relying party can process and verify at
+   least one of them: the "geohash" claim or the private claim.  It does
+   not need to be able to process and verify both.
 
 4.  Security Considerations
 
