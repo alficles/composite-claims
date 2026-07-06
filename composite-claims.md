@@ -1,7 +1,6 @@
 %%%
 title = "Composite Token Claims"
-abbrev = "Composite Token Claims"
-ipr= "trust200902"
+ipr = "trust200902"
 area = "Security"
 workgroup = "COSE WG"
 submissiontype = "IETF"
@@ -11,7 +10,7 @@ updates = [ ]
 
 [seriesInfo]
 name = "Internet-Draft"
-value = "draft-lemmons-cose-composite-claims-02"
+value = "draft-lemmons-cose-composite-claims-03"
 stream = "IETF"
 status = "standard"
 
@@ -19,7 +18,6 @@ status = "standard"
 initials = "C."
 surname = "Lemmons"
 fullname = "Chris Lemmons"
-#role = "author"
 organization = "Comcast"
   [author.address]
   email = "chris_lemmons@comcast.com"
@@ -64,14 +62,14 @@ this is a JSON object.
 Composition claims contain one or more claim sets.
 
 In tokens without composition claims, there is exactly one set of claims, so
-the acceptability of the claim set decides the acceptability of the token.
+the acceptability of the claim set determines the acceptability of the token.
 However, this document defines multiple claim sets, so it instead refers to
 accepting or rejecting claim sets. If the primary claim set is unacceptable,
 the token is unacceptable and **MUST** be rejected.
 
 Some applications use tokens to convey information. For example, a token might
-simply have a subject claim that identifies the bearer and the relying party
-simply uses that as information, not necessarily as a means by which to provide
+have a subject claim that identifies the bearer and the relying party
+uses that as information, not necessarily as a means by which to provide
 or deny access or make some other kind of decision. In this context, the token
 simply describes all situations in which the token would accurately describe
 that situation.
@@ -98,7 +96,7 @@ The "or" (Or) claim identifies one or more claim sets of which at least one is
 acceptable. If none of the claim sets in an "or" claim is acceptable, the
 claim set containing the "or" claim is also unacceptable.
 
-Use of this claim is **OPTIONAL**.
+Use of this claim by a token issuer is **OPTIONAL**.
 
 In JWTs, the Claim Name is "or" and the Claim Value is a JSON array of JSON
 objects.
@@ -116,13 +114,13 @@ or-claim-value = [ + Claims-Set ]
 
 ### nor (Not Or) Claim
 
-The "nor" (Nor) claim identifies one or more claim sets of which none are
+The "nor" (Nor) claim identifies one or more claim sets of which none is
 acceptable. If any claim set in a "nor" claim is acceptable, the claim set
 containing the "nor" claim is also unacceptable.
 
 This is the logical negation of the "or" claim.
 
-Use of this claim is **OPTIONAL**.
+Use of this claim by a token issuer is **OPTIONAL**.
 
 In JWTs, the Claim Name is "nor" and the Claim Value is a JSON array of JSON
 objects.
@@ -145,11 +143,11 @@ acceptable. If any claim set in an "and" claim is not acceptable, the
 claim set containing the "and" claim is also unacceptable.
 
 The "and" claim is often unnecessary because a claim set is only accepted when
-all its claims are acceptable. However, CBOR maps cannot have duplicate keys, so
+all its claims are acceptable. However, a CBOR map must not contain duplicate keys, so
 claims cannot be repeated. The "and" claim is useful when a claim needs to
 appear multiple times, like when using the "or" and "nor" claims.
 
-Use of this claim is **OPTIONAL**.
+Use of this claim by a token issuer is **OPTIONAL**.
 
 In JWTs, the Claim Name is "and" and the Claim Value is a JSON array of JSON
 objects.
@@ -166,6 +164,11 @@ and-claim-value = [ + Claims-Set ]
 ```
 
 ### Examples
+
+The examples in this document use CBOR diagnostic notation [@?RFC8949], in
+which each claim key is preceded by a `/comment/` naming the claim; the
+corresponding JWT examples use JSON. For brevity, JWT equivalents are shown
+only for the first two examples.
 
 These logical claims can be used to describe more complex relationships between
 claims. For example, the following claim set describes a token with multiple
@@ -237,7 +240,7 @@ This token describes an audience of "https://example.com" and a region
 described by the geohash of "9q8yy" that does not include the region described
 by "9q8yy9" or "9q8yyd".
 
-And if a very complex relationship is required, the "and" claim can be used to
+If a more complex relationship is required, the "and" claim can be used to
 combine multiple claims. For example, consider the following claim set:
 
 ```
@@ -259,9 +262,9 @@ combine multiple claims. For example, consider the following claim set:
 }
 ```
 
-This admittedly contrived example describes a token that is valid for both
-George and Harriet and is intended for both https://example.com and
-https://example.net. It is a bit contrived because the "aud" claim already
+This example describes a token that is valid for both
+George and Harriet and is intended for both "https://example.com" and
+"https://example.net". This repetition is unnecessary in practice because the "aud" claim already
 describes a list of acceptable audiences. The use of the "and" claim is
 required in order to effectively repeat the "or" claim, because a single claim
 set cannot contain the same claim twice.
@@ -286,17 +289,17 @@ Elements in the "crit" array **MUST NOT** identify claims that are specified
 as MANDATORY to understand for the token. This will vary by application profile
 as described in [RFC7519], Section 4. As noted in [@!OpenID-Federation],
 Section 13.4, any profile that requires correct processing of the "crit" claim
-**MUST** of necessity specify that it is MANDATORY to understand.
+**MUST** specify that it is MANDATORY to understand.
 
-If a claim listed in the "crit" claim is present in a claim set and the
+If a claim listed in the "crit" array is present in a claim set and the
 processor cannot process the claim for any reason, the claim set **MUST** be
-rejected. If a claim listed in the "crit" claim is not present in a claim set,
+rejected. If a claim listed in the "crit" array is not present in a claim set,
 the claim set **MUST** be rejected. (TODO: Square this with the OpenID
 definition. The OpenID definition does not explicitly require claim sets to be
 rejected if the claim name rules like including duplicates, empty arrays, or
 the presence of claims that are not present in the claim set.)
 
-Use of this claim is **OPTIONAL**.
+Use of this claim by a token issuer is **OPTIONAL**.
 
 In CWTs, the Claim Key is TBD (to be registered in the "CBOR Web Token (CWT)
 Claims" registry).
@@ -309,7 +312,7 @@ portion of the token on the ability to process a claim:
 ```
 {
   /or/ TBD: [
-    { /geohash/ 282: "9q8y", /crit/ TBD: [ 282 ] },
+    { /geohash/ 282: "9q8yy", /crit/ TBD: [ 282 ] },
     { /private/ -524289: "sf", /crit/ TBD: [ -524289 ] }
   ]
 }
