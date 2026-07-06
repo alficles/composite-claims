@@ -48,6 +48,11 @@ JWT <xref target="RFC7519"></xref>.</t>
 <dt>Claim Set</dt>
 <dd>A set of claims. For CWTs this is a CBOR map. For JWTs
 this is a JSON object.</dd>
+<dt>Acceptable</dt>
+<dd>A claim is acceptable if what it asserts is either true or not relevant to
+the recipient. A claim set is acceptable if and only if every claim in it is
+acceptable. A recipient determines acceptability according to the application
+or profile.</dd>
 </dl>
 </section>
 
@@ -55,9 +60,10 @@ this is a JSON object.</dd>
 <t>Composite claims contain one or more claim sets.</t>
 <t>In tokens without composite claims, there is exactly one set of claims, so
 the acceptability of the claim set determines the acceptability of the token.
-However, this document defines multiple claim sets, so it instead refers to
-accepting or rejecting claim sets. If the primary claim set is unacceptable,
-the token is unacceptable and <bcp14>MUST</bcp14> be rejected.</t>
+Because composite claims allow a token to contain multiple, nested claim sets,
+this specification defines acceptability at the level of individual claim sets.
+The top-level claim set of a token is its primary claim set. If the primary
+claim set is unacceptable, the token is unacceptable and <bcp14>MUST</bcp14> be rejected.</t>
 <t>Some applications use tokens to convey information. For example, a token might
 have a subject claim that identifies the bearer and the relying party
 uses that as information, not necessarily as a means by which to provide

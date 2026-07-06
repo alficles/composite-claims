@@ -102,10 +102,10 @@ Table of Contents
    Composite Claim  A claim whose value contains one or more claim sets.
    Claim Set  A set of claims.  For CWTs this is a CBOR map.  For JWTs
       this is a JSON object.
-
-
-
-
+   Acceptable  A claim is acceptable if what it asserts is either true
+      or not relevant to the recipient.  A claim set is acceptable if
+      and only if every claim in it is acceptable.  A recipient
+      determines acceptability according to the application or profile.
 
 
 
@@ -120,10 +120,11 @@ Internet-Draft           Composite Token Claims                July 2026
 
    In tokens without composite claims, there is exactly one set of
    claims, so the acceptability of the claim set determines the
-   acceptability of the token.  However, this document defines multiple
-   claim sets, so it instead refers to accepting or rejecting claim
-   sets.  If the primary claim set is unacceptable, the token is
-   unacceptable and MUST be rejected.
+   acceptability of the token.  Because composite claims allow a token
+   to contain multiple, nested claim sets, this specification defines
+   acceptability at the level of individual claim sets.  The top-level
+   claim set of a token is its primary claim set.  If the primary claim
+   set is unacceptable, the token is unacceptable and MUST be rejected.
 
    Some applications use tokens to convey information.  For example, a
    token might have a subject claim that identifies the bearer and the
@@ -161,7 +162,6 @@ Internet-Draft           Composite Token Claims                July 2026
 
    In JWTs, the Claim Name is "or" and the Claim Value is a JSON array
    of JSON objects.
-
 
 
 

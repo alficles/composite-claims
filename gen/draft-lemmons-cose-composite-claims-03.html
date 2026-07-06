@@ -1402,6 +1402,13 @@ JWT <span>[<a href="#RFC7519" class="cite xref">RFC7519</a>]</span>.<a href="#se
         <dd style="margin-left: 1.5em" id="section-2-4.4">A set of claims. For CWTs this is a CBOR map. For JWTs
 this is a JSON object.<a href="#section-2-4.4" class="pilcrow">¶</a>
 </dd>
+        <dd class="break"></dd>
+<dt id="section-2-4.5">Acceptable</dt>
+        <dd style="margin-left: 1.5em" id="section-2-4.6">A claim is acceptable if what it asserts is either true or not relevant to
+the recipient. A claim set is acceptable if and only if every claim in it is
+acceptable. A recipient determines acceptability according to the application
+or profile.<a href="#section-2-4.6" class="pilcrow">¶</a>
+</dd>
       <dd class="break"></dd>
 </dl>
 </section>
@@ -1414,9 +1421,10 @@ this is a JSON object.<a href="#section-2-4.4" class="pilcrow">¶</a>
 <p id="section-3-1">Composite claims contain one or more claim sets.<a href="#section-3-1" class="pilcrow">¶</a></p>
 <p id="section-3-2">In tokens without composite claims, there is exactly one set of claims, so
 the acceptability of the claim set determines the acceptability of the token.
-However, this document defines multiple claim sets, so it instead refers to
-accepting or rejecting claim sets. If the primary claim set is unacceptable,
-the token is unacceptable and <span class="bcp14">MUST</span> be rejected.<a href="#section-3-2" class="pilcrow">¶</a></p>
+Because composite claims allow a token to contain multiple, nested claim sets,
+this specification defines acceptability at the level of individual claim sets.
+The top-level claim set of a token is its primary claim set. If the primary
+claim set is unacceptable, the token is unacceptable and <span class="bcp14">MUST</span> be rejected.<a href="#section-3-2" class="pilcrow">¶</a></p>
 <p id="section-3-3">Some applications use tokens to convey information. For example, a token might
 have a subject claim that identifies the bearer and the relying party
 uses that as information, not necessarily as a means by which to provide
