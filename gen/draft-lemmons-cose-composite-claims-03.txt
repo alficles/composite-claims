@@ -13,9 +13,10 @@ Expires: 7 January 2027
 
 Abstract
 
-   Composition claims are claims for CBOR Web Tokens (CWTs) and JSON Web
+   Composite claims are claims for CBOR Web Tokens (CWTs) and JSON Web
    Tokens (JWTs) that define logical relationships between sets of
-   claims.
+   claims.  This document also defines a CWT representation of the
+   "crit" (Critical) claim.
 
 Status of This Memo
 
@@ -52,7 +53,6 @@ Copyright Notice
 
 
 
-
 Lemmons                  Expires 7 January 2027                 [Page 1]
 
 Internet-Draft           Composite Token Claims                July 2026
@@ -71,20 +71,20 @@ Table of Contents
      3.2.  crit (Critical) Claim . . . . . . . . . . . . . . . . . .   7
        3.2.1.  Example . . . . . . . . . . . . . . . . . . . . . . .   8
    4.  Security Considerations . . . . . . . . . . . . . . . . . . .   8
-   5.  IANA Considerations . . . . . . . . . . . . . . . . . . . . .   8
-   6.  References  . . . . . . . . . . . . . . . . . . . . . . . . .   9
-     6.1.  Normative References  . . . . . . . . . . . . . . . . . .   9
-     6.2.  Informative References  . . . . . . . . . . . . . . . . .  10
-   Author's Address  . . . . . . . . . . . . . . . . . . . . . . . .  10
+   5.  IANA Considerations . . . . . . . . . . . . . . . . . . . . .   9
+   6.  References  . . . . . . . . . . . . . . . . . . . . . . . . .  10
+     6.1.  Normative References  . . . . . . . . . . . . . . . . . .  10
+     6.2.  Informative References  . . . . . . . . . . . . . . . . .  11
+   Author's Address  . . . . . . . . . . . . . . . . . . . . . . . .  11
 
 1.  Introduction
 
-   Composition claims are claims defined for CBOR Web Tokens (CWTs)
+   Composite claims are claims defined for CBOR Web Tokens (CWTs)
    [RFC8392] and JSON Web Tokens (JWTs) [RFC7519].
 
-   This document defines the CWT representations of the composition
-   claims named "or", "nor", and "and".  It also defines a CWT
-   definition for "crit".
+   This document defines the CWT and JWT representations of the
+   composite claims named "or", "nor", and "and".  It also defines a CWT
+   representation of the "crit" claim.
 
 2.  Terminology
 
@@ -94,15 +94,15 @@ Table of Contents
    14 [RFC2119] [RFC8174] when, and only when, they appear in all
    capitals, as shown here.
 
-   This document reuses terminology from CWT [RFC8392], JWT [RFC7519],
-   and COSE [RFC9052].
+   This document reuses terminology from CBOR [RFC8949], CWT [RFC8392],
+   and JWT [RFC7519].
 
    The following terms are defined by this specification:
 
-   Composition Claim  A claim whose value contains one or more claim
-      sets.
+   Composite Claim  A claim whose value contains one or more claim sets.
    Claim Set  A set of claims.  For CWTs this is a CBOR map.  For JWTs
       this is a JSON object.
+
 
 
 
@@ -116,9 +116,9 @@ Internet-Draft           Composite Token Claims                July 2026
 
 3.  Claims
 
-   Composition claims contain one or more claim sets.
+   Composite claims contain one or more claim sets.
 
-   In tokens without composition claims, there is exactly one set of
+   In tokens without composite claims, there is exactly one set of
    claims, so the acceptability of the claim set determines the
    acceptability of the token.  However, this document defines multiple
    claim sets, so it instead refers to accepting or rejecting claim
@@ -132,7 +132,7 @@ Internet-Draft           Composite Token Claims                July 2026
    In this context, the token simply describes all situations in which
    the token would accurately describe that situation.
 
-   Composition claims may be nested arbitrarily.  Implementations MAY
+   Composite claims may be nested arbitrarily.  Implementations MAY
    reject tokens exceeding an implementation-defined nesting depth but
    MUST support at least four levels.
 
@@ -145,8 +145,10 @@ Internet-Draft           Composite Token Claims                July 2026
    In CWTs, the value is a CBOR array of CBOR maps.  In JWTs, the value
    is a JSON array of JSON objects.
 
-   For the following CDDL, Claims-Set is a map of claims as defined in
-   [RFC8392].  It is described informatively in [RFC9711], Appendix D.
+   In the following CDDL, Claims-Set is a claim set: a CBOR map for CWTs
+   [RFC8392] or a JSON object for JWTs [RFC7519].  The CDDL extends the
+   $$Claims-Set-Claims group socket introduced by the Entity Attestation
+   Token (EAT) [RFC9711].
 
 3.1.1.  or (Or) Claim
 
@@ -160,8 +162,6 @@ Internet-Draft           Composite Token Claims                July 2026
    In JWTs, the Claim Name is "or" and the Claim Value is a JSON array
    of JSON objects.
 
-   In CWTs, the Claim Key is TBD (to be registered in the "CBOR Web
-   Token (CWT) Claims" registry).
 
 
 
@@ -170,10 +170,13 @@ Lemmons                  Expires 7 January 2027                 [Page 3]
 Internet-Draft           Composite Token Claims                July 2026
 
 
+   In CWTs, the Claim Key is TBD_OR (to be registered in the "CBOR Web
+   Token (CWT) Claims" registry).
+
    The "or" (Or) claim is described by the following CDDL:
 
    $$Claims-Set-Claims //= ( or-claim-label => or-claim-value )
-   or-claim-label = TBD
+   or-claim-label = TBD_OR
    or-claim-value = [ + Claims-Set ]
 
 3.1.2.  nor (Nor) Claim
@@ -189,13 +192,13 @@ Internet-Draft           Composite Token Claims                July 2026
    In JWTs, the Claim Name is "nor" and the Claim Value is a JSON array
    of JSON objects.
 
-   In CWTs, the Claim Key is TBD (to be registered in the "CBOR Web
+   In CWTs, the Claim Key is TBD_NOR (to be registered in the "CBOR Web
    Token (CWT) Claims" registry).
 
    The "nor" (Nor) claim is described by the following CDDL:
 
    $$Claims-Set-Claims //= ( nor-claim-label => nor-claim-value )
-   nor-claim-label = TBD
+   nor-claim-label = TBD_NOR
    nor-claim-value = [ + Claims-Set ]
 
 3.1.3.  and (And) Claim
@@ -206,18 +209,15 @@ Internet-Draft           Composite Token Claims                July 2026
    unacceptable.
 
    The "and" claim is often unnecessary because a claim set is only
-   accepted when all its claims are acceptable.  However, a CBOR map
-   must not contain duplicate keys, so claims cannot be repeated.  The
-   "and" claim is useful when a claim needs to appear multiple times,
-   like when using the "or" and "nor" claims.
+   accepted when all its claims are acceptable.  However, neither a CBOR
+   map nor a JSON object may contain duplicate keys, so claims cannot be
+   repeated.  The "and" claim is useful when a claim needs to appear
+   multiple times, like when using the "or" and "nor" claims.
 
    Use of this claim by a token issuer is OPTIONAL.
 
    In JWTs, the Claim Name is "and" and the Claim Value is a JSON array
    of JSON objects.
-
-   In CWTs, the Claim Key is TBD (to be registered in the "CBOR Web
-   Token (CWT) Claims" registry).
 
 
 
@@ -226,10 +226,13 @@ Lemmons                  Expires 7 January 2027                 [Page 4]
 Internet-Draft           Composite Token Claims                July 2026
 
 
+   In CWTs, the Claim Key is TBD_AND (to be registered in the "CBOR Web
+   Token (CWT) Claims" registry).
+
    The "and" (And) claim is described by the following CDDL:
 
    $$Claims-Set-Claims //= ( and-claim-label => and-claim-value )
-   and-claim-label = TBD
+   and-claim-label = TBD_AND
    and-claim-value = [ + Claims-Set ]
 
 3.1.4.  Examples
@@ -247,14 +250,14 @@ Internet-Draft           Composite Token Claims                July 2026
    two subjects are genuinely different.
 
    {
-     /or/ TBD: [
+     /or/ TBD_OR: [
        { /sub/ 2: "george@example.net" },
        { /sub/ 2: "harriet@example.net" }
      ]
    }
 
-   A relying party that receives this token knows that bearer claims to
-   be both George and Harriet and if either subject is acceptable, the
+   A relying party that receives this token knows that the bearer claims
+   to be George or Harriet, and if either subject is acceptable, the
    token is acceptable.
 
    The following JWT claim set example is equivalent:
@@ -266,14 +269,11 @@ Internet-Draft           Composite Token Claims                July 2026
      ]
    }
 
-   The "nor" claim is useful both as a logical negation, even when only
-   one claim is present.  For example, consider the following claim set:
+   The "nor" claim is useful as a logical negation, even when only one
+   claim set is present.  For example, consider the following claim set:
 
-   {
-     /nor/ TBD: [
-       { /aud/ 3: "https://example.com" }
-     ]
-   }
+
+
 
 
 
@@ -281,6 +281,12 @@ Lemmons                  Expires 7 January 2027                 [Page 5]
 
 Internet-Draft           Composite Token Claims                July 2026
 
+
+   {
+     /nor/ TBD_NOR: [
+       { /aud/ 3: "https://example.com" }
+     ]
+   }
 
    This token is intended for any audience except "https://example.com"
    (https://example.com").
@@ -300,7 +306,7 @@ Internet-Draft           Composite Token Claims                July 2026
    {
      /aud/ 3: "https://example.com",
      /geohash/ 282: "9q8yy",
-     /nor/ TBD: [
+     /nor/ TBD_NOR: [
        { /geohash/ 282: ["9q8yy9", "9q8yyd"] }
      ]
    }
@@ -313,22 +319,16 @@ Internet-Draft           Composite Token Claims                July 2026
    used to combine multiple claims.  For example, consider the following
    claim set:
 
-   {
-     /and/ TBD: [
-       {
-         /or/ TBD: [
-           { /sub/ 2: "george@example.net" },
-           { /sub/ 2: "harriet@example.net" }
-         ]
-       },
-       {
-         /or/ TBD: [
-           { /aud/ 3: "https://example.com" },
-           { /aud/ 3: "https://example.net" }
-         ]
-       }
-     ]
-   }
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -338,9 +338,26 @@ Lemmons                  Expires 7 January 2027                 [Page 6]
 Internet-Draft           Composite Token Claims                July 2026
 
 
-   This example describes a token that is valid for both George and
-   Harriet and is intended for both "https://example.com"
-   (https://example.com") and "https://example.net"
+   {
+     /and/ TBD_AND: [
+       {
+         /or/ TBD_OR: [
+           { /sub/ 2: "george@example.net" },
+           { /sub/ 2: "harriet@example.net" }
+         ]
+       },
+       {
+         /or/ TBD_OR: [
+           { /aud/ 3: "https://example.com" },
+           { /aud/ 3: "https://example.net" }
+         ]
+       }
+     ]
+   }
+
+   This example describes a token that is valid for either George or
+   Harriet and is intended for either "https://example.com"
+   (https://example.com") or "https://example.net"
    (https://example.net").  This repetition is unnecessary in practice
    because the "aud" claim already describes a list of acceptable
    audiences.  The use of the "and" claim is required in order to
@@ -349,12 +366,17 @@ Internet-Draft           Composite Token Claims                July 2026
 
 3.2.  crit (Critical) Claim
 
-   The "crit" (Critical) claim indicates critical extensions to this
-   kind of claim set.
+   The "crit" (Critical) claim identifies claims within the same claim
+   set that a recipient must be able to process and verify for that
+   claim set to be acceptable.  Unlike the logical claims above, its
+   value is a list of claim identifiers rather than a set of claim sets,
+   so it is not itself a composite claim; it is defined here because it
+   is used together with them.
 
    The semantics of the JWT claim name "crit" are defined by OpenID
-   Federation 1.0 [OpenID-Federation].  This specification defines only
-   the CWT representation.
+   Federation 1.0 [OpenID-Federation].  This specification defines the
+   CWT representation of "crit" and the CWT-specific processing rules
+   below.
 
    The value of this claim is an array.
 
@@ -362,6 +384,15 @@ Internet-Draft           Composite Token Claims                July 2026
    keys.  The "crit" array MUST NOT be empty.  Each element of the
    "crit" array MUST identify a claim that is present in the same claim
    set.  Elements in the "crit" array MUST be unique.
+
+
+
+
+
+Lemmons                  Expires 7 January 2027                 [Page 7]
+
+Internet-Draft           Composite Token Claims                July 2026
+
 
    Elements in the "crit" array MUST NOT identify claims that are
    specified as MANDATORY to understand for the token.  This will vary
@@ -373,26 +404,18 @@ Internet-Draft           Composite Token Claims                July 2026
    If a claim listed in the "crit" array is present in a claim set and
    the processor cannot process the claim for any reason, the claim set
    MUST be rejected.  If a claim listed in the "crit" array is not
-   present in a claim set, the claim set MUST be rejected.  (TODO:
-   Square this with the OpenID definition.  The OpenID definition does
-   not explicitly require claim sets to be rejected if the claim name
-   rules like including duplicates, empty arrays, or the presence of
-   claims that are not present in the claim set.)
+   present in a claim set, the claim set MUST be rejected.
 
    Use of this claim by a token issuer is OPTIONAL.
 
-   In CWTs, the Claim Key is TBD (to be registered in the "CBOR Web
+   In CWTs, the Claim Key is TBD_CRIT (to be registered in the "CBOR Web
    Token (CWT) Claims" registry).
 
+   The "crit" (Critical) claim is described by the following CDDL:
 
-
-
-
-
-Lemmons                  Expires 7 January 2027                 [Page 7]
-
-Internet-Draft           Composite Token Claims                July 2026
-
+   $$Claims-Set-Claims //= ( crit-claim-label => crit-claim-value )
+   crit-claim-label = TBD_CRIT
+   crit-claim-value = [ + (int / tstr) ]
 
 3.2.1.  Example
 
@@ -400,9 +423,9 @@ Internet-Draft           Composite Token Claims                July 2026
    condition a portion of the token on the ability to process a claim:
 
    {
-     /or/ TBD: [
-       { /geohash/ 282: "9q8yy", /crit/ TBD: [ 282 ] },
-       { /private/ -524289: "sf", /crit/ TBD: [ -524289 ] }
+     /or/ TBD_OR: [
+       { /geohash/ 282: "9q8yy", /crit/ TBD_CRIT: [ 282 ] },
+       { /private/ -524289: "sf", /crit/ TBD_CRIT: [ -524289 ] }
      ]
    }
 
@@ -416,31 +439,8 @@ Internet-Draft           Composite Token Claims                July 2026
 4.  Security Considerations
 
    All security considerations relevant to CWTs and JWTs in general will
-   apply to tokens that use composition claims.
+   apply to tokens that use composite claims.
 
-   Additionally, processors of tokens with composition claims will need
-   to be aware of the possibility of receiving highly nested tokens.
-   Excessive nesting can lead to overflows or other processing errors.
-
-5.  IANA Considerations
-
-   This specification requests that IANA register the following claim
-   keys in the "CBOR Web Token (CWT) Claims" registry established by
-   [RFC8392]:
-
-   Claim Name: or
-   Claim Description: Logical OR
-   JWT Claim Name: or
-   Claim Key: TBD
-   Claim Value Type(s): array
-   Change Controller: IESG
-
-   Claim Name: nor
-   Claim Description: Logical NOR
-   JWT Claim Name: nor
-   Claim Key: TBD
-   Claim Value Type(s): array
-   Change Controller: IESG
 
 
 
@@ -450,23 +450,61 @@ Lemmons                  Expires 7 January 2027                 [Page 8]
 Internet-Draft           Composite Token Claims                July 2026
 
 
+   Additionally, processors of tokens with composite claims will need to
+   be aware of the possibility of receiving highly nested tokens.
+   Excessive nesting can lead to overflows or other processing errors.
+
+5.  IANA Considerations
+
+   RFC Editor: Upon assignment of the CWT Claim Keys requested below,
+   please replace the placeholders "TBD_OR", "TBD_NOR", "TBD_AND", and
+   "TBD_CRIT" throughout this document, including in the CDDL and
+   examples, with the respective assigned values.
+
+   This specification requests that IANA register the following claim
+   keys in the "CBOR Web Token (CWT) Claims" registry established by
+   [RFC8392]:
+
+   Claim Name: or
+   Claim Description: Logical OR
+   JWT Claim Name: or
+   Claim Key: TBD_OR
+   Claim Value Type(s): array
+   Change Controller: IESG
+
+   Claim Name: nor
+   Claim Description: Logical NOR
+   JWT Claim Name: nor
+   Claim Key: TBD_NOR
+   Claim Value Type(s): array
+   Change Controller: IESG
+
    Claim Name: and
    Claim Description: Logical AND
    JWT Claim Name: and
-   Claim Key: TBD
+   Claim Key: TBD_AND
    Claim Value Type(s): array
    Change Controller: IESG
 
    Claim Name: crit
    Claim Description: Critical Claims
    JWT Claim Name: crit
-   Claim Key: TBD
+   Claim Key: TBD_CRIT
    Claim Value Type(s): array
    Change Controller: IESG
 
    This specification requests that IANA register the following claim
    names in the "JSON Web Token Claims" registry established by
    [RFC7519]:
+
+
+
+
+
+Lemmons                  Expires 7 January 2027                 [Page 9]
+
+Internet-Draft           Composite Token Claims                July 2026
+
 
    Claim Name: or
    Claim Description: Logical OR
@@ -492,19 +530,9 @@ Internet-Draft           Composite Token Claims                July 2026
 6.1.  Normative References
 
    [OpenID-Federation]
-              OpenID Foundation, "OpenID Federation 1.0",
+              OpenID Foundation, "OpenID Federation 1.0", Final
+              Specification, 17 February 2026,
               <https://openid.net/specs/openid-federation-1_0.html>.
-
-
-
-
-
-
-
-Lemmons                  Expires 7 January 2027                 [Page 9]
-
-Internet-Draft           Composite Token Claims                July 2026
-
 
    [RFC2119]  Bradner, S., "Key words for use in RFCs to Indicate
               Requirement Levels", BCP 14, RFC 2119,
@@ -523,10 +551,21 @@ Internet-Draft           Composite Token Claims                July 2026
               "CBOR Web Token (CWT)", RFC 8392, DOI 10.17487/RFC8392,
               May 2018, <https://www.rfc-editor.org/info/rfc8392>.
 
-   [RFC9052]  Schaad, J., "CBOR Object Signing and Encryption (COSE):
-              Structures and Process", STD 96, RFC 9052,
-              DOI 10.17487/RFC9052, August 2022,
-              <https://www.rfc-editor.org/info/rfc9052>.
+
+
+
+
+
+
+Lemmons                  Expires 7 January 2027                [Page 10]
+
+Internet-Draft           Composite Token Claims                July 2026
+
+
+   [RFC8949]  Bormann, C. and P. Hoffman, "Concise Binary Object
+              Representation (CBOR)", STD 94, RFC 8949,
+              DOI 10.17487/RFC8949, December 2020,
+              <https://www.rfc-editor.org/info/rfc8949>.
 
 6.2.  Informative References
 
@@ -534,11 +573,6 @@ Internet-Draft           Composite Token Claims                July 2026
               Readable Geographical Hashing", 2024,
               <https://shop.cta.tech/products/fast-and-readable-
               geographical-hashing-cta-5009>.
-
-   [RFC8949]  Bormann, C. and P. Hoffman, "Concise Binary Object
-              Representation (CBOR)", STD 94, RFC 8949,
-              DOI 10.17487/RFC8949, December 2020,
-              <https://www.rfc-editor.org/info/rfc8949>.
 
    [RFC9711]  Lundblade, L., Mandyam, G., O'Donoghue, J., and C.
               Wallace, "The Entity Attestation Token (EAT)", RFC 9711,
@@ -557,4 +591,26 @@ Author's Address
 
 
 
-Lemmons                  Expires 7 January 2027                [Page 10]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Lemmons                  Expires 7 January 2027                [Page 11]

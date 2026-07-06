@@ -6,10 +6,11 @@
 <meta content="initial-scale=1.0" name="viewport">
 <title>Composite Token Claims</title>
 <meta content="Chris Lemmons" name="author">
-<meta content="
-       Composition claims are claims for CBOR Web Tokens (CWTs) and JSON Web Tokens
-(JWTs) that define logical relationships between sets of claims. 
-    " name="description">
+<meta content='
+       Composite claims are claims for CBOR Web Tokens (CWTs) and JSON Web Tokens
+(JWTs) that define logical relationships between sets of claims. This document
+also defines a CWT representation of the "crit" (Critical) claim. 
+    ' name="description">
 <meta content="xml2rfc 3.34.0" name="generator">
 <meta content="CBOR" name="keyword">
 <meta content="CWT" name="keyword">
@@ -1256,8 +1257,9 @@ li > p:last-of-type:only-child {
 <h1 id="title">Composite Token Claims</h1>
 <section id="section-abstract">
       <h2 id="abstract"><a href="#abstract" class="selfRef">Abstract</a></h2>
-<p id="section-abstract-1">Composition claims are claims for CBOR Web Tokens (CWTs) and JSON Web Tokens
-(JWTs) that define logical relationships between sets of claims.<a href="#section-abstract-1" class="pilcrow">¶</a></p>
+<p id="section-abstract-1">Composite claims are claims for CBOR Web Tokens (CWTs) and JSON Web Tokens
+(JWTs) that define logical relationships between sets of claims. This document
+also defines a CWT representation of the "crit" (Critical) claim.<a href="#section-abstract-1" class="pilcrow">¶</a></p>
 </section>
 <div id="status-of-memo">
 <section id="section-boilerplate.1">
@@ -1372,10 +1374,11 @@ li > p:last-of-type:only-child {
       <h2 id="name-introduction">
 <a href="#section-1" class="section-number selfRef">1. </a><a href="#name-introduction" class="section-name selfRef">Introduction</a>
       </h2>
-<p id="section-1-1">Composition claims are claims defined for CBOR Web Tokens (CWTs) <span>[<a href="#RFC8392" class="cite xref">RFC8392</a>]</span>
+<p id="section-1-1">Composite claims are claims defined for CBOR Web Tokens (CWTs) <span>[<a href="#RFC8392" class="cite xref">RFC8392</a>]</span>
 and JSON Web Tokens (JWTs) <span>[<a href="#RFC7519" class="cite xref">RFC7519</a>]</span>.<a href="#section-1-1" class="pilcrow">¶</a></p>
-<p id="section-1-2">This document defines the CWT representations of the composition claims named
-"or", "nor", and "and". It also defines a CWT definition for "crit".<a href="#section-1-2" class="pilcrow">¶</a></p>
+<p id="section-1-2">This document defines the CWT and JWT representations of the composite claims
+named "or", "nor", and "and". It also defines a CWT representation of the "crit"
+claim.<a href="#section-1-2" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="terminology">
@@ -1387,11 +1390,11 @@ and JSON Web Tokens (JWTs) <span>[<a href="#RFC7519" class="cite xref">RFC7519</
 "SHOULD NOT", "RECOMMENDED", "NOT RECOMMENDED", "MAY", and "OPTIONAL" in this
 document are to be interpreted as described in BCP 14 <span>[<a href="#RFC2119" class="cite xref">RFC2119</a>]</span> <span>[<a href="#RFC8174" class="cite xref">RFC8174</a>]</span> when,
 and only when, they appear in all capitals, as shown here.<a href="#section-2-1" class="pilcrow">¶</a></p>
-<p id="section-2-2">This document reuses terminology from CWT <span>[<a href="#RFC8392" class="cite xref">RFC8392</a>]</span>, JWT <span>[<a href="#RFC7519" class="cite xref">RFC7519</a>]</span>, and
-COSE <span>[<a href="#RFC9052" class="cite xref">RFC9052</a>]</span>.<a href="#section-2-2" class="pilcrow">¶</a></p>
+<p id="section-2-2">This document reuses terminology from CBOR <span>[<a href="#RFC8949" class="cite xref">RFC8949</a>]</span>, CWT <span>[<a href="#RFC8392" class="cite xref">RFC8392</a>]</span>, and
+JWT <span>[<a href="#RFC7519" class="cite xref">RFC7519</a>]</span>.<a href="#section-2-2" class="pilcrow">¶</a></p>
 <p id="section-2-3">The following terms are defined by this specification:<a href="#section-2-3" class="pilcrow">¶</a></p>
 <span class="break"></span><dl class="dlCompact dlParallel" id="section-2-4">
-        <dt id="section-2-4.1">Composition Claim</dt>
+        <dt id="section-2-4.1">Composite Claim</dt>
         <dd style="margin-left: 1.5em" id="section-2-4.2">A claim whose value contains one or more claim sets.<a href="#section-2-4.2" class="pilcrow">¶</a>
 </dd>
         <dd class="break"></dd>
@@ -1408,8 +1411,8 @@ this is a JSON object.<a href="#section-2-4.4" class="pilcrow">¶</a>
       <h2 id="name-claims">
 <a href="#section-3" class="section-number selfRef">3. </a><a href="#name-claims" class="section-name selfRef">Claims</a>
       </h2>
-<p id="section-3-1">Composition claims contain one or more claim sets.<a href="#section-3-1" class="pilcrow">¶</a></p>
-<p id="section-3-2">In tokens without composition claims, there is exactly one set of claims, so
+<p id="section-3-1">Composite claims contain one or more claim sets.<a href="#section-3-1" class="pilcrow">¶</a></p>
+<p id="section-3-2">In tokens without composite claims, there is exactly one set of claims, so
 the acceptability of the claim set determines the acceptability of the token.
 However, this document defines multiple claim sets, so it instead refers to
 accepting or rejecting claim sets. If the primary claim set is unacceptable,
@@ -1420,7 +1423,7 @@ uses that as information, not necessarily as a means by which to provide
 or deny access or make some other kind of decision. In this context, the token
 simply describes all situations in which the token would accurately describe
 that situation.<a href="#section-3-3" class="pilcrow">¶</a></p>
-<p id="section-3-4">Composition claims may be nested arbitrarily. Implementations <span class="bcp14">MAY</span> reject
+<p id="section-3-4">Composite claims may be nested arbitrarily. Implementations <span class="bcp14">MAY</span> reject
 tokens exceeding an implementation-defined nesting depth but <span class="bcp14">MUST</span> support at
 least four levels.<a href="#section-3-4" class="pilcrow">¶</a></p>
 <div id="logical-claims">
@@ -1433,8 +1436,10 @@ type of these claims is array and the elements of the array are maps that are
 themselves sets of claims.<a href="#section-3.1-1" class="pilcrow">¶</a></p>
 <p id="section-3.1-2">In CWTs, the value is a CBOR array of CBOR maps. In JWTs, the value is a JSON
 array of JSON objects.<a href="#section-3.1-2" class="pilcrow">¶</a></p>
-<p id="section-3.1-3">For the following CDDL, <code>Claims-Set</code> is a map of claims as defined in
-<span>[<a href="#RFC8392" class="cite xref">RFC8392</a>]</span>. It is described informatively in <span>[<a href="#RFC9711" class="cite xref">RFC9711</a>]</span>, Appendix D.<a href="#section-3.1-3" class="pilcrow">¶</a></p>
+<p id="section-3.1-3">In the following CDDL, <code>Claims-Set</code> is a claim set: a CBOR map for CWTs
+<span>[<a href="#RFC8392" class="cite xref">RFC8392</a>]</span> or a JSON object for JWTs <span>[<a href="#RFC7519" class="cite xref">RFC7519</a>]</span>. The CDDL extends the
+<code>$$Claims-Set-Claims</code> group socket introduced by the Entity Attestation Token
+(EAT) <span>[<a href="#RFC9711" class="cite xref">RFC9711</a>]</span>.<a href="#section-3.1-3" class="pilcrow">¶</a></p>
 <div id="or-or-claim">
 <section id="section-3.1.1">
           <h4 id="name-or-or-claim">
@@ -1446,12 +1451,12 @@ claim set containing the "or" claim is also unacceptable.<a href="#section-3.1.1
 <p id="section-3.1.1-2">Use of this claim by a token issuer is <span class="bcp14">OPTIONAL</span>.<a href="#section-3.1.1-2" class="pilcrow">¶</a></p>
 <p id="section-3.1.1-3">In JWTs, the Claim Name is "or" and the Claim Value is a JSON array of JSON
 objects.<a href="#section-3.1.1-3" class="pilcrow">¶</a></p>
-<p id="section-3.1.1-4">In CWTs, the Claim Key is TBD (to be registered in the "CBOR Web Token (CWT)
+<p id="section-3.1.1-4">In CWTs, the Claim Key is TBD_OR (to be registered in the "CBOR Web Token (CWT)
 Claims" registry).<a href="#section-3.1.1-4" class="pilcrow">¶</a></p>
 <p id="section-3.1.1-5">The "or" (Or) claim is described by the following CDDL:<a href="#section-3.1.1-5" class="pilcrow">¶</a></p>
 <div class="lang-cddl sourcecode" id="section-3.1.1-6">
 <pre>$$Claims-Set-Claims //= ( or-claim-label =&gt; or-claim-value )
-or-claim-label = TBD
+or-claim-label = TBD_OR
 or-claim-value = [ + Claims-Set ]
 </pre><a href="#section-3.1.1-6" class="pilcrow">¶</a>
 </div>
@@ -1469,12 +1474,12 @@ containing the "nor" claim is also unacceptable.<a href="#section-3.1.2-1" class
 <p id="section-3.1.2-3">Use of this claim by a token issuer is <span class="bcp14">OPTIONAL</span>.<a href="#section-3.1.2-3" class="pilcrow">¶</a></p>
 <p id="section-3.1.2-4">In JWTs, the Claim Name is "nor" and the Claim Value is a JSON array of JSON
 objects.<a href="#section-3.1.2-4" class="pilcrow">¶</a></p>
-<p id="section-3.1.2-5">In CWTs, the Claim Key is TBD (to be registered in the "CBOR Web Token (CWT)
+<p id="section-3.1.2-5">In CWTs, the Claim Key is TBD_NOR (to be registered in the "CBOR Web Token (CWT)
 Claims" registry).<a href="#section-3.1.2-5" class="pilcrow">¶</a></p>
 <p id="section-3.1.2-6">The "nor" (Nor) claim is described by the following CDDL:<a href="#section-3.1.2-6" class="pilcrow">¶</a></p>
 <div class="lang-cddl sourcecode" id="section-3.1.2-7">
 <pre>$$Claims-Set-Claims //= ( nor-claim-label =&gt; nor-claim-value )
-nor-claim-label = TBD
+nor-claim-label = TBD_NOR
 nor-claim-value = [ + Claims-Set ]
 </pre><a href="#section-3.1.2-7" class="pilcrow">¶</a>
 </div>
@@ -1489,18 +1494,18 @@ nor-claim-value = [ + Claims-Set ]
 acceptable. If any claim set in an "and" claim is not acceptable, the
 claim set containing the "and" claim is also unacceptable.<a href="#section-3.1.3-1" class="pilcrow">¶</a></p>
 <p id="section-3.1.3-2">The "and" claim is often unnecessary because a claim set is only accepted when
-all its claims are acceptable. However, a CBOR map must not contain duplicate keys, so
+all its claims are acceptable. However, neither a CBOR map nor a JSON object may contain duplicate keys, so
 claims cannot be repeated. The "and" claim is useful when a claim needs to
 appear multiple times, like when using the "or" and "nor" claims.<a href="#section-3.1.3-2" class="pilcrow">¶</a></p>
 <p id="section-3.1.3-3">Use of this claim by a token issuer is <span class="bcp14">OPTIONAL</span>.<a href="#section-3.1.3-3" class="pilcrow">¶</a></p>
 <p id="section-3.1.3-4">In JWTs, the Claim Name is "and" and the Claim Value is a JSON array of JSON
 objects.<a href="#section-3.1.3-4" class="pilcrow">¶</a></p>
-<p id="section-3.1.3-5">In CWTs, the Claim Key is TBD (to be registered in the "CBOR Web Token (CWT)
+<p id="section-3.1.3-5">In CWTs, the Claim Key is TBD_AND (to be registered in the "CBOR Web Token (CWT)
 Claims" registry).<a href="#section-3.1.3-5" class="pilcrow">¶</a></p>
 <p id="section-3.1.3-6">The "and" (And) claim is described by the following CDDL:<a href="#section-3.1.3-6" class="pilcrow">¶</a></p>
 <div class="lang-cddl sourcecode" id="section-3.1.3-7">
 <pre>$$Claims-Set-Claims //= ( and-claim-label =&gt; and-claim-value )
-and-claim-label = TBD
+and-claim-label = TBD_AND
 and-claim-value = [ + Claims-Set ]
 </pre><a href="#section-3.1.3-7" class="pilcrow">¶</a>
 </div>
@@ -1522,15 +1527,15 @@ subjects must be true, but the issuer is not disclosing which one must be true
 or even whether the two subjects are genuinely different.<a href="#section-3.1.4-2" class="pilcrow">¶</a></p>
 <div class="alignLeft art-text artwork" id="section-3.1.4-3">
 <pre>{
-  /or/ TBD: [
+  /or/ TBD_OR: [
     { /sub/ 2: "george@example.net" },
     { /sub/ 2: "harriet@example.net" }
   ]
 }
 </pre><a href="#section-3.1.4-3" class="pilcrow">¶</a>
 </div>
-<p id="section-3.1.4-4">A relying party that receives this token knows that bearer claims to be both
-George and Harriet and if either subject is acceptable, the token is
+<p id="section-3.1.4-4">A relying party that receives this token knows that the bearer claims to be
+George or Harriet, and if either subject is acceptable, the token is
 acceptable.<a href="#section-3.1.4-4" class="pilcrow">¶</a></p>
 <p id="section-3.1.4-5">The following JWT claim set example is equivalent:<a href="#section-3.1.4-5" class="pilcrow">¶</a></p>
 <div class="alignLeft art-text artwork" id="section-3.1.4-6">
@@ -1542,11 +1547,11 @@ acceptable.<a href="#section-3.1.4-4" class="pilcrow">¶</a></p>
 }
 </pre><a href="#section-3.1.4-6" class="pilcrow">¶</a>
 </div>
-<p id="section-3.1.4-7">The "nor" claim is useful both as a logical negation, even when only one claim
+<p id="section-3.1.4-7">The "nor" claim is useful as a logical negation, even when only one claim set
 is present. For example, consider the following claim set:<a href="#section-3.1.4-7" class="pilcrow">¶</a></p>
 <div class="alignLeft art-text artwork" id="section-3.1.4-8">
 <pre>{
-  /nor/ TBD: [
+  /nor/ TBD_NOR: [
     { /aud/ 3: "https://example.com" }
   ]
 }
@@ -1568,7 +1573,7 @@ The "geohash" claim <span>[<a href="#CTA5009A" class="cite xref">CTA5009A</a>]</
 <pre>{
   /aud/ 3: "https://example.com",
   /geohash/ 282: "9q8yy",
-  /nor/ TBD: [
+  /nor/ TBD_NOR: [
     { /geohash/ 282: ["9q8yy9", "9q8yyd"] }
   ]
 }
@@ -1580,15 +1585,15 @@ described by the geohash "9q8yy", excluding the regions "9q8yy9" and "9q8yyd".<a
 combine multiple claims. For example, consider the following claim set:<a href="#section-3.1.4-15" class="pilcrow">¶</a></p>
 <div class="alignLeft art-text artwork" id="section-3.1.4-16">
 <pre>{
-  /and/ TBD: [
+  /and/ TBD_AND: [
     {
-      /or/ TBD: [
+      /or/ TBD_OR: [
         { /sub/ 2: "george@example.net" },
         { /sub/ 2: "harriet@example.net" }
       ]
     },
     {
-      /or/ TBD: [
+      /or/ TBD_OR: [
         { /aud/ 3: "https://example.com" },
         { /aud/ 3: "https://example.net" }
       ]
@@ -1597,8 +1602,8 @@ combine multiple claims. For example, consider the following claim set:<a href="
 }
 </pre><a href="#section-3.1.4-16" class="pilcrow">¶</a>
 </div>
-<p id="section-3.1.4-17">This example describes a token that is valid for both
-George and Harriet and is intended for both "<a href="https://example.com%22">https://example.com"</a> and
+<p id="section-3.1.4-17">This example describes a token that is valid for either
+George or Harriet and is intended for either "<a href="https://example.com%22">https://example.com"</a> or
 "<a href="https://example.net%22">https://example.net"</a>. This repetition is unnecessary in practice because the "aud" claim already
 describes a list of acceptable audiences. The use of the "and" claim is
 required in order to effectively repeat the "or" claim, because a single claim
@@ -1612,10 +1617,14 @@ set cannot contain the same claim twice.<a href="#section-3.1.4-17" class="pilcr
         <h3 id="name-crit-critical-claim">
 <a href="#section-3.2" class="section-number selfRef">3.2. </a><a href="#name-crit-critical-claim" class="section-name selfRef">crit (Critical) Claim</a>
         </h3>
-<p id="section-3.2-1">The "crit" (Critical) claim indicates critical extensions to this kind of claim
-set.<a href="#section-3.2-1" class="pilcrow">¶</a></p>
+<p id="section-3.2-1">The "crit" (Critical) claim identifies claims within the same claim set that a
+recipient must be able to process and verify for that claim set to be
+acceptable. Unlike the logical claims above, its value is a list of claim
+identifiers rather than a set of claim sets, so it is not itself a composite
+claim; it is defined here because it is used together with them.<a href="#section-3.2-1" class="pilcrow">¶</a></p>
 <p id="section-3.2-2">The semantics of the JWT claim name "crit" are defined by OpenID Federation 1.0
-<span>[<a href="#OpenID-Federation" class="cite xref">OpenID-Federation</a>]</span>. This specification defines only the CWT representation.<a href="#section-3.2-2" class="pilcrow">¶</a></p>
+<span>[<a href="#OpenID-Federation" class="cite xref">OpenID-Federation</a>]</span>. This specification defines the CWT representation of
+"crit" and the CWT-specific processing rules below.<a href="#section-3.2-2" class="pilcrow">¶</a></p>
 <p id="section-3.2-3">The value of this claim is an array.<a href="#section-3.2-3" class="pilcrow">¶</a></p>
 <p id="section-3.2-4">In CWTs, elements are integers or text strings identifying claim keys. The
 "crit" array <span class="bcp14">MUST NOT</span> be empty. Each element of the "crit" array <span class="bcp14">MUST</span>
@@ -1623,19 +1632,23 @@ identify a claim that is present in the same claim set. Elements in the "crit"
 array <span class="bcp14">MUST</span> be unique.<a href="#section-3.2-4" class="pilcrow">¶</a></p>
 <p id="section-3.2-5">Elements in the "crit" array <span class="bcp14">MUST NOT</span> identify claims that are specified
 as MANDATORY to understand for the token. This will vary by application profile
-as described in [RFC7519], Section 4. As noted in <span>[<a href="#OpenID-Federation" class="cite xref">OpenID-Federation</a>]</span>,
+as described in <span>[<a href="#RFC7519" class="cite xref">RFC7519</a>]</span>, Section 4. As noted in <span>[<a href="#OpenID-Federation" class="cite xref">OpenID-Federation</a>]</span>,
 Section 13.4, any profile that requires correct processing of the "crit" claim
 <span class="bcp14">MUST</span> specify that it is MANDATORY to understand.<a href="#section-3.2-5" class="pilcrow">¶</a></p>
 <p id="section-3.2-6">If a claim listed in the "crit" array is present in a claim set and the
 processor cannot process the claim for any reason, the claim set <span class="bcp14">MUST</span> be
 rejected. If a claim listed in the "crit" array is not present in a claim set,
-the claim set <span class="bcp14">MUST</span> be rejected. (TODO: Square this with the OpenID
-definition. The OpenID definition does not explicitly require claim sets to be
-rejected if the claim name rules like including duplicates, empty arrays, or
-the presence of claims that are not present in the claim set.)<a href="#section-3.2-6" class="pilcrow">¶</a></p>
+the claim set <span class="bcp14">MUST</span> be rejected.<a href="#section-3.2-6" class="pilcrow">¶</a></p>
 <p id="section-3.2-7">Use of this claim by a token issuer is <span class="bcp14">OPTIONAL</span>.<a href="#section-3.2-7" class="pilcrow">¶</a></p>
-<p id="section-3.2-8">In CWTs, the Claim Key is TBD (to be registered in the "CBOR Web Token (CWT)
+<p id="section-3.2-8">In CWTs, the Claim Key is TBD_CRIT (to be registered in the "CBOR Web Token (CWT)
 Claims" registry).<a href="#section-3.2-8" class="pilcrow">¶</a></p>
+<p id="section-3.2-9">The "crit" (Critical) claim is described by the following CDDL:<a href="#section-3.2-9" class="pilcrow">¶</a></p>
+<div class="lang-cddl sourcecode" id="section-3.2-10">
+<pre>$$Claims-Set-Claims //= ( crit-claim-label =&gt; crit-claim-value )
+crit-claim-label = TBD_CRIT
+crit-claim-value = [ + (int / tstr) ]
+</pre><a href="#section-3.2-10" class="pilcrow">¶</a>
+</div>
 <div id="example">
 <section id="section-3.2.1">
           <h4 id="name-example">
@@ -1645,9 +1658,9 @@ Claims" registry).<a href="#section-3.2-8" class="pilcrow">¶</a></p>
 portion of the token on the ability to process a claim:<a href="#section-3.2.1-1" class="pilcrow">¶</a></p>
 <div class="alignLeft art-text artwork" id="section-3.2.1-2">
 <pre>{
-  /or/ TBD: [
-    { /geohash/ 282: "9q8yy", /crit/ TBD: [ 282 ] },
-    { /private/ -524289: "sf", /crit/ TBD: [ -524289 ] }
+  /or/ TBD_OR: [
+    { /geohash/ 282: "9q8yy", /crit/ TBD_CRIT: [ 282 ] },
+    { /private/ -524289: "sf", /crit/ TBD_CRIT: [ -524289 ] }
   ]
 }
 </pre><a href="#section-3.2.1-2" class="pilcrow">¶</a>
@@ -1669,8 +1682,8 @@ private claim. It does not need to be able to process and verify both.<a href="#
 <a href="#section-4" class="section-number selfRef">4. </a><a href="#name-security-considerations" class="section-name selfRef">Security Considerations</a>
       </h2>
 <p id="section-4-1">All security considerations relevant to CWTs and JWTs in general will apply to
-tokens that use composition claims.<a href="#section-4-1" class="pilcrow">¶</a></p>
-<p id="section-4-2">Additionally, processors of tokens with composition claims will need to be aware
+tokens that use composite claims.<a href="#section-4-1" class="pilcrow">¶</a></p>
+<p id="section-4-2">Additionally, processors of tokens with composite claims will need to be aware
 of the possibility of receiving highly nested tokens. Excessive nesting can
 lead to overflows or other processing errors.<a href="#section-4-2" class="pilcrow">¶</a></p>
 </section>
@@ -1680,48 +1693,52 @@ lead to overflows or other processing errors.<a href="#section-4-2" class="pilcr
       <h2 id="name-iana-considerations">
 <a href="#section-5" class="section-number selfRef">5. </a><a href="#name-iana-considerations" class="section-name selfRef">IANA Considerations</a>
       </h2>
-<p id="section-5-1">This specification requests that IANA register the following claim keys in the
-"CBOR Web Token (CWT) Claims" registry established by <span>[<a href="#RFC8392" class="cite xref">RFC8392</a>]</span>:<a href="#section-5-1" class="pilcrow">¶</a></p>
-<p id="section-5-2">Claim Name: or<br>
+<p id="section-5-1">RFC Editor: Upon assignment of the CWT Claim Keys requested below, please
+replace the placeholders "TBD_OR", "TBD_NOR", "TBD_AND", and "TBD_CRIT"
+throughout this document, including in the CDDL and examples, with the
+respective assigned values.<a href="#section-5-1" class="pilcrow">¶</a></p>
+<p id="section-5-2">This specification requests that IANA register the following claim keys in the
+"CBOR Web Token (CWT) Claims" registry established by <span>[<a href="#RFC8392" class="cite xref">RFC8392</a>]</span>:<a href="#section-5-2" class="pilcrow">¶</a></p>
+<p id="section-5-3">Claim Name: or<br>
 Claim Description: Logical OR<br>
 JWT Claim Name: or<br>
-Claim Key: TBD<br>
-Claim Value Type(s): array<br>
-Change Controller: IESG<a href="#section-5-2" class="pilcrow">¶</a></p>
-<p id="section-5-3">Claim Name: nor<br>
-Claim Description: Logical NOR<br>
-JWT Claim Name: nor<br>
-Claim Key: TBD<br>
+Claim Key: TBD_OR<br>
 Claim Value Type(s): array<br>
 Change Controller: IESG<a href="#section-5-3" class="pilcrow">¶</a></p>
-<p id="section-5-4">Claim Name: and<br>
-Claim Description: Logical AND<br>
-JWT Claim Name: and<br>
-Claim Key: TBD<br>
+<p id="section-5-4">Claim Name: nor<br>
+Claim Description: Logical NOR<br>
+JWT Claim Name: nor<br>
+Claim Key: TBD_NOR<br>
 Claim Value Type(s): array<br>
 Change Controller: IESG<a href="#section-5-4" class="pilcrow">¶</a></p>
-<p id="section-5-5">Claim Name: crit<br>
-Claim Description: Critical Claims<br>
-JWT Claim Name: crit<br>
-Claim Key: TBD<br>
+<p id="section-5-5">Claim Name: and<br>
+Claim Description: Logical AND<br>
+JWT Claim Name: and<br>
+Claim Key: TBD_AND<br>
 Claim Value Type(s): array<br>
 Change Controller: IESG<a href="#section-5-5" class="pilcrow">¶</a></p>
-<p id="section-5-6">This specification requests that IANA register the following claim names in the
-"JSON Web Token Claims" registry established by <span>[<a href="#RFC7519" class="cite xref">RFC7519</a>]</span>:<a href="#section-5-6" class="pilcrow">¶</a></p>
-<p id="section-5-7">Claim Name: or<br>
+<p id="section-5-6">Claim Name: crit<br>
+Claim Description: Critical Claims<br>
+JWT Claim Name: crit<br>
+Claim Key: TBD_CRIT<br>
+Claim Value Type(s): array<br>
+Change Controller: IESG<a href="#section-5-6" class="pilcrow">¶</a></p>
+<p id="section-5-7">This specification requests that IANA register the following claim names in the
+"JSON Web Token Claims" registry established by <span>[<a href="#RFC7519" class="cite xref">RFC7519</a>]</span>:<a href="#section-5-7" class="pilcrow">¶</a></p>
+<p id="section-5-8">Claim Name: or<br>
 Claim Description: Logical OR<br>
 Change Controller: IESG<br>
-Specification Document(s): This document<a href="#section-5-7" class="pilcrow">¶</a></p>
-<p id="section-5-8">Claim Name: nor<br>
+Specification Document(s): This document<a href="#section-5-8" class="pilcrow">¶</a></p>
+<p id="section-5-9">Claim Name: nor<br>
 Claim Description: Logical NOR<br>
 Change Controller: IESG<br>
-Specification Document(s): This document<a href="#section-5-8" class="pilcrow">¶</a></p>
-<p id="section-5-9">Claim Name: and<br>
+Specification Document(s): This document<a href="#section-5-9" class="pilcrow">¶</a></p>
+<p id="section-5-10">Claim Name: and<br>
 Claim Description: Logical AND<br>
 Change Controller: IESG<br>
-Specification Document(s): This document<a href="#section-5-9" class="pilcrow">¶</a></p>
-<p id="section-5-10">The JWT Claim Name "crit" is already registered in the "JSON Web Token Claims"
-registry and is defined by OpenID Federation 1.0 <span>[<a href="#OpenID-Federation" class="cite xref">OpenID-Federation</a>]</span>.<a href="#section-5-10" class="pilcrow">¶</a></p>
+Specification Document(s): This document<a href="#section-5-10" class="pilcrow">¶</a></p>
+<p id="section-5-11">The JWT Claim Name "crit" is already registered in the "JSON Web Token Claims"
+registry and is defined by OpenID Federation 1.0 <span>[<a href="#OpenID-Federation" class="cite xref">OpenID-Federation</a>]</span>.<a href="#section-5-11" class="pilcrow">¶</a></p>
 </section>
 </div>
 <section id="section-6">
@@ -1735,7 +1752,7 @@ registry and is defined by OpenID Federation 1.0 <span>[<a href="#OpenID-Federat
 <dl class="references">
 <dt id="OpenID-Federation">[OpenID-Federation]</dt>
         <dd>
-<span class="refAuthor">OpenID Foundation</span>, <span class="refTitle">"OpenID Federation 1.0"</span>, <span>&lt;<a href="https://openid.net/specs/openid-federation-1_0.html">https://openid.net/specs/openid-federation-1_0.html</a>&gt;</span>. </dd>
+<span class="refAuthor">OpenID Foundation</span>, <span class="refTitle">"OpenID Federation 1.0"</span>, <span class="refContent">Final Specification</span>, <time datetime="2026-02-17" class="refDate">17 February 2026</time>, <span>&lt;<a href="https://openid.net/specs/openid-federation-1_0.html">https://openid.net/specs/openid-federation-1_0.html</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 <dt id="RFC2119">[RFC2119]</dt>
         <dd>
@@ -1753,9 +1770,9 @@ registry and is defined by OpenID Federation 1.0 <span>[<a href="#OpenID-Federat
         <dd>
 <span class="refAuthor">Jones, M.</span>, <span class="refAuthor">Wahlstroem, E.</span>, <span class="refAuthor">Erdtman, S.</span>, and <span class="refAuthor">H. Tschofenig</span>, <span class="refTitle">"CBOR Web Token (CWT)"</span>, <span class="seriesInfo">RFC 8392</span>, <span class="seriesInfo">DOI 10.17487/RFC8392</span>, <time datetime="2018-05" class="refDate">May 2018</time>, <span>&lt;<a href="https://www.rfc-editor.org/info/rfc8392">https://www.rfc-editor.org/info/rfc8392</a>&gt;</span>. </dd>
 <dd class="break"></dd>
-<dt id="RFC9052">[RFC9052]</dt>
+<dt id="RFC8949">[RFC8949]</dt>
       <dd>
-<span class="refAuthor">Schaad, J.</span>, <span class="refTitle">"CBOR Object Signing and Encryption (COSE): Structures and Process"</span>, <span class="seriesInfo">STD 96</span>, <span class="seriesInfo">RFC 9052</span>, <span class="seriesInfo">DOI 10.17487/RFC9052</span>, <time datetime="2022-08" class="refDate">August 2022</time>, <span>&lt;<a href="https://www.rfc-editor.org/info/rfc9052">https://www.rfc-editor.org/info/rfc9052</a>&gt;</span>. </dd>
+<span class="refAuthor">Bormann, C.</span> and <span class="refAuthor">P. Hoffman</span>, <span class="refTitle">"Concise Binary Object Representation (CBOR)"</span>, <span class="seriesInfo">STD 94</span>, <span class="seriesInfo">RFC 8949</span>, <span class="seriesInfo">DOI 10.17487/RFC8949</span>, <time datetime="2020-12" class="refDate">December 2020</time>, <span>&lt;<a href="https://www.rfc-editor.org/info/rfc8949">https://www.rfc-editor.org/info/rfc8949</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 </dl>
 </section>
@@ -1767,10 +1784,6 @@ registry and is defined by OpenID Federation 1.0 <span>[<a href="#OpenID-Federat
 <dt id="CTA5009A">[CTA5009A]</dt>
         <dd>
 <span class="refAuthor">Consumer Technology Association</span>, <span class="refTitle">"CTA 5009-A: Fast and Readable Geographical Hashing"</span>, <time datetime="2024" class="refDate">2024</time>, <span>&lt;<a href="https://shop.cta.tech/products/fast-and-readable-geographical-hashing-cta-5009">https://shop.cta.tech/products/fast-and-readable-geographical-hashing-cta-5009</a>&gt;</span>. </dd>
-<dd class="break"></dd>
-<dt id="RFC8949">[RFC8949]</dt>
-        <dd>
-<span class="refAuthor">Bormann, C.</span> and <span class="refAuthor">P. Hoffman</span>, <span class="refTitle">"Concise Binary Object Representation (CBOR)"</span>, <span class="seriesInfo">STD 94</span>, <span class="seriesInfo">RFC 8949</span>, <span class="seriesInfo">DOI 10.17487/RFC8949</span>, <time datetime="2020-12" class="refDate">December 2020</time>, <span>&lt;<a href="https://www.rfc-editor.org/info/rfc8949">https://www.rfc-editor.org/info/rfc8949</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 <dt id="RFC9711">[RFC9711]</dt>
       <dd>

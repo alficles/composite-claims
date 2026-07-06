@@ -16,8 +16,9 @@
 <keyword>JSON</keyword>
 
 <abstract>
-<t>Composition claims are claims for CBOR Web Tokens (CWTs) and JSON Web Tokens
-(JWTs) that define logical relationships between sets of claims.</t>
+<t>Composite claims are claims for CBOR Web Tokens (CWTs) and JSON Web Tokens
+(JWTs) that define logical relationships between sets of claims. This document
+also defines a CWT representation of the &quot;crit&quot; (Critical) claim.</t>
 </abstract>
 
 </front>
@@ -25,10 +26,11 @@
 <middle>
 
 <section anchor="introduction"><name>Introduction</name>
-<t>Composition claims are claims defined for CBOR Web Tokens (CWTs) <xref target="RFC8392"></xref>
+<t>Composite claims are claims defined for CBOR Web Tokens (CWTs) <xref target="RFC8392"></xref>
 and JSON Web Tokens (JWTs) <xref target="RFC7519"></xref>.</t>
-<t>This document defines the CWT representations of the composition claims named
-&quot;or&quot;, &quot;nor&quot;, and &quot;and&quot;. It also defines a CWT definition for &quot;crit&quot;.</t>
+<t>This document defines the CWT and JWT representations of the composite claims
+named &quot;or&quot;, &quot;nor&quot;, and &quot;and&quot;. It also defines a CWT representation of the &quot;crit&quot;
+claim.</t>
 </section>
 
 <section anchor="terminology"><name>Terminology</name>
@@ -36,12 +38,12 @@ and JSON Web Tokens (JWTs) <xref target="RFC7519"></xref>.</t>
 &quot;SHOULD NOT&quot;, &quot;RECOMMENDED&quot;, &quot;NOT RECOMMENDED&quot;, &quot;MAY&quot;, and &quot;OPTIONAL&quot; in this
 document are to be interpreted as described in BCP 14 <xref target="RFC2119"></xref> <xref target="RFC8174"></xref> when,
 and only when, they appear in all capitals, as shown here.</t>
-<t>This document reuses terminology from CWT <xref target="RFC8392"></xref>, JWT <xref target="RFC7519"></xref>, and
-COSE <xref target="RFC9052"></xref>.</t>
+<t>This document reuses terminology from CBOR <xref target="RFC8949"></xref>, CWT <xref target="RFC8392"></xref>, and
+JWT <xref target="RFC7519"></xref>.</t>
 <t>The following terms are defined by this specification:</t>
 
 <dl spacing="compact">
-<dt>Composition Claim</dt>
+<dt>Composite Claim</dt>
 <dd>A claim whose value contains one or more claim sets.</dd>
 <dt>Claim Set</dt>
 <dd>A set of claims. For CWTs this is a CBOR map. For JWTs
@@ -50,8 +52,8 @@ this is a JSON object.</dd>
 </section>
 
 <section anchor="claims"><name>Claims</name>
-<t>Composition claims contain one or more claim sets.</t>
-<t>In tokens without composition claims, there is exactly one set of claims, so
+<t>Composite claims contain one or more claim sets.</t>
+<t>In tokens without composite claims, there is exactly one set of claims, so
 the acceptability of the claim set determines the acceptability of the token.
 However, this document defines multiple claim sets, so it instead refers to
 accepting or rejecting claim sets. If the primary claim set is unacceptable,
@@ -62,7 +64,7 @@ uses that as information, not necessarily as a means by which to provide
 or deny access or make some other kind of decision. In this context, the token
 simply describes all situations in which the token would accurately describe
 that situation.</t>
-<t>Composition claims may be nested arbitrarily. Implementations <bcp14>MAY</bcp14> reject
+<t>Composite claims may be nested arbitrarily. Implementations <bcp14>MAY</bcp14> reject
 tokens exceeding an implementation-defined nesting depth but <bcp14>MUST</bcp14> support at
 least four levels.</t>
 
@@ -72,8 +74,10 @@ type of these claims is array and the elements of the array are maps that are
 themselves sets of claims.</t>
 <t>In CWTs, the value is a CBOR array of CBOR maps. In JWTs, the value is a JSON
 array of JSON objects.</t>
-<t>For the following CDDL, <tt>Claims-Set</tt> is a map of claims as defined in
-<xref target="RFC8392"></xref>. It is described informatively in <xref target="RFC9711"></xref>, Appendix D.</t>
+<t>In the following CDDL, <tt>Claims-Set</tt> is a claim set: a CBOR map for CWTs
+<xref target="RFC8392"></xref> or a JSON object for JWTs <xref target="RFC7519"></xref>. The CDDL extends the
+<tt>$$Claims-Set-Claims</tt> group socket introduced by the Entity Attestation Token
+(EAT) <xref target="RFC9711"></xref>.</t>
 
 <section anchor="or-or-claim"><name>or (Or) Claim</name>
 <t>The &quot;or&quot; (Or) claim identifies one or more claim sets of which at least one is
@@ -82,12 +86,12 @@ claim set containing the &quot;or&quot; claim is also unacceptable.</t>
 <t>Use of this claim by a token issuer is <bcp14>OPTIONAL</bcp14>.</t>
 <t>In JWTs, the Claim Name is &quot;or&quot; and the Claim Value is a JSON array of JSON
 objects.</t>
-<t>In CWTs, the Claim Key is TBD (to be registered in the &quot;CBOR Web Token (CWT)
+<t>In CWTs, the Claim Key is TBD_OR (to be registered in the &quot;CBOR Web Token (CWT)
 Claims&quot; registry).</t>
 <t>The &quot;or&quot; (Or) claim is described by the following CDDL:</t>
 
 <sourcecode type="cddl"><![CDATA[$$Claims-Set-Claims //= ( or-claim-label => or-claim-value )
-or-claim-label = TBD
+or-claim-label = TBD_OR
 or-claim-value = [ + Claims-Set ]
 ]]></sourcecode>
 </section>
@@ -100,12 +104,12 @@ containing the &quot;nor&quot; claim is also unacceptable.</t>
 <t>Use of this claim by a token issuer is <bcp14>OPTIONAL</bcp14>.</t>
 <t>In JWTs, the Claim Name is &quot;nor&quot; and the Claim Value is a JSON array of JSON
 objects.</t>
-<t>In CWTs, the Claim Key is TBD (to be registered in the &quot;CBOR Web Token (CWT)
+<t>In CWTs, the Claim Key is TBD_NOR (to be registered in the &quot;CBOR Web Token (CWT)
 Claims&quot; registry).</t>
 <t>The &quot;nor&quot; (Nor) claim is described by the following CDDL:</t>
 
 <sourcecode type="cddl"><![CDATA[$$Claims-Set-Claims //= ( nor-claim-label => nor-claim-value )
-nor-claim-label = TBD
+nor-claim-label = TBD_NOR
 nor-claim-value = [ + Claims-Set ]
 ]]></sourcecode>
 </section>
@@ -115,18 +119,18 @@ nor-claim-value = [ + Claims-Set ]
 acceptable. If any claim set in an &quot;and&quot; claim is not acceptable, the
 claim set containing the &quot;and&quot; claim is also unacceptable.</t>
 <t>The &quot;and&quot; claim is often unnecessary because a claim set is only accepted when
-all its claims are acceptable. However, a CBOR map must not contain duplicate keys, so
+all its claims are acceptable. However, neither a CBOR map nor a JSON object may contain duplicate keys, so
 claims cannot be repeated. The &quot;and&quot; claim is useful when a claim needs to
 appear multiple times, like when using the &quot;or&quot; and &quot;nor&quot; claims.</t>
 <t>Use of this claim by a token issuer is <bcp14>OPTIONAL</bcp14>.</t>
 <t>In JWTs, the Claim Name is &quot;and&quot; and the Claim Value is a JSON array of JSON
 objects.</t>
-<t>In CWTs, the Claim Key is TBD (to be registered in the &quot;CBOR Web Token (CWT)
+<t>In CWTs, the Claim Key is TBD_AND (to be registered in the &quot;CBOR Web Token (CWT)
 Claims&quot; registry).</t>
 <t>The &quot;and&quot; (And) claim is described by the following CDDL:</t>
 
 <sourcecode type="cddl"><![CDATA[$$Claims-Set-Claims //= ( and-claim-label => and-claim-value )
-and-claim-label = TBD
+and-claim-label = TBD_AND
 and-claim-value = [ + Claims-Set ]
 ]]></sourcecode>
 </section>
@@ -143,14 +147,14 @@ subjects must be true, but the issuer is not disclosing which one must be true
 or even whether the two subjects are genuinely different.</t>
 
 <artwork><![CDATA[{
-  /or/ TBD: [
+  /or/ TBD_OR: [
     { /sub/ 2: "george@example.net" },
     { /sub/ 2: "harriet@example.net" }
   ]
 }
 ]]></artwork>
-<t>A relying party that receives this token knows that bearer claims to be both
-George and Harriet and if either subject is acceptable, the token is
+<t>A relying party that receives this token knows that the bearer claims to be
+George or Harriet, and if either subject is acceptable, the token is
 acceptable.</t>
 <t>The following JWT claim set example is equivalent:</t>
 
@@ -161,11 +165,11 @@ acceptable.</t>
   ]
 }
 ]]></artwork>
-<t>The &quot;nor&quot; claim is useful both as a logical negation, even when only one claim
+<t>The &quot;nor&quot; claim is useful as a logical negation, even when only one claim set
 is present. For example, consider the following claim set:</t>
 
 <artwork><![CDATA[{
-  /nor/ TBD: [
+  /nor/ TBD_NOR: [
     { /aud/ 3: "https://example.com" }
   ]
 }
@@ -185,7 +189,7 @@ The &quot;geohash&quot; claim <xref target="CTA5009A"></xref> describes a geogra
 <artwork><![CDATA[{
   /aud/ 3: "https://example.com",
   /geohash/ 282: "9q8yy",
-  /nor/ TBD: [
+  /nor/ TBD_NOR: [
     { /geohash/ 282: ["9q8yy9", "9q8yyd"] }
   ]
 }
@@ -196,15 +200,15 @@ described by the geohash &quot;9q8yy&quot;, excluding the regions &quot;9q8yy9&q
 combine multiple claims. For example, consider the following claim set:</t>
 
 <artwork><![CDATA[{
-  /and/ TBD: [
+  /and/ TBD_AND: [
     {
-      /or/ TBD: [
+      /or/ TBD_OR: [
         { /sub/ 2: "george@example.net" },
         { /sub/ 2: "harriet@example.net" }
       ]
     },
     {
-      /or/ TBD: [
+      /or/ TBD_OR: [
         { /aud/ 3: "https://example.com" },
         { /aud/ 3: "https://example.net" }
       ]
@@ -212,8 +216,8 @@ combine multiple claims. For example, consider the following claim set:</t>
   ]
 }
 ]]></artwork>
-<t>This example describes a token that is valid for both
-George and Harriet and is intended for both &quot;<eref target="https://example.com&quot;">https://example.com"</eref> and
+<t>This example describes a token that is valid for either
+George or Harriet and is intended for either &quot;<eref target="https://example.com&quot;">https://example.com"</eref> or
 &quot;<eref target="https://example.net&quot;">https://example.net"</eref>. This repetition is unnecessary in practice because the &quot;aud&quot; claim already
 describes a list of acceptable audiences. The use of the &quot;and&quot; claim is
 required in order to effectively repeat the &quot;or&quot; claim, because a single claim
@@ -222,10 +226,14 @@ set cannot contain the same claim twice.</t>
 </section>
 
 <section anchor="crit-critical-claim"><name>crit (Critical) Claim</name>
-<t>The &quot;crit&quot; (Critical) claim indicates critical extensions to this kind of claim
-set.</t>
+<t>The &quot;crit&quot; (Critical) claim identifies claims within the same claim set that a
+recipient must be able to process and verify for that claim set to be
+acceptable. Unlike the logical claims above, its value is a list of claim
+identifiers rather than a set of claim sets, so it is not itself a composite
+claim; it is defined here because it is used together with them.</t>
 <t>The semantics of the JWT claim name &quot;crit&quot; are defined by OpenID Federation 1.0
-<xref target="OpenID-Federation"></xref>. This specification defines only the CWT representation.</t>
+<xref target="OpenID-Federation"></xref>. This specification defines the CWT representation of
+&quot;crit&quot; and the CWT-specific processing rules below.</t>
 <t>The value of this claim is an array.</t>
 <t>In CWTs, elements are integers or text strings identifying claim keys. The
 &quot;crit&quot; array <bcp14>MUST NOT</bcp14> be empty. Each element of the &quot;crit&quot; array <bcp14>MUST</bcp14>
@@ -233,28 +241,31 @@ identify a claim that is present in the same claim set. Elements in the &quot;cr
 array <bcp14>MUST</bcp14> be unique.</t>
 <t>Elements in the &quot;crit&quot; array <bcp14>MUST NOT</bcp14> identify claims that are specified
 as MANDATORY to understand for the token. This will vary by application profile
-as described in [RFC7519], Section 4. As noted in <xref target="OpenID-Federation"></xref>,
+as described in <xref target="RFC7519"></xref>, Section 4. As noted in <xref target="OpenID-Federation"></xref>,
 Section 13.4, any profile that requires correct processing of the &quot;crit&quot; claim
 <bcp14>MUST</bcp14> specify that it is MANDATORY to understand.</t>
 <t>If a claim listed in the &quot;crit&quot; array is present in a claim set and the
 processor cannot process the claim for any reason, the claim set <bcp14>MUST</bcp14> be
 rejected. If a claim listed in the &quot;crit&quot; array is not present in a claim set,
-the claim set <bcp14>MUST</bcp14> be rejected. (TODO: Square this with the OpenID
-definition. The OpenID definition does not explicitly require claim sets to be
-rejected if the claim name rules like including duplicates, empty arrays, or
-the presence of claims that are not present in the claim set.)</t>
+the claim set <bcp14>MUST</bcp14> be rejected.</t>
 <t>Use of this claim by a token issuer is <bcp14>OPTIONAL</bcp14>.</t>
-<t>In CWTs, the Claim Key is TBD (to be registered in the &quot;CBOR Web Token (CWT)
+<t>In CWTs, the Claim Key is TBD_CRIT (to be registered in the &quot;CBOR Web Token (CWT)
 Claims&quot; registry).</t>
+<t>The &quot;crit&quot; (Critical) claim is described by the following CDDL:</t>
+
+<sourcecode type="cddl"><![CDATA[$$Claims-Set-Claims //= ( crit-claim-label => crit-claim-value )
+crit-claim-label = TBD_CRIT
+crit-claim-value = [ + (int / tstr) ]
+]]></sourcecode>
 
 <section anchor="example"><name>Example</name>
 <t>A &quot;crit&quot; claim can be used in conjunction with logical claims to condition a
 portion of the token on the ability to process a claim:</t>
 
 <artwork><![CDATA[{
-  /or/ TBD: [
-    { /geohash/ 282: "9q8yy", /crit/ TBD: [ 282 ] },
-    { /private/ -524289: "sf", /crit/ TBD: [ -524289 ] }
+  /or/ TBD_OR: [
+    { /geohash/ 282: "9q8yy", /crit/ TBD_CRIT: [ 282 ] },
+    { /private/ -524289: "sf", /crit/ TBD_CRIT: [ -524289 ] }
   ]
 }
 ]]></artwork>
@@ -269,37 +280,41 @@ private claim. It does not need to be able to process and verify both.</t>
 
 <section anchor="security-considerations"><name>Security Considerations</name>
 <t>All security considerations relevant to CWTs and JWTs in general will apply to
-tokens that use composition claims.</t>
-<t>Additionally, processors of tokens with composition claims will need to be aware
+tokens that use composite claims.</t>
+<t>Additionally, processors of tokens with composite claims will need to be aware
 of the possibility of receiving highly nested tokens. Excessive nesting can
 lead to overflows or other processing errors.</t>
 </section>
 
 <section anchor="iana-considerations"><name>IANA Considerations</name>
+<t>RFC Editor: Upon assignment of the CWT Claim Keys requested below, please
+replace the placeholders &quot;TBD_OR&quot;, &quot;TBD_NOR&quot;, &quot;TBD_AND&quot;, and &quot;TBD_CRIT&quot;
+throughout this document, including in the CDDL and examples, with the
+respective assigned values.</t>
 <t>This specification requests that IANA register the following claim keys in the
 &quot;CBOR Web Token (CWT) Claims&quot; registry established by <xref target="RFC8392"></xref>:</t>
 <t>Claim Name: or<br />
 Claim Description: Logical OR<br />
 JWT Claim Name: or<br />
-Claim Key: TBD<br />
+Claim Key: TBD_OR<br />
 Claim Value Type(s): array<br />
 Change Controller: IESG</t>
 <t>Claim Name: nor<br />
 Claim Description: Logical NOR<br />
 JWT Claim Name: nor<br />
-Claim Key: TBD<br />
+Claim Key: TBD_NOR<br />
 Claim Value Type(s): array<br />
 Change Controller: IESG</t>
 <t>Claim Name: and<br />
 Claim Description: Logical AND<br />
 JWT Claim Name: and<br />
-Claim Key: TBD<br />
+Claim Key: TBD_AND<br />
 Claim Value Type(s): array<br />
 Change Controller: IESG</t>
 <t>Claim Name: crit<br />
 Claim Description: Critical Claims<br />
 JWT Claim Name: crit<br />
-Claim Key: TBD<br />
+Claim Key: TBD_CRIT<br />
 Claim Value Type(s): array<br />
 Change Controller: IESG</t>
 <t>This specification requests that IANA register the following claim names in the
@@ -331,14 +346,15 @@ registry and is defined by OpenID Federation 1.0 <xref target="OpenID-Federation
     <author>
       <organization>OpenID Foundation</organization>
     </author>
-    <date></date>
+    <date year="2026" month="February" day="17"></date>
   </front>
+  <refcontent>Final Specification</refcontent>
 </reference>
 <xi:include href="https://bib.ietf.org/public/rfc/bibxml/reference.RFC.2119.xml"/>
 <xi:include href="https://bib.ietf.org/public/rfc/bibxml/reference.RFC.7519.xml"/>
 <xi:include href="https://bib.ietf.org/public/rfc/bibxml/reference.RFC.8174.xml"/>
 <xi:include href="https://bib.ietf.org/public/rfc/bibxml/reference.RFC.8392.xml"/>
-<xi:include href="https://bib.ietf.org/public/rfc/bibxml/reference.RFC.9052.xml"/>
+<xi:include href="https://bib.ietf.org/public/rfc/bibxml/reference.RFC.8949.xml"/>
 </references>
 <references><name>Informative References</name>
 <reference anchor="CTA5009A" target="https://shop.cta.tech/products/fast-and-readable-geographical-hashing-cta-5009">
@@ -350,7 +366,6 @@ registry and is defined by OpenID Federation 1.0 <xref target="OpenID-Federation
     <date year="2024"></date>
   </front>
 </reference>
-<xi:include href="https://bib.ietf.org/public/rfc/bibxml/reference.RFC.8949.xml"/>
 <xi:include href="https://bib.ietf.org/public/rfc/bibxml/reference.RFC.9711.xml"/>
 </references>
 </references>
