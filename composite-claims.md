@@ -303,10 +303,10 @@ set cannot contain the same claim twice.
 ## crit (Critical) Claim
 
 The "crit" (Critical) claim identifies claims within the same claim set that a
-recipient must be able to process and verify for that claim set to be
-acceptable. Unlike the logical claims above, its value is a list of claim
-identifiers rather than a set of claim sets, so it is not itself a composite
-claim; it is defined here because it is used together with them.
+recipient **MUST** understand and process for that claim set to be acceptable.
+Unlike the logical claims above, its value is a list of claim identifiers
+rather than a set of claim sets, so it is not itself a composite claim; it is
+defined here because it is used together with them.
 
 The semantics of the JWT claim name "crit" are defined by OpenID Federation 1.0
 [@!OpenID-Federation]. This specification defines the CWT representation of
@@ -327,10 +327,8 @@ to be understood and processed varies by application profile, as described in
 profile that requires correct processing of the "crit" claim **MUST** specify
 that the "crit" claim itself MUST be understood and processed.
 
-A recipient **MUST** reject the claim set that directly contains a "crit" claim
-if any claim listed in that "crit" array is not present in that claim set. If a
-claim listed in the "crit" array is present but the recipient cannot process it
-for any reason, the recipient **MUST** reject that claim set.
+A recipient **MUST** reject the containing claim set if any listed claim is
+absent from that set, not understood, or cannot be processed.
 
 Use of this claim by a token issuer is **OPTIONAL**.
 
@@ -347,8 +345,8 @@ crit-claim-value = [ + (int / tstr) ]
 
 ### Example
 
-A "crit" claim can be used in conjunction with logical claims to condition a
-portion of the token on the ability to process a claim:
+A "crit" claim can be used with logical claims to require processing of at
+least one of two claims:
 
 ```
 {
@@ -359,11 +357,10 @@ portion of the token on the ability to process a claim:
 }
 ```
 
-This example assumes the existence of some kind of claim in the private space
-that a recipient may or may not be able to process and verify. Because the
-two claim sets are combined with "or", the token is acceptable if the relying
-party can process and verify at least one of them: the "geohash" claim or the
-private claim. It does not need to be able to process and verify both.
+This example assumes a private claim that some recipients do not understand.
+The token is acceptable if the recipient understands and processes either the
+"geohash" claim or the private claim, and that claim is acceptable. The
+recipient need not understand and process both claims.
 
 # Security Considerations
 
