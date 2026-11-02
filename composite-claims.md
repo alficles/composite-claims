@@ -35,6 +35,14 @@ also defines a CWT representation of the "crit" (Critical) claim.
 Composite claims are claims defined for CBOR Web Tokens (CWTs) [@!RFC8392]
 and JSON Web Tokens (JWTs) [@!RFC7519].
 
+A token may authorize access to different resources under different
+conditions. For example, access to one resource may expire before access to
+another. Composite claims allow each resource restriction to be grouped with
+its expiration and the alternatives to be combined in a single token.
+The Common Access Token authorization scheme for Media over QUIC
+[@?I-D.ietf-moq-c4m] uses this approach to associate permissions with
+different expiration times.
+
 This document defines the CWT and JWT representations of the composite claims
 named "or", "nor", and "and". It also defines a CWT representation of the "crit"
 claim.
