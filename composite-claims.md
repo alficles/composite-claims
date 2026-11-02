@@ -98,10 +98,10 @@ themselves sets of claims.
 In CWTs, the value is a CBOR array of CBOR maps. In JWTs, the value is a JSON
 array of JSON objects.
 
-In the following CDDL, `Claims-Set` is a claim set: a CBOR map for CWTs
-[@!RFC8392] or a JSON object for JWTs [@!RFC7519]. The CDDL extends the
-`$$Claims-Set-Claims` group socket introduced by the Entity Attestation Token
-(EAT) [@?RFC9711].
+The following CDDL fragments describe the claims defined here. `Claims-Set`
+denotes a claim set as defined by CWT [@!RFC8392] or JWT [@!RFC7519]. The
+fragments use the `$$Claims-Set-Claims` group socket from the informative
+CDDL model in [@?RFC9711], Appendix D.
 
 ### or (Or) Claim
 
