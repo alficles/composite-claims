@@ -9,7 +9,7 @@ updates = [ ]
 
 [seriesInfo]
 name = "Internet-Draft"
-value = "draft-lemmons-cose-composite-claims-03"
+value = "draft-lemmons-cose-composite-claims-04"
 stream = "IETF"
 status = "standard"
 
