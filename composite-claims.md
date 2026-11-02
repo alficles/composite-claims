@@ -97,12 +97,11 @@ or deny access or make some other kind of decision. In this context, the token
 simply describes all situations in which the token would accurately describe
 that situation.
 
-Composite claims may be nested. This specification places no inherent limit on
-nesting depth. For the purpose of this requirement, the primary claim set is at
-nesting depth 0, and a claim set nested within a composite claim is at a depth
-one greater than the composite claim that contains it. Implementations **MAY**
-reject tokens whose nesting depth exceeds an implementation-defined limit, but
-that limit **MUST NOT** be less than 4.
+Composite claims may be nested. The primary claim set is at nesting depth 0.
+A claim set nested within a composite claim is at a depth one greater than the
+claim set containing that composite claim. Implementations **SHOULD** impose
+a finite, implementation-defined nesting-depth limit and **MAY** reject tokens
+exceeding that limit. The limit **MUST NOT** be less than 4.
 
 ## Logical Claims
 
