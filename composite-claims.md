@@ -109,6 +109,12 @@ The following CDDL fragments describe the claims defined here. `Claims-Set`
 denotes a claim set as defined by CWT [@!RFC8392] or JWT [@!RFC7519]. The
 fragments use the `$$Claims-Set-Claims` group socket from the informative
 CDDL model in [@?RFC9711], Appendix D.
+The `JC<J,C>` generic denotes the JSON (`J`) and CBOR (`C`) alternatives
+using the `.feature` control operator [@!RFC9165], Section 4.
+
+```cddl
+JC<J,C> = J .feature "json" / C .feature "cbor"
+```
 
 ### or (Or) Claim
 
@@ -130,7 +136,7 @@ The "or" (Or) claim is described by the following CDDL:
 
 ```cddl
 $$Claims-Set-Claims //= ( or-claim-label => or-claim-value )
-or-claim-label = TBD_OR
+or-claim-label = JC<"or", TBD_OR>
 or-claim-value = [ + Claims-Set ]
 ```
 
@@ -156,7 +162,7 @@ The "nor" (Nor) claim is described by the following CDDL:
 
 ```cddl
 $$Claims-Set-Claims //= ( nor-claim-label => nor-claim-value )
-nor-claim-label = TBD_NOR
+nor-claim-label = JC<"nor", TBD_NOR>
 nor-claim-value = [ + Claims-Set ]
 ```
 
@@ -185,7 +191,7 @@ The "and" (And) claim is described by the following CDDL:
 
 ```cddl
 $$Claims-Set-Claims //= ( and-claim-label => and-claim-value )
-and-claim-label = TBD_AND
+and-claim-label = JC<"and", TBD_AND>
 and-claim-value = [ + Claims-Set ]
 ```
 
