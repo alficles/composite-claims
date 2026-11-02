@@ -271,34 +271,25 @@ The "geohash" claim [@?CTA5009A] describes a geographical region. For example:
 This token describes an audience of "https://example.com" and a region
 described by the geohash "9q8yy", excluding the regions "9q8yy9" and "9q8yyd".
 
-If a more complex relationship is required, the "and" claim can be used to
-combine multiple claims. For example, consider the following claim set:
+The "and" claim can be used to combine multiple instances of the same claim.
+The "catgeocoord" claim [@?CTA5007B] describes one or more circular
+geographical regions and accepts a location within any of them. For example,
+consider the following claim set, carried in an encrypted CWT:
 
 ```
 {
   /and/ TBD_AND: [
-    {
-      /or/ TBD_OR: [
-        { /sub/ 2: "george@example.net" },
-        { /sub/ 2: "harriet@example.net" }
-      ]
-    },
-    {
-      /or/ TBD_OR: [
-        { /aud/ 3: "https://example.com" },
-        { /aud/ 3: "https://example.net" }
-      ]
-    }
+    { /catgeocoord/ 317: [[37.77, -122.42, 1000]] },
+    { /catgeocoord/ 317: [[37.77, -122.40, 1000]] }
   ]
 }
 ```
 
-This example describes a token that is valid for either
-George or Harriet and is intended for either "https://example.com" or
-"https://example.net". This repetition is unnecessary in practice because the "aud" claim already
-describes a list of acceptable audiences. The use of the "and" claim is
-required in order to effectively repeat the "or" claim, because a single claim
-set cannot contain the same claim twice.
+For a recipient that supports "catgeocoord", this token describes the
+intersection of two circular regions, each with a radius of 1000 meters.
+A single "catgeocoord" claim containing both regions would describe their
+union instead. The "and" claim allows both constraints to apply, because
+a single claim set cannot contain the same claim twice.
 
 ## crit (Critical) Claim
 
@@ -429,6 +420,16 @@ Specification Document(s): This document
 
 The JWT Claim Name "crit" is already registered in the "JSON Web Token Claims"
 registry and is defined by OpenID Federation 1.0 [@!OpenID-Federation].
+
+<reference anchor='CTA5007B' target='https://shop.cta.tech/products/cta-5007-b'>
+    <front>
+        <title>CTA-5007-B: Common Access Token</title>
+        <author>
+            <organization>Consumer Technology Association</organization>
+        </author>
+        <date month='April' year='2025'/>
+    </front>
+</reference>
 
 <reference anchor='CTA5009A' target='https://shop.cta.tech/products/fast-and-readable-geographical-hashing-cta-5009'>
     <front>
