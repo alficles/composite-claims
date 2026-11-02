@@ -320,12 +320,12 @@ An issuer producing a "crit" claim **MUST** ensure that the "crit" array is not
 empty, that each element identifies a claim that is present in the claim set
 that directly contains the "crit" claim, and that the elements are unique.
 
-An issuer **MUST NOT** include in the "crit" array any claim that is already
-required to be understood and processed for the token. Which claims are required
-to be understood and processed varies by application profile, as described in
-[@!RFC7519], Section 4. As noted in [@!OpenID-Federation], Section 13.4, any
-profile that requires correct processing of the "crit" claim **MUST** specify
-that the "crit" claim itself MUST be understood and processed.
+Claims that recipients are required to understand and process under the
+applicable profile, as described in [@!RFC7519], Section 4, are considered to
+be the claims specified for use in the token type. An issuer **MUST NOT**
+include such claims in the "crit" array. As noted in [@!OpenID-Federation],
+Section 13.4, any profile that requires correct processing of the "crit" claim
+**MUST** specify that the "crit" claim itself MUST be understood and processed.
 
 A recipient **MUST** reject the containing claim set if any listed claim is
 absent from that set, not understood, or cannot be processed.
