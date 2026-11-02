@@ -75,6 +75,13 @@ this specification defines acceptability at the level of individual claim sets.
 The top-level claim set of a token is its primary claim set. If the primary
 claim set is unacceptable, the token is unacceptable and **MUST** be rejected.
 
+Within a claim set nested in a composite claim, a claim validation failure that
+would require rejection of a token instead makes that claim set unacceptable.
+This includes violations of claim-specific type, structure, or value
+constraints.
+Requirements for validating the enclosing token's encoding and cryptographic
+protection still apply.
+
 Some applications use tokens to convey information. For example, a token might
 have a subject claim that identifies the bearer and the recipient
 uses that as information, not necessarily as a means by which to provide
