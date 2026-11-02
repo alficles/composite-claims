@@ -151,7 +151,7 @@ or-claim-value = [ + Claims-Set ]
 
 The "nor" (Nor) claim identifies one or more claim sets of which none is
 acceptable. If any claim set in a "nor" claim is acceptable, the claim set
-containing the "nor" claim is also unacceptable.
+containing the "nor" claim is unacceptable.
 
 This is the logical negation of the "or" claim.
 
@@ -176,7 +176,7 @@ nor-claim-value = [ + Claims-Set ]
 ### and (And) Claim
 
 The "and" (And) claim identifies one or more claim sets of which all are
-acceptable. If any claim set in an "and" claim is not acceptable, the
+acceptable. If any claim set in an "and" claim is unacceptable, the
 claim set containing the "and" claim is also unacceptable.
 
 The "and" claim is often unnecessary because a claim set is only accepted when
